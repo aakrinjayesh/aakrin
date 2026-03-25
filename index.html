@@ -1305,14 +1305,54 @@ onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
       <div class="form-col">
         <div class="form-title">Enquiry Now!</div>
         <div class="form-sub">Fill in the form and we'll get back to you shortly.</div>
-        <div class="enquiry-form">
-          <input type="text" placeholder="Name">
-          <input type="email" placeholder="Email">
-          <input type="tel" placeholder="Phone Number">
-          <input type="text" placeholder="Subject">
-          <textarea placeholder="Your Message Here" rows="4"></textarea>
-          <button class="submit-btn" onclick="alert('Thank you! We will contact you soon.')">Submit Form →</button>
-        </div>
+        <form class="enquiry-form" id="enquiryForm">
+          <input type="text" id="enq-name" placeholder="Name" required>
+          <input type="email" id="enq-email" placeholder="Email" required>
+          <input type="tel" id="enq-phone" placeholder="Phone Number">
+          <input type="text" id="enq-subject" placeholder="Subject">
+          <textarea id="enq-message" placeholder="Your Message Here" rows="4"></textarea>
+          <button class="submit-btn" type="submit" id="enqSubmitBtn">Submit Form →</button>
+          <div id="enq-status" style="text-align:center;font-size:14px;display:none;"></div>
+        </form>
+        <script>
+          document.getElementById('enquiryForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var btn = document.getElementById('enqSubmitBtn');
+            var status = document.getElementById('enq-status');
+            btn.disabled = true;
+            btn.textContent = 'Sending...';
+            status.style.display = 'none';
+
+            var payload = {
+              name:    document.getElementById('enq-name').value,
+              email:   document.getElementById('enq-email').value,
+              phone:   document.getElementById('enq-phone').value,
+              subject: document.getElementById('enq-subject').value,
+              message: document.getElementById('enq-message').value
+            };
+
+            fetch('https://script.google.com/macros/s/AKfycbwqOoUXO_j9T-208knzSUttTC_ifs3fnt5GLe0GZA4b7bqEpeQHES8jx2IJkIR5HxmT/exec', {
+              method: 'POST',
+              body: JSON.stringify(payload)
+            })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+              status.style.color = '#22c55e';
+              status.textContent = 'Thank you! We will contact you soon.';
+              status.style.display = 'block';
+              document.getElementById('enquiryForm').reset();
+            })
+            .catch(function() {
+              status.style.color = '#ef4444';
+              status.textContent = 'Something went wrong. Please try again.';
+              status.style.display = 'block';
+            })
+            .finally(function() {
+              btn.disabled = false;
+              btn.textContent = 'Submit Form →';
+            });
+          });
+        </script>
       </div>
     </div>
   </div>
