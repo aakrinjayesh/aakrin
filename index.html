@@ -8,11 +8,19 @@
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "ym7dl733c2");
 </script>
+<script>
+// Show the onboarding chat on first visit (or with ?chat=1) before first paint
+(function() {
+  var show = /[?&]chat=1/.test(location.search);
+  try { if (!localStorage.getItem('aakrin_onboarding_v3')) show = true; } catch (e) {}
+  if (show) document.documentElement.classList.add('onb-open');
+})();
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aakrin | Best Salesforce Consulting Firm</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,800;0,9..144,900;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,800;0,9..144,900;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root {
   --primary: #1B6EF3;
@@ -604,6 +612,13 @@ footer { background: var(--heading); color: rgba(255,255,255,0.7); padding: 80px
 .enquiry-form { display: flex; flex-direction: column; gap: 14px; }
 .enquiry-form input, .enquiry-form textarea { background: #eaf0f7; border: 1px solid #c8d8e8; border-radius: 8px; padding: 12px 16px; color: #1a3a6b; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; outline: none; width: 100%; }
 .enquiry-form textarea { resize: vertical; }
+.enquiry-form select { background: #eaf0f7; border: 1px solid #c8d8e8; border-radius: 8px; padding: 12px 14px; color: #1a3a6b; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; outline: none; width: 100%; cursor: pointer; }
+.enquiry-form [hidden] { display: none; }
+.enquiry-form input:focus, .enquiry-form select:focus { border-color: #2563eb; }
+.enquiry-form .invalid { border-color: #d93025; }
+.enquiry-error { color: #d93025; font-size: 13px; font-weight: 600; }
+.enquiry-error:empty { display: none; }
+.enquiry-success { background: #eaf7ef; border: 1px solid #b7e2c4; color: #1d5b33; border-radius: 10px; padding: 16px 18px; font-size: 14px; line-height: 1.6; font-weight: 600; }
 .submit-btn { background: #1a3a6b; color: #fff; border: none; border-radius: 30px; padding: 14px 32px; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 15px; cursor: pointer; }
 .submit-btn:hover { background: #2563eb; }
 
@@ -657,9 +672,441 @@ footer { background: var(--heading); color: rgba(255,255,255,0.7); padding: 80px
   color: white;
   margin: 0;
 }
+
+/* ====== ONBOARDING GUIDE (Nova) ====== */
+/* Everything is scoped under .onb so it can't affect the rest of the site */
+.onb {
+  --nova-sky-top: #cfe9ff;
+  --nova-sky-bottom: #f7fbff;
+  --nova-ink: #13294b;
+  --nova-muted: #4b6283;
+  --nova-accent: #0b8cff;
+  --nova-accent-dark: #0a6bd1;
+  --nova-card: #ffffff;
+  --nova-line: #e3edf8;
+  --nova-field: #f5f9ff;
+  --nova-error: #b42318;
+  display: none; position: fixed; inset: 0; z-index: 10000; overflow: hidden;
+  font-family: "Nunito", system-ui, sans-serif; color: var(--nova-ink);
+  background: linear-gradient(180deg, var(--nova-sky-top) 0%, var(--nova-sky-bottom) 70%);
+}
+.onb-open .onb { display: block; }
+.onb-open, .onb-open body { overflow: hidden; }
+.float-onb { background: var(--heading); border: none; font-size: 20px; }
+
+/* Sky decoration */
+.onb .nova-cloud {
+  position: absolute; z-index: 0; pointer-events: none;
+  background: #fff; border-radius: 999px; opacity: .85;
+  filter: drop-shadow(0 8px 14px rgba(19,41,75,.06));
+  animation: novaDrift linear infinite;
+}
+.onb .nova-cloud::before, .onb .nova-cloud::after { content: ""; position: absolute; background: #fff; border-radius: 50%; }
+.onb .nova-cloud::before { width: 55%; height: 160%; left: 12%; bottom: 20%; }
+.onb .nova-cloud::after { width: 40%; height: 130%; right: 12%; bottom: 25%; }
+.onb .nova-c1 { width: 180px; height: 48px; top: 12%; animation-duration: 60s; animation-delay: -10s; }
+.onb .nova-c2 { width: 120px; height: 34px; top: 30%; animation-duration: 45s; animation-delay: -30s; opacity: .7; }
+.onb .nova-c3 { width: 240px; height: 60px; top: 62%; animation-duration: 80s; animation-delay: -50s; opacity: .6; }
+.onb .nova-c4 { width: 140px; height: 40px; top: 82%; animation-duration: 55s; animation-delay: -5s; opacity: .75; }
+@keyframes novaDrift { from { transform: translateX(110vw); } to { transform: translateX(-300px); } }
+
+/* Top buttons */
+.onb .nova-nav {
+  position: relative; z-index: 40;
+  display: flex; align-items: center; justify-content: flex-end;
+  max-width: 1100px; margin: 0 auto; padding: 20px 16px;
+}
+.onb .nova-nav-actions { display: flex; gap: 8px; }
+.onb .nova-btn {
+  border: 0; background: var(--nova-card); color: var(--nova-ink); font: inherit; font-weight: 800;
+  padding: 10px 16px; border-radius: 999px; cursor: pointer;
+  box-shadow: 0 4px 14px rgba(19,41,75,.1);
+  transition: transform .15s, box-shadow .15s;
+}
+.onb .nova-btn:hover { transform: translateY(-1px); }
+.onb .nova-btn.nova-sound { padding: 10px 14px; font-size: 1.05rem; }
+.onb .nova-btn.nova-sound[aria-pressed="false"] { opacity: .55; }
+
+/* Flyer: centred on screen */
+.onb .nova-flyer {
+  position: absolute; left: 50%; top: 50%;
+  width: 420px; height: 300px;
+  margin: -150px 0 0 -230px;
+  z-index: 10; pointer-events: none;
+  transform: translate(-80vw, 60vh) scale(.45);
+}
+/* Wide screens: keep Nova clear of the (wider) speech bubble on the right */
+@media (min-width: 1100px) { .onb .nova-flyer { left: 32%; } }
+.onb .nova-plane { position: absolute; left: 0; top: 140px; width: 420px; height: 210px; }
+.onb .nova-plane-back { z-index: 1; }
+.onb .nova-plane-front { z-index: 3; }
+.onb .nova-agent {
+  position: absolute; left: 150px; top: 18px; width: 160px; height: 216px; z-index: 2;
+  transform-origin: 50% 100%;
+}
+.onb .nova-agent svg { width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 6px 10px rgba(19,41,75,.12)); }
+.onb .nova-shadow {
+  position: absolute; left: 175px; top: 318px; width: 110px; height: 16px; border-radius: 50%;
+  background: radial-gradient(rgba(19,41,75,.25), transparent 70%);
+  opacity: 0; z-index: 0;
+}
+.onb .nova-trail {
+  position: absolute; right: -40px; top: 230px; width: 160px; height: 4px; border-radius: 4px;
+  background: linear-gradient(90deg, rgba(11,140,255,.5), transparent);
+  z-index: 0;
+}
+.onb .nova-agent.idle { animation: novaBreathe 3s ease-in-out infinite; }
+@keyframes novaBreathe { 50% { transform: translateY(-4px) scaleY(1.01); } }
+
+/* Eyes */
+.onb #novaEyeMotion { transform-origin: 100px 122px; transform-box: view-box; }
+.onb #novaEyes { transform-origin: 100px 122px; transform-box: view-box; animation: novaBlink 4s infinite; }
+@keyframes novaBlink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(.1); } }
+
+/* Mouth */
+.onb #novaMouth { transform-origin: 100px 138px; transform-box: view-box; }
+.onb .nova-agent.talking #novaMouth { animation: novaMouthTalk .32s ease-in-out infinite alternate; }
+@keyframes novaMouthTalk { from { transform: scaleY(1); } to { transform: scaleY(2.1); } }
+
+/* Speech bubble */
+.onb .nova-bubble {
+  position: fixed;
+  top: 96px; right: 24px; left: auto; bottom: auto;
+  width: min(540px, calc(100vw - 48px));
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--nova-card);
+  border-radius: 22px;
+  padding: 22px 24px;
+  box-shadow: 0 18px 40px rgba(19,41,75,.15);
+  opacity: 0; transform: translateY(-8px) scale(.96); transform-origin: 100% 0%;
+  transition: opacity .35s ease, transform .45s cubic-bezier(.34,1.56,.64,1);
+  pointer-events: none;
+  z-index: 30;
+  scrollbar-width: thin;
+}
+.onb .nova-bubble.show { opacity: 1; transform: none; pointer-events: auto; }
+.onb .nova-bubble::-webkit-scrollbar { width: 8px; }
+.onb .nova-bubble::-webkit-scrollbar-thumb { background: #d6e4ff; border-radius: 4px; }
+.onb .nova-bubble-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 16px; }
+.onb .nova-who {
+  font-size: .78rem; font-weight: 800; color: var(--nova-accent);
+  letter-spacing: .06em; text-transform: uppercase;
+  display: flex; align-items: center; gap: 6px;
+}
+.onb .nova-who::before {
+  content: "✦"; font-size: .95rem;
+  width: 18px; height: 18px; border-radius: 6px;
+  background: linear-gradient(135deg, var(--nova-accent), #6cc4ff);
+  color: #fff; display: grid; place-items: center;
+}
+.onb .nova-step {
+  font-size: .72rem; font-weight: 800; color: var(--nova-muted);
+  letter-spacing: .06em; text-transform: uppercase; white-space: nowrap;
+}
+.onb .nova-step[hidden] { display: none; }
+.onb .nova-msg {
+  font-size: 1.2rem; font-weight: 800; margin: 8px 0 0;
+  min-height: 1.6em; line-height: 1.4; color: var(--nova-ink);
+}
+.onb .nova-msg:focus { outline: none; }
+.onb .nova-caret {
+  display: inline-block; width: 2px; height: 1.1em; background: var(--nova-ink);
+  vertical-align: -3px; margin-left: 2px; animation: novaCaret .8s steps(1) infinite;
+}
+.onb .nova-msg.typed .nova-caret { display: none; }
+@keyframes novaCaret { 50% { opacity: 0; } }
+.onb .nova-sr {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+
+/* Bubble body: hint, answers, form */
+.onb .nova-body { display: grid; gap: 14px; margin-top: 14px; animation: novaStepIn .35s ease both; }
+.onb .nova-body[hidden] { display: none; }
+@keyframes novaStepIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.onb .nova-hint { font-size: .9rem; font-weight: 600; color: var(--nova-muted); line-height: 1.5; }
+
+/* Answer list (single choice) */
+.onb .nova-choices { display: grid; gap: 8px; }
+.onb .nova-choice {
+  display: flex; align-items: center; gap: 12px; width: 100%;
+  min-height: 52px; padding: 11px 14px;
+  border: 2px solid var(--nova-line); border-radius: 14px; background: var(--nova-field);
+  font: inherit; font-weight: 700; font-size: .95rem; line-height: 1.3; color: var(--nova-ink);
+  text-align: left; cursor: pointer;
+  opacity: 0; transform: translateY(6px);
+  transition: opacity .3s ease, transform .3s ease, border-color .15s, background-color .15s;
+}
+.onb .nova-choice.in { opacity: 1; transform: none; }
+.onb .nova-choice:hover { border-color: var(--nova-accent); background: #eaf4ff; }
+.onb .nova-choice[aria-checked="true"] { border-color: var(--nova-accent); background: #eaf4ff; }
+.onb .nova-radio {
+  width: 20px; height: 20px; flex-shrink: 0; border-radius: 50%;
+  border: 2px solid #c5d6ea; display: grid; place-items: center;
+}
+.onb .nova-choice[aria-checked="true"] .nova-radio { border-color: var(--nova-accent); background: var(--nova-accent); }
+.onb .nova-choice[aria-checked="true"] .nova-radio::after { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #fff; }
+
+/* Answers summary + recommendation */
+.onb .nova-summary { display: grid; gap: 10px; padding: 14px 16px; border-radius: 14px; background: #f0f6ff; }
+.onb .nova-summary-label { font-size: .72rem; font-weight: 800; color: var(--nova-muted); letter-spacing: .06em; text-transform: uppercase; }
+.onb .nova-tags { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; }
+.onb .nova-tags li { font-size: .8rem; font-weight: 700; padding: 4px 10px; border-radius: 8px; border: 1px solid var(--nova-line); background: #fff; }
+.onb .nova-summary p { font-size: .92rem; font-weight: 700; line-height: 1.5; }
+
+/* Enquiry form */
+.onb .nova-form { display: grid; gap: 14px; }
+.onb .nova-form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px 14px; }
+.onb .nova-field { display: grid; align-content: start; gap: 5px; }
+.onb .nova-field[hidden] { display: none; }
+.onb .nova-field label { font-size: .85rem; font-weight: 800; color: var(--nova-ink); line-height: 1.3; }
+.onb .nova-field label .nova-opt { font-weight: 600; color: var(--nova-muted); }
+.onb .nova-field input, .onb .nova-field select, .onb .nova-field textarea {
+  width: 100%; min-height: 46px; padding: 10px 13px;
+  border: 2px solid var(--nova-line); border-radius: 12px; background: var(--nova-field);
+  font: inherit; font-size: .95rem; font-weight: 600; color: var(--nova-ink);
+  transition: border-color .15s, background .15s, box-shadow .15s;
+}
+.onb .nova-field textarea { min-height: 96px; resize: vertical; line-height: 1.5; }
+.onb .nova-field input:focus, .onb .nova-field select:focus, .onb .nova-field textarea:focus {
+  outline: none; border-color: var(--nova-accent); background: #fff; box-shadow: 0 0 0 3px rgba(11,140,255,.15);
+}
+.onb .nova-field [aria-invalid="true"] { border-color: var(--nova-error); }
+.onb .nova-field-error { font-size: .82rem; font-weight: 700; color: var(--nova-error); }
+.onb .nova-field-error:empty { display: none; }
+.onb .nova-form-alert { padding: 10px 14px; border-radius: 12px; background: #fdecea; color: #8a1c12; font-size: .88rem; font-weight: 700; }
+.onb .nova-form-alert[hidden] { display: none; }
+.onb .nova-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.onb .nova-primary {
+  width: 100%; min-height: 48px; padding: 12px 18px; border: 0; border-radius: 12px;
+  background: var(--nova-accent); color: #fff; font: inherit; font-weight: 800; font-size: 1rem;
+  cursor: pointer; transition: background .2s, transform .1s;
+}
+.onb .nova-primary:hover { background: var(--nova-accent-dark); }
+.onb .nova-primary:active { transform: translateY(1px); }
+.onb .nova-primary:disabled { opacity: .75; cursor: progress; }
+.onb .nova-secondary {
+  min-height: 44px; padding: 9px 16px; border: 2px solid var(--nova-line); border-radius: 12px;
+  background: #fff; color: var(--nova-ink); font: inherit; font-weight: 800; font-size: .92rem; cursor: pointer;
+}
+.onb .nova-secondary:hover { border-color: var(--nova-ink); }
+.onb .nova-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.onb .nova-actions .nova-primary { width: auto; }
+.onb .nova-done-body { font-size: .98rem; font-weight: 600; line-height: 1.55; color: var(--nova-muted); }
+
+/* Bubble footer: Back / explore myself */
+.onb .nova-foot {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px;
+  margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--nova-line);
+}
+.onb .nova-foot[hidden] { display: none; }
+.onb .nova-link {
+  border: 0; background: none; padding: 4px 0; cursor: pointer;
+  font: inherit; font-size: .88rem; font-weight: 700; color: var(--nova-muted);
+  text-underline-offset: 4px;
+}
+.onb .nova-link:hover { color: var(--nova-ink); text-decoration: underline; }
+.onb .nova-choice:focus-visible, .onb .nova-btn:focus-visible, .onb .nova-primary:focus-visible,
+.onb .nova-secondary:focus-visible, .onb .nova-link:focus-visible { outline: 3px solid var(--nova-accent); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .onb .nova-cloud, .onb .nova-agent.idle, .onb #novaEyes, .onb .nova-caret, .onb .nova-body { animation: none; }
+  .onb .nova-choice { transition: none; }
+}
+@media (max-width: 720px) {
+  .onb .nova-nav { padding: 14px 12px; }
+  .onb .nova-btn { padding: 8px 12px; font-size: .85rem; }
+  .onb .nova-btn.nova-sound { padding: 8px 11px; }
+  .onb .nova-flyer { transform-origin: 50% 50%; }
+  .onb .nova-bubble {
+    top: auto; left: 12px; right: 12px; bottom: 12px;
+    width: auto; max-height: 62vh;
+    padding: 16px 18px; border-radius: 20px;
+    transform-origin: 50% 100%;
+    transform: translateY(8px) scale(.96);
+  }
+  .onb .nova-msg { font-size: 1.05rem; }
+  .onb .nova-choice { font-size: .88rem; min-height: 48px; padding: 9px 12px; }
+  .onb .nova-form-grid { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
+
+<!-- Onboarding guide (full-screen on first visit) -->
+<div class="onb" id="onb" role="dialog" aria-modal="true" aria-labelledby="novaHeading">
+  <div class="nova-cloud nova-c1"></div><div class="nova-cloud nova-c2"></div><div class="nova-cloud nova-c3"></div><div class="nova-cloud nova-c4"></div>
+
+  <div class="nova-nav">
+    <div class="nova-nav-actions">
+      <button type="button" class="nova-btn nova-sound" id="novaSound" aria-pressed="true" title="Toggle sound">🔊</button>
+      <button type="button" class="nova-btn" id="novaReplay">↻ Replay intro</button>
+      <button type="button" class="nova-btn" id="novaSkip">Skip &amp; explore →</button>
+    </div>
+  </div>
+
+  <iframe name="enquiryLeadFrame" title="Enquiry submission" hidden></iframe>
+
+  <div class="nova-flyer" id="novaFlyer" aria-hidden="true">
+    <div class="nova-shadow" id="novaShadow"></div>
+    <svg class="nova-plane nova-plane-back" id="novaPlaneBack" viewBox="0 0 420 210">
+      <polygon points="6,96 414,10 292,118" fill="#FFD84A"/>
+      <polygon points="6,96 414,10 340,40" fill="#FFE47A"/>
+    </svg>
+
+    <div class="nova-agent" id="novaAgent">
+      <svg viewBox="0 0 200 270">
+        <defs>
+          <filter id="novaFur" filterUnits="userSpaceOnUse" x="-40" y="-30" width="280" height="330">
+            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" seed="7" result="n"/>
+            <feDisplacementMap in="SourceGraphic" in2="n" scale="6" xChannelSelector="R" yChannelSelector="G" result="d"/>
+            <feTurbulence type="turbulence" baseFrequency="1.3" numOctaves="2" seed="4" result="curl"/>
+            <feColorMatrix in="curl" type="matrix" values="0 0 0 0 0.18  0 0 0 0 0.08  0 0 0 0 0.02  -2.2 0 0 0 1.1" result="dark"/>
+            <feComposite in="dark" in2="d" operator="in" result="darkIn"/>
+            <feColorMatrix in="curl" type="matrix" values="0 0 0 0 0.85  0 0 0 0 0.6  0 0 0 0 0.4  2.4 0 0 0 -1.7" result="lite"/>
+            <feComposite in="lite" in2="d" operator="in" result="liteIn"/>
+            <feMerge><feMergeNode in="d"/><feMergeNode in="darkIn"/><feMergeNode in="liteIn"/></feMerge>
+          </filter>
+          <filter id="novaTailFur" filterUnits="userSpaceOnUse" x="-40" y="-30" width="280" height="330">
+            <feTurbulence type="fractalNoise" baseFrequency="0.05 0.9" numOctaves="2" seed="9" result="n"/>
+            <feDisplacementMap in="SourceGraphic" in2="n" scale="7" result="d"/>
+            <feTurbulence type="fractalNoise" baseFrequency="0.3 2.2" numOctaves="2" seed="5" result="s"/>
+            <feColorMatrix in="s" type="matrix" values="0 0 0 0 0.15  0 0 0 0 0.07  0 0 0 0 0.02  2 0 0 0 -0.8" result="sd"/>
+            <feComposite in="sd" in2="d" operator="in" result="sdi"/>
+            <feMerge><feMergeNode in="d"/><feMergeNode in="sdi"/></feMerge>
+          </filter>
+          <filter id="novaFelt" filterUnits="userSpaceOnUse" x="-40" y="-30" width="280" height="330">
+            <feTurbulence type="fractalNoise" baseFrequency="1.2" numOctaves="2" seed="1" result="n"/>
+            <feDisplacementMap in="SourceGraphic" in2="n" scale="2.5"/>
+          </filter>
+          <filter id="novaSoft"><feGaussianBlur stdDeviation="2.5"/></filter>
+          <radialGradient id="novaSuit" cx="42%" cy="30%" r="80%">
+            <stop offset="0%" stop-color="#a86a3c"/><stop offset="55%" stop-color="#875230"/><stop offset="100%" stop-color="#5e3519"/>
+          </radialGradient>
+          <radialGradient id="novaRing" cx="50%" cy="30%" r="70%">
+            <stop offset="0%" stop-color="#b87a48"/><stop offset="100%" stop-color="#8a522b"/>
+          </radialGradient>
+          <linearGradient id="novaTail" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#6e3c1d"/><stop offset="100%" stop-color="#3f1f0c"/>
+          </linearGradient>
+          <radialGradient id="novaFace" cx="50%" cy="45%" r="62%">
+            <stop offset="0%" stop-color="#f6c49a"/><stop offset="75%" stop-color="#e9a877"/><stop offset="100%" stop-color="#cf8a5c"/>
+          </radialGradient>
+          <linearGradient id="novaHair" x1="0" y1="0" x2="0.3" y2="1">
+            <stop offset="0%" stop-color="#4a3226"/><stop offset="100%" stop-color="#2a1a12"/>
+          </linearGradient>
+          <radialGradient id="novaMitten" cx="40%" cy="35%" r="70%">
+            <stop offset="0%" stop-color="#c4c5c6"/><stop offset="100%" stop-color="#8e9092"/>
+          </radialGradient>
+          <radialGradient id="novaEye" cx="40%" cy="30%" r="70%">
+            <stop offset="0%" stop-color="#3a3a3a"/><stop offset="100%" stop-color="#050505"/>
+          </radialGradient>
+          <clipPath id="novaFaceClip"><ellipse cx="100" cy="112" rx="48" ry="46"/></clipPath>
+        </defs>
+
+        <g filter="url(#novaTailFur)">
+          <path d="M76 216 Q18 234 2 190 Q-8 150 24 126 Q26 166 48 178 Q62 186 78 184 Z" fill="url(#novaTail)"/>
+          <path d="M20 140 Q22 176 60 196" stroke="#2f1708" stroke-width="3" fill="none" opacity=".5"/>
+        </g>
+        <g filter="url(#novaFur)">
+          <rect x="70" y="214" width="26" height="42" rx="12" fill="#7a4626"/>
+          <rect x="104" y="214" width="26" height="42" rx="12" fill="#7a4626"/>
+          <ellipse cx="81" cy="258" rx="17" ry="10" fill="#6c3c1f"/>
+          <ellipse cx="119" cy="258" rx="17" ry="10" fill="#6c3c1f"/>
+        </g>
+        <g filter="url(#novaFur)">
+          <path d="M56 156 Q58 136 100 134 Q142 136 144 156 Q154 200 148 234 Q100 244 52 234 Q46 200 56 156 Z" fill="url(#novaSuit)"/>
+        </g>
+        <ellipse cx="103" cy="194" rx="28" ry="32" fill="#6a3417" filter="url(#novaFelt)"/>
+        <ellipse cx="98" cy="184" rx="14" ry="16" fill="#7d4220" opacity=".5"/>
+        <g filter="url(#novaFur)">
+          <path d="M38 74 Q20 32 32 6 Q62 16 82 46 Z" fill="url(#novaSuit)"/>
+          <path d="M162 74 Q180 32 168 6 Q138 16 118 46 Z" fill="url(#novaSuit)"/>
+        </g>
+        <path d="M45 58 Q35 34 40 20 Q56 28 66 46 Z" fill="#5a2f16"/>
+        <path d="M155 58 Q165 34 160 20 Q144 28 134 46 Z" fill="#5a2f16"/>
+        <g filter="url(#novaFur)"><ellipse cx="100" cy="98" rx="76" ry="70" fill="url(#novaSuit)"/></g>
+        <ellipse cx="100" cy="112" rx="64" ry="61" fill="none" stroke="#2e1608" stroke-width="5" opacity=".55" filter="url(#novaSoft)"/>
+        <g filter="url(#novaFur)"><ellipse cx="100" cy="111" rx="62" ry="59" fill="url(#novaRing)"/></g>
+        <path d="M52 92 Q100 40 148 92" stroke="#c08552" stroke-width="5" fill="none" opacity=".35" stroke-linecap="round"/>
+        <ellipse cx="100" cy="112" rx="51" ry="49" fill="#4a2814" opacity=".55"/>
+        <ellipse cx="100" cy="112" rx="48" ry="46" fill="url(#novaFace)"/>
+        <g clip-path="url(#novaFaceClip)"><g transform="translate(100 114) scale(1.3) translate(-100 -104)">
+          <path d="M50 92 Q60 56 100 56 Q140 56 152 92 Q130 76 100 78 Q70 80 50 92 Z" fill="url(#novaHair)"/>
+          <path d="M112 62 Q80 68 72 114 Q86 92 104 86 Q120 80 132 70 Z" fill="url(#novaHair)"/>
+          <path d="M118 68 Q148 72 143 108 Q136 88 118 80 Z" fill="url(#novaHair)"/>
+          <path d="M72 74 Q56 86 58 108 Q62 92 78 84 Z" fill="url(#novaHair)"/>
+          <path d="M106 68 Q86 78 78 104 M116 70 Q98 80 90 92 M124 74 Q138 82 140 100 M100 62 Q120 60 136 70" stroke="#6e4c3b" stroke-width="1.6" fill="none" stroke-linecap="round" opacity=".75"/>
+        </g></g>
+        <g id="novaEyeMotion">
+          <g id="novaEyes">
+            <ellipse cx="82" cy="123" rx="8.5" ry="11" fill="url(#novaEye)"/>
+            <ellipse cx="121" cy="121" rx="8.5" ry="11" fill="url(#novaEye)"/>
+            <ellipse cx="84.5" cy="117" rx="3" ry="3.6" fill="#cfcfcf" opacity=".85"/>
+            <ellipse cx="123.5" cy="115" rx="3" ry="3.6" fill="#cfcfcf" opacity=".85"/>
+          </g>
+        </g>
+        <g id="novaMouth"><ellipse cx="100" cy="138" rx="4.5" ry="2.4" fill="#7a2b16"/></g>
+        <g transform="translate(0 6)">
+          <g fill="#00a1e0">
+            <circle cx="88" cy="182" r="11"/><circle cx="102" cy="175" r="13"/><circle cx="116" cy="181" r="10"/>
+            <circle cx="79" cy="193" r="9"/><circle cx="124" cy="191" r="8"/><rect x="78" y="182" width="48" height="18" rx="9"/>
+          </g>
+          <text x="101" y="191" text-anchor="middle" fill="#fff" font-family="Arial, Helvetica, sans-serif" font-size="8.6" font-weight="700" letter-spacing="-0.2">Salesforce</text>
+        </g>
+
+        <!-- Left arm, rotated around the shoulder by the script -->
+        <g id="novaArmL">
+          <g filter="url(#novaFur)">
+            <path d="M60 162 Q32 184 34 208" stroke="#5c3218" stroke-width="31" stroke-linecap="round" fill="none"/>
+            <path d="M60 162 Q32 184 34 208" stroke="#94593a" stroke-width="26" stroke-linecap="round" fill="none"/>
+          </g>
+          <g filter="url(#novaFelt)">
+            <ellipse cx="34" cy="218" rx="14" ry="15" fill="url(#novaMitten)"/>
+            <path d="M24 211 Q34 207 44 211 M23 217 Q34 213 45 217 M24 223 Q34 219 44 223" stroke="#a6a8aa" stroke-width="1.2" fill="none"/>
+          </g>
+        </g>
+
+        <!-- Right arm, rotated around the shoulder by the script -->
+        <g id="novaArmR">
+          <g filter="url(#novaFur)">
+            <path d="M140 160 Q170 146 178 120" stroke="#5c3218" stroke-width="31" stroke-linecap="round" fill="none"/>
+            <path d="M140 160 Q170 146 178 120" stroke="#94593a" stroke-width="26" stroke-linecap="round" fill="none"/>
+          </g>
+          <g filter="url(#novaFelt)">
+            <ellipse cx="181" cy="106" rx="14" ry="16" fill="url(#novaMitten)" transform="rotate(18 181 106)"/>
+            <path d="M171 99 Q181 96 191 101 M170 105 Q181 102 192 107 M170 111 Q181 108 190 113" stroke="#a6a8aa" stroke-width="1.2" fill="none"/>
+          </g>
+        </g>
+      </svg>
+    </div>
+
+    <svg class="nova-plane nova-plane-front" id="novaPlaneFront" viewBox="0 0 420 210">
+      <polygon points="6,96 292,118 236,200" fill="#F5B400"/>
+      <polygon points="120,104 414,10 292,118" fill="#FFC21A"/>
+      <polygon points="292,118 414,10 320,170" fill="#E6A100"/>
+      <line x1="6" y1="96" x2="414" y2="10" stroke="#fff3b0" stroke-width="2" opacity=".7"/>
+    </svg>
+    <div class="nova-trail" id="novaTrail"></div>
+  </div>
+
+  <!-- Speech bubble: Nova's line, then the answers / enquiry form for the current step -->
+  <div class="nova-bubble" id="novaBubble">
+    <div class="nova-bubble-head">
+      <div class="nova-who">Nova · Aakrin guide</div>
+      <div class="nova-step" id="novaStep" hidden></div>
+    </div>
+    <h2 class="nova-msg" id="novaHeading" tabindex="-1">
+      <span class="nova-sr" id="novaHeadingSr"></span>
+      <span aria-hidden="true"><span id="novaMsg"></span><span class="nova-caret"></span></span>
+    </h2>
+    <p class="nova-sr" id="novaLive" aria-live="polite"></p>
+    <div class="nova-body" id="novaBody" hidden></div>
+    <div class="nova-foot" id="novaFoot" hidden></div>
+  </div>
+</div>
 
 <!-- Topbar -->
 <div class="topbar">
@@ -713,7 +1160,7 @@ footer { background: var(--heading); color: rgba(255,255,255,0.7); padding: 80px
     <div class="slide slide-2 is-active">
       <div class="slide-content">
        <div class="partner-container">
-  <img 
+  <img
     src="partner_logo.png"
     alt="Salesforce Logo"
     class="sf-logo-img"
@@ -733,7 +1180,7 @@ footer { background: var(--heading); color: rgba(255,255,255,0.7); padding: 80px
     <div class="slide slide-2">
       <div class="slide-content">
            <div class="partner-container">
-  <img 
+  <img
     src="partner_logo.png"
     alt="Salesforce Logo"
     class="sf-logo-img"
@@ -785,8 +1232,8 @@ footer { background: var(--heading); color: rgba(255,255,255,0.7); padding: 80px
 
     <!-- Badge -->
     <div class="sf-badge">
-  <img 
-    src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg" 
+  <img
+    src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg"
     alt="Salesforce Logo"
     class="sf-logo-img"
   />
@@ -795,8 +1242,8 @@ footer { background: var(--heading); color: rgba(255,255,255,0.7); padding: 80px
 </div>
 
     <div class="sf-badge">
-     <img 
-    src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg" 
+     <img
+    src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg"
     alt="Salesforce Logo"
     class="sf-logo-img"
   />
@@ -805,8 +1252,8 @@ footer { background: var(--heading); color: rgba(255,255,255,0.7); padding: 80px
     </div>
 
     <div class="sf-badge">
-     <img 
-    src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg" 
+     <img
+    src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg"
     alt="Salesforce Logo"
     class="sf-logo-img"
   />
@@ -815,8 +1262,8 @@ footer { background: var(--heading); color: rgba(255,255,255,0.7); padding: 80px
     </div>
 
     <div class="sf-badge">
-     <img 
-    src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg" 
+     <img
+    src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg"
     alt="Salesforce Logo"
     class="sf-logo-img"
   />
@@ -825,8 +1272,8 @@ footer { background: var(--heading); color: rgba(255,255,255,0.7); padding: 80px
     </div>
 
     <div class="sf-badge">
-      <img 
-    src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg" 
+      <img
+    src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg"
     alt="Salesforce Logo"
     class="sf-logo-img"
   />
@@ -836,8 +1283,8 @@ footer { background: var(--heading); color: rgba(255,255,255,0.7); padding: 80px
 
     <!-- DUPLICATE for smooth infinite scroll -->
     <div class="sf-badge">
-    <img 
-    src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg" 
+    <img
+    src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg"
     alt="Salesforce Logo"
     class="sf-logo-img"
   />
@@ -846,8 +1293,8 @@ footer { background: var(--heading); color: rgba(255,255,255,0.7); padding: 80px
     </div>
 
      <div class="sf-badge">
-    <img 
-    src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg" 
+    <img
+    src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg"
     alt="Salesforce Logo"
     class="sf-logo-img"
   />
@@ -856,8 +1303,8 @@ footer { background: var(--heading); color: rgba(255,255,255,0.7); padding: 80px
     </div>
 
      <div class="sf-badge">
-    <img 
-    src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg" 
+    <img
+    src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg"
     alt="Salesforce Logo"
     class="sf-logo-img"
   />
@@ -866,8 +1313,8 @@ footer { background: var(--heading); color: rgba(255,255,255,0.7); padding: 80px
     </div>
 
      <div class="sf-badge">
-    <img 
-    src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg" 
+    <img
+    src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg"
     alt="Salesforce Logo"
     class="sf-logo-img"
   />
@@ -902,7 +1349,7 @@ footer { background: var(--heading); color: rgba(255,255,255,0.7); padding: 80px
       <div class="service-card"><div class="service-icon">🗄️</div><h3>Salesforce Data Migration</h3><p>Accurate transfer of your valuable business information to Salesforce for effective customer management and analytics.</p></div>
       <div class="service-card"><div class="service-icon">🛠️</div><h3>Salesforce Support &amp; Maintenance</h3><p>Keep your Salesforce instance running smoothly with expert support, prompt issue resolution, and continuous optimization.</p></div>
       <div class="service-card"><div class="service-icon">🚀</div><h3>Salesforce Implementation</h3><p>Successful on-time delivery with careful planning, expertise, and a comprehensive understanding of your business needs.</p></div>
-      
+
       <div class="service-card"><div class="service-icon">⚙️</div><h3>Salesforce Customization</h3><p>
 									Salesforce customization is essential. Customization allows you to tailor Salesforce to your specific needs, enhance user experience, automate workflows, and drive productivity.we will explore the benefits and considerations of Salesforce customization, highlighting</p></div>
         <div class="service-card"><div class="service-icon">🛍️</div><h3>Salesforce Appexchange</h3><p>
@@ -995,10 +1442,10 @@ footer { background: var(--heading); color: rgba(255,255,255,0.7); padding: 80px
 								As part of our 1% pledge with Salesforce we dedicate 1% of our efforts for Non-Profit institution to help them leverage the power of digital transformation.</div>
         </div>
         <!-- Real Estate -->
-<div style="background:var(--light-bg);border:1px solid var(--border);border-radius:14px;padding:22px;transition:.25s;cursor:pointer;" 
-onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)'" 
+<div style="background:var(--light-bg);border:1px solid var(--border);border-radius:14px;padding:22px;transition:.25s;cursor:pointer;"
+onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)'"
 onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
-  
+
   <div style="font-size:26px;margin-bottom:10px;">🏢</div>
   <div style="font-size:16px;font-weight:700;color:var(--heading);margin-bottom:6px;">Real Estate</div>
   <div style="font-size:13px;color:var(--text);line-height:1.65;">
@@ -1007,10 +1454,10 @@ onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
 </div>
 
 <!-- Recruitment -->
-<div style="background:var(--light-bg);border:1px solid var(--border);border-radius:14px;padding:22px;transition:.25s;cursor:pointer;" 
-onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)'" 
+<div style="background:var(--light-bg);border:1px solid var(--border);border-radius:14px;padding:22px;transition:.25s;cursor:pointer;"
+onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)'"
 onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
-  
+
   <div style="font-size:26px;margin-bottom:10px;">👥</div>
   <div style="font-size:16px;font-weight:700;color:var(--heading);margin-bottom:6px;">Recruitment</div>
   <div style="font-size:13px;color:var(--text);line-height:1.65;">
@@ -1362,14 +1809,7 @@ onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
       <div class="form-col">
         <div class="form-title">Enquiry Now!</div>
         <div class="form-sub">Fill in the form and we'll get back to you shortly.</div>
-        <div class="enquiry-form">
-          <input type="text" placeholder="Name">
-          <input type="email" placeholder="Email">
-          <input type="tel" placeholder="Phone Number">
-          <input type="text" placeholder="Subject">
-          <textarea placeholder="Your Message Here" rows="4"></textarea>
-          <button class="submit-btn" onclick="alert('Thank you! We will contact you soon.')">Submit Form →</button>
-        </div>
+        <div id="enquiryFormMount"></div>
       </div>
     </div>
   </div>
@@ -1428,6 +1868,7 @@ onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
   <a href="https://web.whatsapp.com/send?phone=+917259688052" target="_blank" class="float-btn float-whatsapp" title="WhatsApp">💬</a>
   <!-- <a href="tel:+917259688052" class="float-btn float-phone" title="Call">📞</a> -->
   <a href="mailto:info@aakrin.com" class="float-btn float-contact" title="Email">✉</a>
+  <button type="button" class="float-btn float-onb" id="onbLauncher" title="Tell us what you need" aria-label="Tell us what you need">✨</button>
 </div>
 <div class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
 
@@ -1497,6 +1938,1107 @@ window.addEventListener('scroll', () => {
   // Init
   goTo(0);
   startAuto();
+})();
+
+// ====== ENQUIRY FORM (Salesforce Web-to-Lead) ======
+// Used by the Enquiry Now section; its country/state lists are shared with Nova's form
+(function() {
+  // Settings from the org's generated Web-to-Lead form
+  const WEB_TO_LEAD = {
+    action: 'https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8&orgId=00DdN00000rD67Y',
+    oid: '00DdN00000rD67Y',
+    leadSource: 'Web',
+    retURL: 'https://aakrin.com/favicon.svg',  // Salesforce redirects the hidden frame here; a tiny file avoids loading the whole site again
+    debugEmail: 'krishna@aakrin.com'  // e.g. 'krishna@aakrin.com' to get Salesforce's debug email for each submission while testing
+  };
+
+  // Country picklist codes accepted by the org; display names come from the browser
+  const COUNTRY_CODES = ('AF AX AL DZ AD AO AI AQ AG AR AM AW AU AT AZ BS BH BD BB BY BE BZ BJ BM BT BO BQ BA BW BV BR IO BN BG BF BI KH CM CA CV ' +
+    'KY CF TD CL CN CX CC CO KM CG CD CK CR CI HR CW CY CZ DK DJ DM DO EC EG SV GQ ER EE SZ ET FK FO FJ FI FR GF PF TF GA GM GE DE GH GI GR GL GD GP ' +
+    'GT GG GN GW GY HT HM VA HN HU IS IN ID IQ IE IM IL IT JM JP JE JO KZ KE KI KR XK KW KG LA LV LB LS LR LY LI LT LU MO MG MW MY MV ML MT MQ MR MU ' +
+    'YT MX MD MC MN ME MS MA MZ MM NA NR NP NL NC NZ NI NE NG NU NF MK NO OM PK PS PA PG PY PE PH PN PL PT QA RE RO RU RW BL SH KN LC MF PM VC WS SM ' +
+    'ST SA SN RS SC SL SG SX SK SI SB SO ZA GS SS ES LK SR SJ SE CH TW TJ TZ TH TL TG TK TO TT TN TR TM TC TV UG UA AE GB US UY UZ VU VE VN VG WF EH YE ZM ZW').split(' ');
+
+  // State picklist codes repeat across countries, so they're listed per country (name:code)
+  const STATES = {
+    IN: 'Andaman and Nicobar Islands:AN|Andhra Pradesh:AP|Arunachal Pradesh:AR|Assam:AS|Bihar:BR|Chandigarh:CH|Chhattisgarh:CT|Dadra and Nagar Haveli:DN|Daman and Diu:DD|Delhi:DL|Goa:GA|Gujarat:GJ|Haryana:HR|Himachal Pradesh:HP|Jammu and Kashmir:JK|Jharkhand:JH|Karnataka:KA|Kerala:KL|Lakshadweep:LD|Madhya Pradesh:MP|Maharashtra:MH|Manipur:MN|Meghalaya:ML|Mizoram:MZ|Nagaland:NL|Odisha:OR|Puducherry:PY|Punjab:PB|Rajasthan:RJ|Sikkim:SK|Tamil Nadu:TN|Telangana:TG|Tripura:TR|Uttar Pradesh:UP|Uttarakhand:UT|West Bengal:WB',
+    US: 'Alabama:AL|Alaska:AK|Arizona:AZ|Arkansas:AR|California:CA|Colorado:CO|Connecticut:CT|Delaware:DE|District of Columbia:DC|Florida:FL|Georgia:GA|Hawaii:HI|Idaho:ID|Illinois:IL|Indiana:IN|Iowa:IA|Kansas:KS|Kentucky:KY|Louisiana:LA|Maine:ME|Maryland:MD|Massachusetts:MA|Michigan:MI|Minnesota:MN|Mississippi:MS|Missouri:MO|Montana:MT|Nebraska:NE|Nevada:NV|New Hampshire:NH|New Jersey:NJ|New Mexico:NM|New York:NY|North Carolina:NC|North Dakota:ND|Ohio:OH|Oklahoma:OK|Oregon:OR|Pennsylvania:PA|Rhode Island:RI|South Carolina:SC|South Dakota:SD|Tennessee:TN|Texas:TX|Utah:UT|Vermont:VT|Virginia:VA|Washington:WA|West Virginia:WV|Wisconsin:WI|Wyoming:WY',
+    CA: 'Alberta:AB|British Columbia:BC|Manitoba:MB|New Brunswick:NB|Newfoundland and Labrador:NL|Northwest Territories:NT|Nova Scotia:NS|Nunavut:NU|Ontario:ON|Prince Edward Island:PE|Quebec:QC|Saskatchewan:SK|Yukon Territories:YT',
+    AU: 'Australian Capital Territory:ACT|New South Wales:NSW|Northern Territory:NT|Queensland:QLD|South Australia:SA|Tasmania:TAS|Victoria:VIC|Western Australia:WA'
+  };
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  // Forms post into a hidden frame so the visitor stays on the page
+  function leadFrame() {
+    let frame = document.querySelector('iframe[name="enquiryLeadFrame"]');
+    if (!frame) {
+      frame = document.createElement('iframe');
+      frame.name = 'enquiryLeadFrame';
+      frame.title = 'Enquiry submission';
+      frame.hidden = true;
+      document.body.appendChild(frame);
+    }
+    return frame;
+  }
+
+  function countryOptions() {
+    let names = null;
+    try { names = new Intl.DisplayNames(['en'], { type: 'region' }); } catch (e) {}
+    return COUNTRY_CODES
+      .map(code => ({ code, name: (names && names.of(code)) || code }))
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map(c => '<option value="' + c.code + '">' + esc(c.name) + '</option>')
+      .join('');
+  }
+
+  // Shared with the Nova guide's enquiry form
+  window.aakrinGeo = {
+    countryOptions: countryOptions,
+    states: code => (STATES[code] ? STATES[code].split('|').map(s => { const [name, c] = s.split(':'); return { name, code: c }; }) : null)
+  };
+
+  // opts.description(): text for the Lead's Description field; opts.onSuccess(name): called after submitting
+  function createEnquiryForm(opts) {
+    opts = opts || {};
+    const form = document.createElement('form');
+    form.className = 'enquiry-form';
+    form.noValidate = true;
+    form.method = 'POST';
+    form.action = WEB_TO_LEAD.action;
+    form.target = leadFrame().name;
+    form.innerHTML =
+      '<input type="hidden" name="oid"><input type="hidden" name="retURL"><input type="hidden" name="lead_source">' +
+      '<input type="hidden" name="first_name"><input type="hidden" name="last_name"><input type="hidden" name="description">' +
+      (WEB_TO_LEAD.debugEmail ? '<input type="hidden" name="debug" value="1"><input type="hidden" name="debugEmail">' : '') +
+      '<input data-f="name" maxlength="120" autocomplete="name" placeholder="Name *" aria-label="Name (required)">' +
+      '<input name="email" type="email" maxlength="80" autocomplete="email" placeholder="Email *" aria-label="Email (required)">' +
+      '<input name="mobile" type="tel" maxlength="40" autocomplete="tel" placeholder="Phone Number" aria-label="Phone number">' +
+      '<input name="company" maxlength="40" autocomplete="organization" placeholder="Company" aria-label="Company">' +
+      '<input name="city" maxlength="40" autocomplete="address-level2" placeholder="City" aria-label="City">' +
+      '<select name="country_code" autocomplete="country" aria-label="Country"><option value="">Country</option>' + countryOptions() + '</select>' +
+      '<select name="state_code" aria-label="State/Province" hidden disabled><option value="">State/Province</option></select>' +
+      '<div class="enquiry-error" role="alert"></div>' +
+      '<button type="submit" class="submit-btn">Submit Form →</button>';
+
+    const f = form.elements;
+    const nameInput = form.querySelector('[data-f="name"]');
+    const errorBox = form.querySelector('.enquiry-error');
+    f.oid.value = WEB_TO_LEAD.oid;
+    f.retURL.value = WEB_TO_LEAD.retURL;
+    f.lead_source.value = WEB_TO_LEAD.leadSource;
+    if (WEB_TO_LEAD.debugEmail) f.debugEmail.value = WEB_TO_LEAD.debugEmail;
+
+    f.country_code.addEventListener('change', () => {
+      const list = STATES[f.country_code.value];
+      f.state_code.innerHTML = '<option value="">State/Province</option>' + (list ? list.split('|').map(s => {
+        const [name, code] = s.split(':');
+        return '<option value="' + code + '">' + esc(name) + '</option>';
+      }).join('') : '');
+      f.state_code.hidden = !list;
+      f.state_code.disabled = !list;
+    });
+
+    form.addEventListener('input', e => e.target.classList.remove('invalid'));
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const name = nameInput.value.trim();
+      const email = f.email.value.trim();
+      const mobile = f.mobile.value.trim();
+      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
+      const mobileOk = !mobile || /^\+?[\d\s\-().]{7,20}$/.test(mobile);
+      nameInput.classList.toggle('invalid', !name);
+      f.email.classList.toggle('invalid', !emailOk);
+      f.mobile.classList.toggle('invalid', !mobileOk);
+
+      let problem = '';
+      if (!name) problem = 'Please enter your name.';
+      else if (!emailOk) problem = 'Please enter a valid email address.';
+      else if (!mobileOk) problem = 'Please check your phone number.';
+      errorBox.textContent = problem;
+      if (problem) return;
+
+      // Salesforce requires Last Name, so a single-word name goes there
+      const parts = name.split(/\s+/);
+      f.first_name.value = parts.length > 1 ? parts.slice(0, -1).join(' ').slice(0, 40) : '';
+      f.last_name.value = parts[parts.length - 1].slice(0, 80);
+      f.description.value = opts.description ? opts.description() : '';
+      form.submit();
+
+      const done = document.createElement('div');
+      done.className = 'enquiry-success';
+      done.setAttribute('role', 'status');
+      done.innerHTML = '✅ Thank you, ' + esc(parts[0]) + '! We\'ve received your enquiry and will get back to you within 24 hours.';
+      form.replaceWith(done);
+      if (typeof window.clarity === 'function') window.clarity('event', 'enquiry_submitted');
+      if (opts.onSuccess) opts.onSuccess(name);
+    });
+
+    return form;
+  }
+
+  window.createEnquiryForm = createEnquiryForm;
+
+  const mount = document.getElementById('enquiryFormMount');
+  if (mount) mount.appendChild(createEnquiryForm({ description: () => 'Source: Enquiry Now form on aakrin.com' }));
+})();
+
+// ====== ONBOARDING GUIDE (Nova) ======
+// Flow (same as the v2 site): situation → requirement → enquiry form, then a confirmation.
+// Answers and the enquiry go to Salesforce Web-to-Lead; the context is written into Description.
+(() => {
+  const STORAGE_KEY = 'aakrin_onboarding_v3';
+  const SOUND_KEY = 'aakrin_onboarding_sound';
+  const ATTRIBUTION_KEY = 'aakrin_attribution';
+  const $ = id => document.getElementById(id);
+  const flyer = $('novaFlyer'), agent = $('novaAgent'), back = $('novaPlaneBack'), front = $('novaPlaneFront');
+  const trail = $('novaTrail'), shadow = $('novaShadow'), bubble = $('novaBubble'), msg = $('novaMsg');
+  const heading = $('novaHeading'), headingSr = $('novaHeadingSr'), live = $('novaLive');
+  const stepEl = $('novaStep'), bodyEl = $('novaBody'), footEl = $('novaFoot');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let runId = 0;
+  let loopOn = false;
+
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  const anim = (el, frames, opts) => el.animate(frames, { fill: 'forwards', ...opts }).finished.catch(() => {});
+  const isMobile = () => innerWidth < 720;
+  const store = {
+    get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  };
+
+  function track(key, value) {
+    if (typeof window.clarity === 'function') window.clarity('set', key, value);
+  }
+  function trackEvent(name) {
+    if (typeof window.clarity === 'function') window.clarity('event', name);
+  }
+  function markDone() { store.set(STORAGE_KEY, '1'); }
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  /* =========================================================
+     ATTRIBUTION (first touch per browser session, sent with the lead)
+     ========================================================= */
+  (function captureAttribution() {
+    try {
+      if (sessionStorage.getItem(ATTRIBUTION_KEY)) return;
+      const params = new URLSearchParams(location.search);
+      const data = { landing_page: location.pathname };
+      ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(k => {
+        const v = (params.get(k) || '').trim();
+        if (v) data[k] = v.slice(0, 120);
+      });
+      if (document.referrer) {
+        const host = new URL(document.referrer).host;
+        if (host && host !== location.host) data.referrer = host;
+      }
+      sessionStorage.setItem(ATTRIBUTION_KEY, JSON.stringify(data));
+    } catch (e) {}
+  })();
+  function getAttribution() {
+    try { const raw = sessionStorage.getItem(ATTRIBUTION_KEY); if (raw) return JSON.parse(raw); } catch (e) {}
+    return { landing_page: location.pathname };
+  }
+
+  /* =========================================================
+     CONTENT (from the v2 site: src/content/quiz.ts + enquiry.ts)
+     ========================================================= */
+  const COPY = {
+    greeting: "Hi there! 👋 I'm Nova, your Aakrin guide. Answer two quick questions and share your details, and our team will take it from there.",
+    steps: ['Your situation', 'What you need', 'Your details'],
+    situation: { title: 'Which best describes your situation?', hint: 'Choose one to continue.' },
+    requirement: { title: 'What do you need help with?', hint: 'Choose the closest match.' },
+    requirementAck: 'Perfect, one last step.',
+    details: {
+      title: 'Want us to help with this?',
+      hint: 'Share your details. Your answers are sent to the Aakrin team with your enquiry.',
+      answersLabel: 'Your answers',
+      recommendation: summary => 'Based on your answers, Aakrin can help with ' + summary + '.'
+    },
+    done: {
+      title: 'Thanks — we have your details.',
+      body: 'Your requirement has been submitted to Aakrin. Our team will review it and get back to you.'
+    },
+    exploreSelf: "I'd rather explore the website myself",
+    exploreSite: 'Explore the website',
+    startOver: 'Start over',
+    back: 'Back'
+  };
+
+  const SITUATIONS = [
+    { id: 'consulting-partner', label: "I'm a Salesforce consulting partner", audience: 'partner', ack: "Great. Let's look at how we can support your delivery." },
+    { id: 'implementing', label: "We're implementing Salesforce", audience: 'business', ack: 'Starting fresh is a good time to get the foundations right.' },
+    { id: 'existing-user', label: "We're already using Salesforce", audience: 'business', ack: "Got it. Let's look at what you need next." },
+    { id: 'custom-development', label: 'We need custom Salesforce development', audience: 'business', ack: 'Custom development it is.' },
+    { id: 'integrations-data', label: 'We need Salesforce integrations or data work', audience: 'business', ack: 'Integrations and data, noted.' },
+    { id: 'agentforce-ai', label: "We're exploring Agentforce / AI", audience: 'business', ack: "Agentforce it is. Let's see where it fits." }
+  ];
+
+  const REQUIREMENTS = {
+    partner: [
+      { id: 'engineering-capacity', label: 'Additional Salesforce engineering capacity', summary: 'additional Salesforce engineering capacity for your projects' },
+      { id: 'development', label: 'Salesforce development', summary: 'Salesforce development for your projects' },
+      { id: 'customization', label: 'Customization / enhancements', summary: 'Salesforce customization and enhancements' },
+      { id: 'integrations', label: 'Integrations', summary: 'Salesforce integrations' },
+      { id: 'data-migration', label: 'Data / migration', summary: 'Salesforce data and migration work' },
+      { id: 'agentforce-ai', label: 'Agentforce / AI', summary: 'Agentforce and AI on Salesforce' },
+      { id: 'support-optimization', label: 'Support / optimization', summary: 'Salesforce support and optimization' }
+    ],
+    business: [
+      { id: 'implementation', label: 'Salesforce implementation', summary: 'your Salesforce implementation' },
+      { id: 'customization-development', label: 'Customization / development', summary: 'Salesforce customization and development' },
+      { id: 'integrations', label: 'Integrations', summary: 'Salesforce integrations' },
+      { id: 'data-migration', label: 'Data / migration', summary: 'Salesforce data and migration work' },
+      { id: 'automation', label: 'Automation', summary: 'automating business processes in Salesforce' },
+      { id: 'agentforce-ai', label: 'Agentforce / AI', summary: 'Agentforce and AI on Salesforce' },
+      { id: 'optimization-support', label: 'Optimization / support', summary: 'Salesforce optimization and support' }
+    ]
+  };
+
+  // Standard Salesforce Lead "Industry" picklist values (sent as-is)
+  const INDUSTRIES = ['Agriculture', 'Apparel', 'Banking', 'Biotechnology', 'Chemicals', 'Communications', 'Construction',
+    'Consulting', 'Education', 'Electronics', 'Energy', 'Engineering', 'Entertainment', 'Environmental', 'Finance',
+    'Food & Beverage', 'Government', 'Healthcare', 'Hospitality', 'Insurance', 'Machinery', 'Manufacturing', 'Media',
+    'Not For Profit', 'Other', 'Recreation', 'Retail', 'Shipping', 'Technology', 'Telecommunications', 'Transportation', 'Utilities'];
+
+  const TIMING = [
+    { id: 'now', label: 'Immediately' },
+    { id: 'month', label: 'Within a month' },
+    { id: 'quarter', label: 'In 1–3 months' },
+    { id: 'half', label: 'In 3–6 months' },
+    { id: 'exploring', label: 'Just exploring' }
+  ];
+
+  const FIELDS = {
+    name: 'Name', email: 'Work email', phone: 'Phone', company: 'Company', industry: 'Industry',
+    timing: 'When are you looking to start?', country: 'Country', state: 'State / province',
+    message: 'Tell us a little about what you need'
+  };
+  const FIELD_ORDER = ['name', 'email', 'phone', 'company', 'industry', 'timing', 'country', 'state', 'message'];
+  const MESSAGE_MAX = 2000;
+
+  const WEB_TO_LEAD = {
+    action: 'https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8&orgId=00DdN00000rD67Y',
+    oid: '00DdN00000rD67Y',
+    leadSource: 'Web',
+    retURL: 'https://aakrin.com/favicon.svg',
+    debugEmail: ''  // testing only, e.g. 'you@aakrin.com'; leave empty in production
+  };
+
+  /* =========================================================
+     STATE
+     ========================================================= */
+  const emptyValues = () => ({ name: '', email: '', company: '', phone: '', country: '', state: '', industry: '', timing: '', message: '' });
+  let phase = 'intro';          // intro | greeting | q1 | q2 | q3 | done
+  let situationId = null;
+  let requirementId = null;
+  let values = emptyValues();
+  let placement = 'first_visit';
+  let busy = false;
+
+  const findSituation = id => SITUATIONS.find(s => s.id === id);
+  const requirementsFor = id => { const s = findSituation(id); return s ? REQUIREMENTS[s.audience] : []; };
+  const findRequirement = () => requirementsFor(situationId).find(r => r.id === requirementId);
+
+  /* =========================================================
+     POINTER TRACKING (drives eyes + arms)
+     ========================================================= */
+  const eyeMotion = $('novaEyeMotion');
+  const armL = $('novaArmL');
+  const armR = $('novaArmR');
+
+  const VB_W = 200, VB_H = 270;
+  const EYE_CX = 100, EYE_CY = 122;
+  const SH_L = { x: 60,  y: 162 };
+  const SH_R = { x: 140, y: 160 };
+  const BASE_L = Math.atan2(208 - SH_L.y, 34  - SH_L.x);
+  const BASE_R = Math.atan2(120 - SH_R.y, 178 - SH_R.x);
+  const ARM_CLAMP_DEG = 75;
+
+  let pointerX = EYE_CX, pointerY = EYE_CY;
+  let eyeX = 0, eyeY = 0;
+  let armLrot = 0, armRrot = 0;
+
+  function updatePointer(clientX, clientY) {
+    const svg = agent.querySelector('svg'); if (!svg) return;
+    const rect = svg.getBoundingClientRect(); if (!rect.width || !rect.height) return;
+    pointerX = (clientX - rect.left) * (VB_W / rect.width);
+    pointerY = (clientY - rect.top)  * (VB_H / rect.height);
+  }
+  addEventListener('pointermove', e => updatePointer(e.clientX, e.clientY), { passive: true });
+
+  function animateFrame() {
+    if (!loopOn) return;
+    const edx = pointerX - EYE_CX, edy = pointerY - EYE_CY;
+    const ed  = Math.hypot(edx, edy) || 1;
+    const eStr = Math.min(1, ed / 70);
+    const eTx = (edx / ed) * 4.5 * eStr;
+    const eTy = (edy / ed) * 3.5 * eStr;
+    const kEye = reduced ? 1 : 0.16;
+    eyeX += (eTx - eyeX) * kEye;
+    eyeY += (eTy - eyeY) * kEye;
+    eyeMotion.setAttribute('transform', `translate(${eyeX.toFixed(2)} ${eyeY.toFixed(2)})`);
+
+    const angL = Math.atan2(pointerY - SH_L.y, pointerX - SH_L.x);
+    const angR = Math.atan2(pointerY - SH_R.y, pointerX - SH_R.x);
+    let tL = (angL - BASE_L) * 180 / Math.PI;
+    let tR = (angR - BASE_R) * 180 / Math.PI;
+    tL = ((tL + 180) % 360 + 360) % 360 - 180;
+    tR = ((tR + 180) % 360 + 360) % 360 - 180;
+    tL = Math.max(-ARM_CLAMP_DEG, Math.min(ARM_CLAMP_DEG, tL));
+    tR = Math.max(-ARM_CLAMP_DEG, Math.min(ARM_CLAMP_DEG, tR));
+    const kArm = reduced ? 1 : 0.14;
+    armLrot += (tL - armLrot) * kArm;
+    armRrot += (tR - armRrot) * kArm;
+    armL.setAttribute('transform', `rotate(${armLrot.toFixed(2)} ${SH_L.x} ${SH_L.y})`);
+    armR.setAttribute('transform', `rotate(${armRrot.toFixed(2)} ${SH_R.x} ${SH_R.y})`);
+
+    requestAnimationFrame(animateFrame);
+  }
+
+  /* =========================================================
+     TEXT-TO-SPEECH
+     ========================================================= */
+  const synth = 'speechSynthesis' in window ? window.speechSynthesis : null;
+  let soundOn = store.get(SOUND_KEY) !== 'off';
+  let voice = null;
+  let pendingSpeechResolve = null;
+  const soundBtn = $('novaSound');
+
+  function pickVoice() {
+    if (!synth) return;
+    const all = synth.getVoices();
+    if (!all.length) return;
+    const en = all.filter(v => /^en(-|_)?/i.test(v.lang));
+    const pool = en.length ? en : all;
+    const tests = [
+      v => /natural|neural/i.test(v.name),
+      v => /google us english/i.test(v.name),
+      v => /google uk english female/i.test(v.name),
+      v => /google/i.test(v.name),
+      v => /samantha/i.test(v.name),
+      v => /microsoft.*(zira|aria|jenny|guy)/i.test(v.name),
+      v => v.default,
+    ];
+    for (const t of tests) { const found = pool.find(t); if (found) { voice = found; return; } }
+    voice = pool[0];
+  }
+  if (synth) {
+    pickVoice();
+    synth.onvoiceschanged = pickVoice;
+    setTimeout(pickVoice, 300);
+    setTimeout(pickVoice, 1200);
+  }
+
+  function updateSoundBtn() {
+    soundBtn.setAttribute('aria-pressed', String(soundOn));
+    soundBtn.textContent = soundOn ? '🔊' : '🔇';
+  }
+  updateSoundBtn();
+  soundBtn.addEventListener('click', () => {
+    soundOn = !soundOn; updateSoundBtn();
+    store.set(SOUND_KEY, soundOn ? 'on' : 'off');
+    trackEvent(soundOn ? 'onb_sound_on' : 'onb_sound_off');
+    if (!soundOn) stopSpeaking();
+  });
+
+  function stripEmoji(text) {
+    return String(text)
+      .replace(/[\p{Extended_Pictographic}\u{1F3FB}-\u{1F3FF}\u{FE0F}\u{200D}\u{20E3}]/gu, '')
+      .replace(/\s+/g, ' ').trim();
+  }
+
+  function speak(text) {
+    if (pendingSpeechResolve) { const r = pendingSpeechResolve; pendingSpeechResolve = null; r(); }
+    if (!synth || !soundOn) return Promise.resolve();
+    const clean = stripEmoji(text);
+    if (!clean) return Promise.resolve();
+    synth.cancel();
+
+    return new Promise(resolve => {
+      let done = false;
+      const finish = () => {
+        if (done) return;
+        done = true;
+        if (pendingSpeechResolve === finish) pendingSpeechResolve = null;
+        agent.classList.remove('talking');
+        resolve();
+      };
+      pendingSpeechResolve = finish;
+
+      const u = new SpeechSynthesisUtterance(clean);
+      if (voice) { u.voice = voice; u.lang = voice.lang; } else { u.lang = 'en-US'; }
+      u.pitch = 1.05; u.rate = 1.05; u.volume = 1;
+      u.onstart = () => agent.classList.add('talking');
+      u.onend = finish;
+      u.onerror = finish;
+
+      // Never wait forever if the browser doesn't report the end of speech
+      setTimeout(finish, Math.max(3000, clean.length * 110));
+
+      // Chrome can drop an utterance queued in the same tick as cancel()
+      setTimeout(() => {
+        if (done || !soundOn) return;
+        try { synth.speak(u); } catch (e) { finish(); }
+      }, 60);
+    });
+  }
+
+  function stopSpeaking() {
+    if (pendingSpeechResolve) { const r = pendingSpeechResolve; pendingSpeechResolve = null; r(); }
+    if (synth) synth.cancel();
+    agent.classList.remove('talking');
+  }
+
+  // Browsers only allow speech after the visitor interacts with the page; the first tap or key press unlocks it
+  const unlock = () => {
+    if (!synth) return;
+    try { synth.resume(); } catch (e) {}
+    if (voice) {
+      const u = new SpeechSynthesisUtterance(' ');
+      u.volume = 0; u.voice = voice;
+      synth.speak(u);
+      synth.cancel();
+    }
+    document.removeEventListener('pointerdown', unlock);
+    document.removeEventListener('keydown', unlock);
+  };
+  document.addEventListener('pointerdown', unlock);
+  document.addEventListener('keydown', unlock);
+
+  /* =========================================================
+     TALKING (typing + voice)
+     ========================================================= */
+  const PACE = { typeMs: 30, punctuationMs: 180, readMsPerWord: 150, minReadMs: 1200, afterSpeechMs: 400 };
+  const readingTime = text => Math.max(PACE.minReadMs, text.trim().split(/\s+/).length * PACE.readMsPerWord);
+
+  function setLine(text) {
+    headingSr.textContent = (stepLabel() ? stepLabel() + ': ' : '') + text;
+  }
+
+  /**
+   * Types a line and speaks it. Lines Nova follows up on her own pass untilSpoken, so the next
+   * line never cuts the speech off. Questions return once typed, so the answers appear at once.
+   * Resolves false if the run was superseded (Back, Replay, close).
+   */
+  async function say(text, id, untilSpoken) {
+    heading.classList.remove('typed');
+    msg.textContent = '';
+    setLine(text);
+    live.textContent = text;
+    bubble.scrollTop = 0;
+    const speech = speak(text);
+    if (reduced) {
+      msg.textContent = text;
+    } else {
+      for (const ch of Array.from(text)) {
+        if (id !== runId) return false;
+        msg.textContent += ch;
+        await wait(/[,.?!]/.test(ch) ? PACE.punctuationMs : PACE.typeMs);
+      }
+    }
+    if (id !== runId) return false;
+    heading.classList.add('typed');
+    if (untilSpoken) {
+      await Promise.all([speech.then(() => wait(PACE.afterSpeechMs)), wait(readingTime(text))]);
+    }
+    return id === runId;
+  }
+
+  /* =========================================================
+     RENDERING
+     ========================================================= */
+  const STEP_OF = { q1: 1, q2: 2, q3: 3 };
+  function stepLabel() {
+    const n = STEP_OF[phase];
+    return n ? 'Step ' + n + ' of 3 · ' + COPY.steps[n - 1] : '';
+  }
+  function renderStep() {
+    const label = stepLabel();
+    stepEl.textContent = label;
+    stepEl.hidden = !label;
+  }
+
+  function clearBody() { bodyEl.innerHTML = ''; bodyEl.hidden = true; }
+  function showBody(node) {
+    bodyEl.innerHTML = '';
+    bodyEl.appendChild(node);
+    bodyEl.hidden = false;
+    // restart the entrance animation
+    bodyEl.style.animation = 'none'; void bodyEl.offsetWidth; bodyEl.style.animation = '';
+  }
+
+  function renderFooter(ready) {
+    footEl.innerHTML = '';
+    const showBack = ready && (phase === 'q2' || phase === 'q3');
+    const showExplore = phase === 'greeting' || phase === 'q1' || phase === 'q2';
+    if (!showBack && !showExplore) { footEl.hidden = true; return; }
+    footEl.hidden = false;
+    if (showBack) {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'nova-secondary';
+      b.innerHTML = '<span aria-hidden="true">←</span> ' + COPY.back;
+      b.addEventListener('click', goBack);
+      footEl.appendChild(b);
+    } else {
+      footEl.appendChild(document.createElement('span'));
+    }
+    if (showExplore) {
+      const l = document.createElement('button');
+      l.type = 'button'; l.className = 'nova-link';
+      l.textContent = COPY.exploreSelf;
+      l.addEventListener('click', () => { trackEvent('onboarding_explore_self'); close(); });
+      footEl.appendChild(l);
+    }
+  }
+
+  function focusHeading() { heading.focus({ preventScroll: true }); }
+
+  /** Single-choice answers: an ARIA radio group; arrow keys move focus, click/Enter/Space picks. */
+  function choicesNode(hint, options, value, onPick) {
+    const wrap = document.createElement('div');
+    wrap.style.display = 'grid'; wrap.style.gap = '12px';
+    const p = document.createElement('p');
+    p.className = 'nova-hint'; p.id = 'novaHint'; p.textContent = hint;
+    const group = document.createElement('div');
+    group.className = 'nova-choices';
+    group.setAttribute('role', 'radiogroup');
+    group.setAttribute('aria-labelledby', 'novaHeading');
+    group.setAttribute('aria-describedby', 'novaHint');
+    const buttons = options.map((opt, i) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'nova-choice';
+      b.setAttribute('role', 'radio');
+      b.setAttribute('aria-checked', String(opt.id === value));
+      b.tabIndex = (value ? opt.id === value : i === 0) ? 0 : -1;
+      b.innerHTML = '<span class="nova-radio" aria-hidden="true"></span><span>' + escapeHtml(opt.label) + '</span>';
+      b.addEventListener('click', () => onPick(opt));
+      b.addEventListener('keydown', e => {
+        const moves = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 };
+        let next = null;
+        if (e.key in moves) next = (i + moves[e.key] + buttons.length) % buttons.length;
+        if (e.key === 'Home') next = 0;
+        if (e.key === 'End') next = buttons.length - 1;
+        if (next === null) return;
+        e.preventDefault();
+        buttons.forEach((x, j) => { x.tabIndex = j === next ? 0 : -1; });
+        buttons[next].focus();
+      });
+      group.appendChild(b);
+      setTimeout(() => b.classList.add('in'), reduced ? 0 : 40 * i);
+      return b;
+    });
+    wrap.append(p, group);
+    return wrap;
+  }
+
+  /* =========================================================
+     STEPS
+     ========================================================= */
+  function showSituation() {
+    showBody(choicesNode(COPY.situation.hint, SITUATIONS, situationId, chooseSituation));
+    renderFooter(true);
+    focusHeading();
+  }
+  function showRequirement() {
+    showBody(choicesNode(COPY.requirement.hint, requirementsFor(situationId), requirementId, chooseRequirement));
+    renderFooter(true);
+    focusHeading();
+  }
+  function showDetails() {
+    showBody(detailsNode());
+    renderFooter(true);
+    focusHeading();
+  }
+  function showDone() {
+    const wrap = document.createElement('div');
+    wrap.style.display = 'grid'; wrap.style.gap = '14px';
+    wrap.innerHTML =
+      '<p class="nova-done-body">' + escapeHtml(COPY.done.body) + '</p>' +
+      '<div class="nova-actions">' +
+        '<button type="button" class="nova-primary" data-a="explore">' + escapeHtml(COPY.exploreSite) + '</button>' +
+        '<button type="button" class="nova-secondary" data-a="restart">' + escapeHtml(COPY.startOver) + '</button>' +
+      '</div>';
+    wrap.querySelector('[data-a="explore"]').addEventListener('click', () => {
+      close();
+      const about = document.getElementById('about');
+      if (about) about.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' });
+    });
+    wrap.querySelector('[data-a="restart"]').addEventListener('click', startOver);
+    showBody(wrap);
+    renderFooter(true);
+    focusHeading();
+  }
+
+  function enterPhase(p) {
+    phase = p;
+    renderStep();
+    clearBody();
+    renderFooter(false);
+  }
+
+  /** Shows a step's question straight away (Back, and reopening mid-way). */
+  function showInstant(p) {
+    stopSpeaking();
+    enterPhase(p);
+    const text = p === 'q1' ? COPY.situation.title : p === 'q2' ? COPY.requirement.title : COPY.details.title;
+    msg.textContent = text;
+    heading.classList.add('typed');
+    setLine(text);
+    if (p === 'q1') showSituation();
+    else if (p === 'q2') showRequirement();
+    else showDetails();
+  }
+
+  async function askSituation(id) {
+    enterPhase('q1');
+    trackEvent('onb_step_situation');
+    if (await say(COPY.situation.title, id)) showSituation();
+  }
+
+  async function chooseSituation(opt) {
+    if (busy) return;
+    busy = true;
+    const id = runId;
+    const prev = findSituation(situationId);
+    if (!prev || prev.audience !== opt.audience) requirementId = null;
+    situationId = opt.id;
+    track('onb_situation', opt.id);
+    trackEvent('quiz_question_1');
+    clearBody(); renderFooter(false);
+    stopSpeaking();
+    if (await say(opt.ack, id, true)) {
+      await wait(300);
+      if (id === runId) {
+        enterPhase('q2');
+        trackEvent('onb_step_requirement');
+        if (await say(COPY.requirement.title, id)) showRequirement();
+      }
+    }
+    if (id === runId) busy = false;
+  }
+
+  async function chooseRequirement(opt) {
+    if (busy) return;
+    busy = true;
+    const id = runId;
+    requirementId = opt.id;
+    track('onb_requirement', opt.id);
+    trackEvent('quiz_question_2');
+    clearBody(); renderFooter(false);
+    stopSpeaking();
+    if (await say(COPY.requirementAck, id, true)) {
+      await wait(250);
+      if (id === runId) {
+        enterPhase('q3');
+        trackEvent('quiz_contact_step');
+        if (await say(COPY.details.title, id)) showDetails();
+      }
+    }
+    if (id === runId) busy = false;
+  }
+
+  function goBack() {
+    runId++;
+    busy = false;
+    if (phase === 'q2') showInstant('q1');
+    else if (phase === 'q3') showInstant('q2');
+  }
+
+  async function onSubmitted() {
+    const id = runId;
+    markDone();
+    enterPhase('done');
+    trackEvent('quiz_completed');
+    if (await say(COPY.done.title, id)) showDone();
+  }
+
+  function startOver() {
+    const id = ++runId;
+    busy = false;
+    stopSpeaking();
+    situationId = requirementId = null;
+    values = emptyValues();
+    askSituation(id);
+  }
+
+  /* =========================================================
+     STEP 3: ANSWERS SUMMARY + ENQUIRY FORM
+     ========================================================= */
+  function detailsNode() {
+    const situation = findSituation(situationId);
+    const requirement = findRequirement();
+    const wrap = document.createElement('div');
+    wrap.style.display = 'grid'; wrap.style.gap = '14px';
+
+    if (situation && requirement) {
+      const box = document.createElement('div');
+      box.className = 'nova-summary';
+      box.innerHTML =
+        '<div class="nova-summary-label">' + escapeHtml(COPY.details.answersLabel) + '</div>' +
+        '<ul class="nova-tags"><li>' + escapeHtml(situation.label) + '</li><li>' + escapeHtml(requirement.label) + '</li></ul>' +
+        '<p>' + escapeHtml(COPY.details.recommendation(requirement.summary)) + '</p>';
+      wrap.appendChild(box);
+    }
+    const hint = document.createElement('p');
+    hint.className = 'nova-hint';
+    hint.textContent = COPY.details.hint;
+    wrap.appendChild(hint);
+    wrap.appendChild(buildForm());
+    return wrap;
+  }
+
+  function fieldHtml(key, control, required) {
+    return '<div class="nova-field" data-field="' + key + '">' +
+      '<label for="nf-' + key + '">' + escapeHtml(FIELDS[key]) + (required ? '' : ' <span class="nova-opt">(optional)</span>') + '</label>' +
+      control +
+      '<p class="nova-field-error" id="nf-' + key + '-error"></p>' +
+    '</div>';
+  }
+
+  function buildForm() {
+    const geo = window.aakrinGeo || { countryOptions: () => '', states: () => null };
+    const form = document.createElement('form');
+    form.className = 'nova-form';
+    form.noValidate = true;
+    const opt = list => list.map(o => '<option value="' + escapeHtml(o.id) + '">' + escapeHtml(o.label) + '</option>').join('');
+    form.innerHTML =
+      '<p class="nova-form-alert" role="alert" hidden>Please check the highlighted fields.</p>' +
+      // Spam honeypot: invisible to people, often filled in by bots. Never part of the lead.
+      '<div class="nova-hp" aria-hidden="true"><label for="nf-website">Leave this field empty</label><input id="nf-website" name="website" type="text" tabindex="-1" autocomplete="off"></div>' +
+      '<div class="nova-form-grid">' +
+        fieldHtml('name', '<input id="nf-name" name="name" type="text" autocomplete="name" maxlength="120" required aria-required="true">', true) +
+        fieldHtml('email', '<input id="nf-email" name="email" type="email" inputmode="email" autocomplete="email" maxlength="80" required aria-required="true">', true) +
+        fieldHtml('phone', '<input id="nf-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="40" required aria-required="true">', true) +
+        fieldHtml('company', '<input id="nf-company" name="company" type="text" autocomplete="organization" maxlength="40">', false) +
+        fieldHtml('industry', '<select id="nf-industry" name="industry"><option value="">Choose an industry</option>' + opt(INDUSTRIES.map(v => ({ id: v, label: v }))) + '</select>', false) +
+        fieldHtml('timing', '<select id="nf-timing" name="timing"><option value="">Choose a timeframe</option>' + opt(TIMING) + '</select>', false) +
+        fieldHtml('country', '<select id="nf-country" name="country" autocomplete="country"><option value="">Choose a country</option>' + geo.countryOptions() + '</select>', false) +
+        fieldHtml('state', '<select id="nf-state" name="state" autocomplete="address-level1"></select>', false) +
+      '</div>' +
+      fieldHtml('message', '<textarea id="nf-message" name="message" rows="4" maxlength="' + MESSAGE_MAX + '"></textarea>', false) +
+      '<button type="submit" class="nova-primary">Send enquiry</button>';
+
+    const el = key => form.querySelector('#nf-' + key);
+    const alertBox = form.querySelector('.nova-form-alert');
+    const submitBtn = form.querySelector('button[type="submit"]');
+    let started = false;
+    let submitting = false;
+
+    function fillStates() {
+      const list = geo.states(values.country);
+      const wrap = form.querySelector('[data-field="state"]');
+      el('state').innerHTML = '<option value="">Choose a state</option>' +
+        (list ? list.map(s => '<option value="' + s.code + '">' + escapeHtml(s.name) + '</option>').join('') : '');
+      wrap.hidden = !list;
+    }
+
+    // Values live outside the form, so they survive Back and close/reopen
+    FIELD_ORDER.forEach(k => { if (k !== 'state') el(k).value = values[k]; });
+    fillStates();
+    el('state').value = values.state;
+
+    function setError(key, text) {
+      const input = el(key);
+      const err = form.querySelector('#nf-' + key + '-error');
+      err.textContent = text || '';
+      if (text) { input.setAttribute('aria-invalid', 'true'); input.setAttribute('aria-describedby', 'nf-' + key + '-error'); }
+      else { input.removeAttribute('aria-invalid'); input.removeAttribute('aria-describedby'); }
+    }
+
+    function onChange(e) {
+      const key = e.target.name;
+      if (!(key in values)) return;
+      if (!started) { started = true; trackEvent('quiz_form_started'); }
+      values[key] = e.target.value;
+      if (key === 'country') { values.state = ''; fillStates(); }
+      setError(key, '');
+      if (!form.querySelector('.nova-field-error:not(:empty)')) alertBox.hidden = true;
+    }
+    form.addEventListener('input', onChange);
+    form.addEventListener('change', onChange);
+
+    function validate() {
+      const errors = {};
+      const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+      const PHONE = /^\+?[\d\s\-().]{7,20}$/;
+      if (!values.name.trim()) errors.name = 'Enter your name.';
+      if (!EMAIL.test(values.email.trim())) errors.email = 'Enter a valid work email address.';
+      if (!values.phone.trim()) errors.phone = 'Enter your phone number.';
+      else if (!PHONE.test(values.phone.trim())) errors.phone = 'Enter a valid phone number.';
+      if (values.industry && INDUSTRIES.indexOf(values.industry) < 0) errors.industry = 'Choose an industry from the list.';
+      const states = geo.states(values.country);
+      if (values.state && !(states && states.some(s => s.code === values.state))) errors.state = 'Choose a state from the list.';
+      if (values.message.length > MESSAGE_MAX) errors.message = 'Keep this under 2,000 characters.';
+      return errors;
+    }
+
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      if (submitting) return;                                   // duplicate-submit guard
+      if (form.querySelector('#nf-website').value) return;      // honeypot filled: drop silently
+
+      const errors = validate();
+      FIELD_ORDER.forEach(k => setError(k, errors[k]));
+      const firstInvalid = FIELD_ORDER.find(k => errors[k]);
+      alertBox.hidden = !firstInvalid;
+      if (firstInvalid) {
+        trackEvent('form_validation_error');
+        el(firstInvalid).focus();
+        return;
+      }
+
+      submitting = true;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending…';
+      form.setAttribute('aria-busy', 'true');
+      form.querySelectorAll('input, select, textarea').forEach(x => { x.disabled = true; });
+      trackEvent('quiz_form_submitted');
+
+      await submitWebToLead(buildLeadFields());
+      onSubmitted();
+    });
+
+    return form;
+  }
+
+  /* =========================================================
+     SALESFORCE WEB-TO-LEAD
+     ========================================================= */
+  function splitName(full) {
+    const parts = full.trim().split(/\s+/).filter(Boolean);
+    if (parts.length <= 1) return { first: '', last: (parts[0] || '').slice(0, 80) };
+    return { first: parts.slice(0, -1).join(' ').slice(0, 40), last: parts[parts.length - 1].slice(0, 80) };
+  }
+
+  function buildDescription() {
+    const situation = findSituation(situationId);
+    const requirement = findRequirement();
+    const timing = TIMING.find(t => t.id === values.timing);
+    const lines = [
+      values.message.trim() || '(No message provided)',
+      '',
+      '--- Website enquiry context ---',
+      'Source: quiz (Nova guide)' + (placement ? ' (placement: ' + placement + ')' : '')
+    ];
+    if (situation) lines.push('Situation: ' + situation.label + ' [' + situation.id + ']');
+    if (requirement) lines.push('Requirement: ' + requirement.label + ' [' + requirement.id + ']');
+    if (timing) lines.push('Timing: ' + timing.label + ' [' + timing.id + ']');
+    const attribution = getAttribution();
+    Object.keys(attribution).forEach(k => { if (attribution[k]) lines.push(k + ': ' + attribution[k]); });
+    return lines.join('\n');
+  }
+
+  function buildLeadFields() {
+    const { first, last } = splitName(values.name);
+    const fields = [
+      ['oid', WEB_TO_LEAD.oid],
+      ['retURL', WEB_TO_LEAD.retURL],
+      ['lead_source', WEB_TO_LEAD.leadSource],
+      ['first_name', first],
+      ['last_name', last],
+      ['email', values.email.trim()],
+      ['company', values.company.trim()],
+      ['industry', values.industry],
+      ['mobile', values.phone.trim()],
+      ['country_code', values.country],
+      ['state_code', values.state],
+      ['description', buildDescription()]
+    ];
+    if (WEB_TO_LEAD.debugEmail) fields.push(['debug', '1'], ['debugEmail', WEB_TO_LEAD.debugEmail]);
+    return fields.filter(([, v]) => v !== '');
+  }
+
+  /** Posts into the hidden frame. Resolves when the frame loads Salesforce's response (or after 8s). */
+  function submitWebToLead(fields) {
+    let frame = document.querySelector('iframe[name="enquiryLeadFrame"]');
+    if (!frame) {
+      frame = document.createElement('iframe');
+      frame.name = 'enquiryLeadFrame'; frame.title = 'Enquiry submission'; frame.hidden = true;
+      document.body.appendChild(frame);
+    }
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = WEB_TO_LEAD.action;
+    form.target = 'enquiryLeadFrame';
+    form.acceptCharset = 'UTF-8';
+    form.hidden = true;
+    fields.forEach(([name, value]) => {
+      const input = document.createElement('input');
+      input.type = 'hidden'; input.name = name; input.value = value;
+      form.appendChild(input);
+    });
+    return new Promise(resolve => {
+      let settled = false;
+      const finish = () => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timer);
+        frame.removeEventListener('load', finish);
+        form.remove();
+        resolve();
+      };
+      const timer = setTimeout(finish, 8000);
+      frame.addEventListener('load', finish);
+      document.body.appendChild(form);
+      form.submit();
+    });
+  }
+
+  /* =========================================================
+     STAGE (fly-in animation)
+     ========================================================= */
+  const AGENT_LANDED_TOP = 120;
+
+  function resetStage() {
+    [flyer, agent, back, front, trail, shadow].forEach(el => el.getAnimations().forEach(a => a.cancel()));
+    flyer.style.transform = '';
+    [back, front, trail, shadow].forEach(el => { el.style.opacity = ''; });
+    agent.style.top = '';
+    agent.classList.remove('idle');
+  }
+
+  /** Nova already standing (no fly-in): repeat opens, Back, reduced motion. */
+  function placeLanded() {
+    resetStage();
+    flyer.style.transform = `translate(0, 0) scale(${isMobile() ? 0.7 : 1})`;
+    [back, front, trail].forEach(el => { el.style.opacity = '0'; });
+    shadow.style.opacity = '1';
+    agent.style.top = AGENT_LANDED_TOP + 'px';
+    agent.classList.add('idle');
+  }
+
+  async function playIntro(id) {
+    resetStage();
+    const s = isMobile() ? 0.7 : 1;
+
+    await anim(flyer, [
+      { transform: `translate(-80vw, 60vh) scale(${.45 * s}) rotate(14deg)` },
+      { transform: `translate(-42vw, 20vh) scale(${.7 * s}) rotate(4deg)`, offset: .4 },
+      { transform: `translate(-12vw, -4vh) scale(${.92 * s}) rotate(-3deg)`, offset: .75 },
+      { transform: `translate(0, 0) scale(${s}) rotate(0deg)` }
+    ], { duration: 3000, easing: 'cubic-bezier(.25,.8,.35,1)' });
+    if (id !== runId) return false;
+
+    await anim(flyer, [
+      { transform: `translate(0,0) scale(${s})` },
+      { transform: `translate(0,-8px) scale(${s})` },
+      { transform: `translate(0,0) scale(${s})` }
+    ], { duration: 600, easing: 'ease-in-out' });
+    if (id !== runId) return false;
+
+    await anim(agent, [
+      { transform: 'translateY(0) scale(1,1)' },
+      { transform: 'translateY(6px) scale(1.08,.88)' }
+    ], { duration: 220, easing: 'ease-out' });
+    if (id !== runId) return false;
+
+    // The plane flies off while the agent jumps down to the ground
+    const leave = { duration: 1300, easing: 'cubic-bezier(.5,0,.9,.4)' };
+    const away = [
+      { transform: 'translate(0,0) rotate(0)', opacity: 1 },
+      { transform: 'translate(90vw,-70vh) rotate(18deg)', opacity: 1 }
+    ];
+    anim(back, away, leave); anim(front, away, leave); anim(trail, away, leave);
+    anim(shadow, [{ opacity: 0, transform: 'scale(.4)' }, { opacity: 1, transform: 'scale(1)' }],
+         { duration: 900, delay: 200 });
+
+    await anim(agent, [
+      { transform: 'translateY(6px) scale(1.08,.88) rotate(0)' },
+      { transform: 'translateY(-150px) scale(.95,1.08) rotate(8deg)', offset: .4 },
+      { transform: 'translateY(-150px) scale(1,1) rotate(-6deg)', offset: .55 },
+      { transform: 'translateY(104px) scale(1,1.04) rotate(0)', offset: .9 },
+      { transform: 'translateY(104px) scale(1.12,.86) rotate(0)', offset: .95 },
+      { transform: 'translateY(102px) scale(1,1) rotate(0)' }
+    ], { duration: 1150, easing: 'ease-in-out' });
+    if (id !== runId) return false;
+
+    agent.getAnimations().forEach(a => a.cancel());
+    agent.style.top = AGENT_LANDED_TOP + 'px';
+    agent.classList.add('idle');
+    return true;
+  }
+
+  async function runFlow(id, intro) {
+    bubble.classList.remove('show');
+    enterPhase('intro');
+    msg.textContent = '';
+    heading.classList.remove('typed');
+    if (intro && !reduced) {
+      if (!(await playIntro(id))) return;
+    } else {
+      placeLanded();
+    }
+    enterPhase('greeting');
+    bubble.classList.add('show');
+    await wait(intro ? 350 : 150);
+    if (id !== runId) return;
+    if (!(await say(COPY.greeting, id, true))) return;
+    await wait(250);
+    if (id !== runId) return;
+    askSituation(id);
+  }
+
+  /* =========================================================
+     OPEN / CLOSE (full-screen overlay on first visit)
+     ========================================================= */
+  function open(from, opts) {
+    const replay = !!(opts && opts.replay);
+    const id = ++runId;
+    busy = false;
+    stopSpeaking();
+    placement = from || placement;
+    document.documentElement.classList.add('onb-open');
+    if (!loopOn) { loopOn = true; animateFrame(); }
+    if (!replay) { track('onb_placement', placement); trackEvent('quiz_open'); }
+
+    // Reopened part-way through: pick up where the visitor left off
+    if (!replay && (phase === 'q1' || phase === 'q2' || phase === 'q3')) {
+      placeLanded();
+      bubble.classList.add('show');
+      showInstant(phase);
+      return;
+    }
+    const seen = store.get(STORAGE_KEY) !== null;
+    situationId = requirementId = null;
+    values = emptyValues();
+    runFlow(id, replay || !seen);
+  }
+
+  function close() {
+    if (phase === 'intro' || phase === 'greeting' || phase === 'q1') trackEvent('quiz_abandoned_question_1');
+    if (phase === 'q2') trackEvent('quiz_abandoned_question_2');
+    track('onb_closed_at', phase);
+    runId++;
+    busy = false;
+    stopSpeaking();
+    loopOn = false;
+    markDone();
+    // Interrupted before the first question, or finished: start fresh next time
+    if (phase === 'intro' || phase === 'greeting' || phase === 'done') phase = 'intro';
+    document.documentElement.classList.remove('onb-open');
+    const launcher = $('onbLauncher');
+    if (launcher) launcher.focus({ preventScroll: true });
+  }
+
+  $('novaReplay').addEventListener('click', () => open(placement, { replay: true }));
+  $('novaSkip').addEventListener('click', () => {
+    trackEvent('onboarding_skipped');
+    close();
+  });
+  $('onbLauncher').addEventListener('click', () => open('launcher'));
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && document.documentElement.classList.contains('onb-open')) close();
+  });
+
+  if (document.documentElement.classList.contains('onb-open')) {
+    open(/[?&]chat=1/.test(location.search) ? 'url' : 'first_visit');
+  }
 })();
 </script>
 
