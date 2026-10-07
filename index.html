@@ -2258,7 +2258,12 @@ window.addEventListener('scroll', () => {
   const SH_R = { x: 140, y: 160 };
   const BASE_L = Math.atan2(208 - SH_L.y, 34  - SH_L.x);
   const BASE_R = Math.atan2(120 - SH_R.y, 178 - SH_R.x);
-  const ARM_CLAMP_DEG = 75;
+  // How far each arm may swing from rest, in degrees (positive = clockwise on screen).
+  // Swinging outwards is free; swinging inwards is limited so a mitten never covers the face or eyes.
+  // Right arm: counter-clockwise lifts the hand over the head and face, so it stops at -20° (mitten stays clear of the cheek).
+  // Left arm: counter-clockwise sweeps the hand across the body, so it stops at -35°.
+  const ARM_L_RANGE = [-35, 75];
+  const ARM_R_RANGE = [-20, 75];
 
   let pointerX = EYE_CX, pointerY = EYE_CY;
   let eyeX = 0, eyeY = 0;
@@ -2290,8 +2295,8 @@ window.addEventListener('scroll', () => {
     let tR = (angR - BASE_R) * 180 / Math.PI;
     tL = ((tL + 180) % 360 + 360) % 360 - 180;
     tR = ((tR + 180) % 360 + 360) % 360 - 180;
-    tL = Math.max(-ARM_CLAMP_DEG, Math.min(ARM_CLAMP_DEG, tL));
-    tR = Math.max(-ARM_CLAMP_DEG, Math.min(ARM_CLAMP_DEG, tR));
+    tL = Math.max(ARM_L_RANGE[0], Math.min(ARM_L_RANGE[1], tL));
+    tR = Math.max(ARM_R_RANGE[0], Math.min(ARM_R_RANGE[1], tR));
     const kArm = reduced ? 1 : 0.14;
     armLrot += (tL - armLrot) * kArm;
     armRrot += (tR - armRrot) * kArm;
