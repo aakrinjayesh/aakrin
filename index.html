@@ -9,12 +9,8 @@
     })(window, document, "clarity", "script", "ym7dl733c2");
 </script>
 <script>
-// Show the onboarding chat on first visit (or with ?chat=1) before first paint
-(function() {
-  var show = /[?&]chat=1/.test(location.search);
-  try { if (!localStorage.getItem('aakrin_onboarding_v3')) show = true; } catch (e) {}
-  if (show) document.documentElement.classList.add('onb-open');
-})();
+// Open the onboarding guide on every page load, before first paint
+document.documentElement.classList.add('onb-open');
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -736,7 +732,7 @@ footer { background: var(--heading); color: rgba(255,255,255,0.7); padding: 80px
   width: 420px; height: 300px;
   margin: -150px 0 0 -230px;
   z-index: 10; pointer-events: none;
-  transform: translate(-80vw, 60vh) scale(.45);
+  transform: translate(120vw, 120vh) scale(.45);   /* off the bottom-right corner until the fly-in starts */
 }
 /* Wide screens: keep Nova clear of the (wider) speech bubble on the right */
 @media (min-width: 1100px) { .onb .nova-flyer { left: 32%; } }
@@ -1087,6 +1083,7 @@ footer { background: var(--heading); color: rgba(255,255,255,0.7); padding: 80px
     </div>
 
     <svg class="nova-plane nova-plane-front" id="novaPlaneFront" viewBox="0 0 420 210">
+      <!-- Nose at the left (6,96): the plane flies right-to-left -->
       <polygon points="6,96 292,118 236,200" fill="#F5B400"/>
       <polygon points="120,104 414,10 292,118" fill="#FFC21A"/>
       <polygon points="292,118 414,10 320,170" fill="#E6A100"/>
@@ -2950,12 +2947,32 @@ window.addEventListener('scroll', () => {
     resetStage();
     const s = isMobile() ? 0.7 : 1;
 
-    await anim(flyer, [
-      { transform: `translate(-80vw, 60vh) scale(${.45 * s}) rotate(14deg)` },
-      { transform: `translate(-42vw, 20vh) scale(${.7 * s}) rotate(4deg)`, offset: .4 },
-      { transform: `translate(-12vw, -4vh) scale(${.92 * s}) rotate(-3deg)`, offset: .75 },
+    // Flight path: from just off the bottom-right corner, through the centre of the screen, to Nova's spot.
+    // Worked out from the real screen size and landing position, so it holds on any screen, phones included.
+    // The plane's nose points left, so a clockwise (positive) tilt lifts the nose while climbing.
+    const home = { x: flyer.offsetLeft + flyer.offsetWidth / 2, y: flyer.offsetTop + flyer.offsetHeight / 2 };
+    const start = { x: innerWidth + 260 * s, y: innerHeight + 160 * s };
+    const centre = { x: innerWidth / 2, y: innerHeight / 2 };
+    const approach = { x: home.x + 70 * s, y: home.y - 14 * s };
+    const at = (p, scale, deg) =>
+      `translate(${Math.round(p.x - home.x)}px, ${Math.round(p.y - home.y)}px) scale(${scale}) rotate(${deg.toFixed(1)}deg)`;
+    // Nose angle for travelling from a to b: positive when heading up-left
+    const heading = (a, b) => {
+      if (Math.hypot(b.x - a.x, b.y - a.y) < 40) return 0;
+      const deg = Math.atan2(a.y - b.y, a.x - b.x) * 180 / Math.PI;
+      return Math.max(-20, Math.min(20, deg * 0.6));
+    };
+
+    // On wide screens Nova lands left of centre, so the plane passes over the centre on the way.
+    // Elsewhere Nova's spot is the centre itself, and the straight line in already ends there.
+    const viaCentre = centre.x - home.x > 80 * s;
+    const frames = [{ transform: at(start, .45 * s, heading(start, viaCentre ? centre : approach)) }];
+    if (viaCentre) frames.push({ transform: at(centre, .8 * s, heading(centre, approach)), offset: .55 });
+    frames.push(
+      { transform: at(approach, .95 * s, 3), offset: .85 },                        // slight nose-up flare before touching down
       { transform: `translate(0, 0) scale(${s}) rotate(0deg)` }
-    ], { duration: 3000, easing: 'cubic-bezier(.25,.8,.35,1)' });
+    );
+    await anim(flyer, frames, { duration: 3000, easing: 'cubic-bezier(.25,.8,.35,1)' });
     if (id !== runId) return false;
 
     await anim(flyer, [
@@ -2971,11 +2988,11 @@ window.addEventListener('scroll', () => {
     ], { duration: 220, easing: 'ease-out' });
     if (id !== runId) return false;
 
-    // The plane flies off while the agent jumps down to the ground
+    // The plane carries on nose-first, climbing off to the upper-left, while the agent jumps down to the ground
     const leave = { duration: 1300, easing: 'cubic-bezier(.5,0,.9,.4)' };
     const away = [
       { transform: 'translate(0,0) rotate(0)', opacity: 1 },
-      { transform: 'translate(90vw,-70vh) rotate(18deg)', opacity: 1 }
+      { transform: 'translate(-90vw,-70vh) rotate(18deg)', opacity: 1 }
     ];
     anim(back, away, leave); anim(front, away, leave); anim(trail, away, leave);
     anim(shadow, [{ opacity: 0, transform: 'scale(.4)' }, { opacity: 1, transform: 'scale(1)' }],
@@ -3040,7 +3057,8 @@ window.addEventListener('scroll', () => {
     const seen = store.get(STORAGE_KEY) !== null;
     situationId = requirementId = null;
     values = emptyValues();
-    runFlow(id, replay || !seen);
+    // Full fly-in on every page load and replay; the ✨ launcher reopens with Nova already standing
+    runFlow(id, replay || (opts && opts.pageLoad) || !seen);
   }
 
   function close() {
@@ -3070,7 +3088,7 @@ window.addEventListener('scroll', () => {
   });
 
   if (document.documentElement.classList.contains('onb-open')) {
-    open(/[?&]chat=1/.test(location.search) ? 'url' : 'first_visit');
+    open(/[?&]chat=1/.test(location.search) ? 'url' : 'page_load', { pageLoad: true });
   }
 })();
 </script>
