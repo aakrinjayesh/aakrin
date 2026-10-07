@@ -726,6 +726,9 @@ footer { background: var(--heading); color: rgba(255,255,255,0.7); padding: 80px
 .onb .nova-btn:hover { transform: translateY(-1px); }
 .onb .nova-btn.nova-sound { padding: 10px 14px; font-size: 1.05rem; }
 .onb .nova-btn.nova-sound[aria-pressed="false"] { opacity: .55; }
+.onb .nova-btn.nova-sound.nova-needs-tap { font-size: .95rem; color: #fff; background: var(--nova-accent); animation: novaTapPulse 1.6s ease-in-out infinite; }
+@keyframes novaTapPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(11,140,255,.45); } 50% { box-shadow: 0 0 0 10px rgba(11,140,255,0); } }
+@media (prefers-reduced-motion: reduce) { .onb .nova-btn.nova-sound.nova-needs-tap { animation: none; } }
 
 /* Flyer: centred on screen */
 .onb .nova-flyer {
@@ -2335,16 +2338,26 @@ window.addEventListener('scroll', () => {
     setTimeout(pickVoice, 1200);
   }
 
+  // Browsers block speech until the visitor has clicked, tapped or pressed a key on the page.
+  // Until then the sound button asks for a tap, and the line on screen is spoken on the first tap.
+  const speechAllowed = () => !(navigator.userActivation && !navigator.userActivation.hasBeenActive);
+  let needsTap = false;
+  let justUnlocked = false;
+  let currentLine = '';
+
   function updateSoundBtn() {
     soundBtn.setAttribute('aria-pressed', String(soundOn));
-    soundBtn.textContent = soundOn ? '🔊' : '🔇';
+    soundBtn.classList.toggle('nova-needs-tap', needsTap && soundOn);
+    soundBtn.textContent = needsTap && soundOn ? '🔊 Tap to hear Nova' : soundOn ? '🔊' : '🔇';
   }
   updateSoundBtn();
   soundBtn.addEventListener('click', () => {
+    if (justUnlocked) return;   // this tap only switched speech on (see unlock below)
     soundOn = !soundOn; updateSoundBtn();
     store.set(SOUND_KEY, soundOn ? 'on' : 'off');
     trackEvent(soundOn ? 'onb_sound_on' : 'onb_sound_off');
-    if (!soundOn) stopSpeaking();
+    if (soundOn) speak(currentLine);
+    else stopSpeaking();
   });
 
   function stripEmoji(text) {
@@ -2355,10 +2368,18 @@ window.addEventListener('scroll', () => {
 
   function speak(text) {
     if (pendingSpeechResolve) { const r = pendingSpeechResolve; pendingSpeechResolve = null; r(); }
+    currentLine = text;
     if (!synth || !soundOn) return Promise.resolve();
     const clean = stripEmoji(text);
     if (!clean) return Promise.resolve();
+    if (!speechAllowed()) {
+      // Not allowed yet: keep the line for the first tap and point the visitor at the sound button
+      if (!needsTap) { needsTap = true; updateSoundBtn(); }
+      return Promise.resolve();
+    }
+    const wasBusy = synth.speaking || synth.pending;
     synth.cancel();
+    if (synth.paused) synth.resume();
 
     return new Promise(resolve => {
       let done = false;
@@ -2376,16 +2397,22 @@ window.addEventListener('scroll', () => {
       u.pitch = 1.05; u.rate = 1.05; u.volume = 1;
       u.onstart = () => agent.classList.add('talking');
       u.onend = finish;
-      u.onerror = finish;
+      u.onerror = e => {
+        // Blocked by the browser's autoplay rule: wait for the visitor's first tap
+        if (e && e.error === 'not-allowed' && !needsTap) { needsTap = true; updateSoundBtn(); }
+        finish();
+      };
 
       // Never wait forever if the browser doesn't report the end of speech
       setTimeout(finish, Math.max(3000, clean.length * 110));
 
-      // Chrome can drop an utterance queued in the same tick as cancel()
-      setTimeout(() => {
+      const go = () => {
         if (done || !soundOn) return;
         try { synth.speak(u); } catch (e) { finish(); }
-      }, 60);
+      };
+      // Chrome and Edge apply cancel() a moment late and can swallow an utterance queued right after it,
+      // so wait briefly only when something was actually cancelled; otherwise speak at once
+      if (wasBusy) setTimeout(go, 150); else go();
     });
   }
 
@@ -2395,21 +2422,27 @@ window.addEventListener('scroll', () => {
     agent.classList.remove('talking');
   }
 
-  // Browsers only allow speech after the visitor interacts with the page; the first tap or key press unlocks it
-  const unlock = () => {
+  // The visitor's first click/tap or key press allows speech. Runs in the capture phase, before the
+  // clicked button's own handler, and speaks the line on screen right away while the tap still counts.
+  const unlock = e => {
+    document.removeEventListener('click', unlock, true);
+    document.removeEventListener('keydown', unlock, true);
     if (!synth) return;
-    try { synth.resume(); } catch (e) {}
-    if (voice) {
-      const u = new SpeechSynthesisUtterance(' ');
-      u.volume = 0; u.voice = voice;
-      synth.speak(u);
-      synth.cancel();
-    }
-    document.removeEventListener('pointerdown', unlock);
-    document.removeEventListener('keydown', unlock);
+    try { synth.resume(); } catch (err) {}
+    const wasWaiting = needsTap;
+    needsTap = false;
+    updateSoundBtn();
+    if (!wasWaiting || !soundOn || !document.documentElement.classList.contains('onb-open')) return;
+    if (e.type === 'keydown' && e.key === 'Escape') return;
+    justUnlocked = true;
+    setTimeout(() => { justUnlocked = false; }, 0);
+    // Answers, Back, Replay etc. move Nova on to a new line themselves, so don't replay the old one
+    const target = e.target instanceof Element ? e.target : null;
+    if (target && target.closest('#onb button:not(#novaSound), #onb a, #onb input, #onb select, #onb textarea')) return;
+    speak(currentLine);
   };
-  document.addEventListener('pointerdown', unlock);
-  document.addEventListener('keydown', unlock);
+  document.addEventListener('click', unlock, true);
+  document.addEventListener('keydown', unlock, true);
 
   /* =========================================================
      TALKING (typing + voice)
