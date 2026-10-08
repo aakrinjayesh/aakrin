@@ -10,7 +10,7 @@
 </script>
 <script>
 // Open the onboarding guide on every page load, before first paint
-document.documentElement.classList.add('onb-open');
+if (!/bot|crawl|spider|slurp|facebookexternalhit|embedly|preview/i.test(navigator.userAgent)) document.documentElement.classList.add('onb-open');   // crawlers and link previews see the website itself
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -734,8 +734,13 @@ footer { background: var(--heading); color: rgba(255,255,255,0.7); padding: 80px
   z-index: 10; pointer-events: none;
   transform: translate(120vw, 120vh) scale(.45);   /* off the bottom-right corner until the fly-in starts */
 }
-/* Wide screens: keep Nova clear of the (wider) speech bubble on the right */
+/* Tablets: Nova lands further left so he has room to roam beside the card (card width is set further down) */
+@media (min-width: 721px) and (max-width: 1099px) { .onb .nova-flyer { left: 22%; } }
 @media (min-width: 1100px) { .onb .nova-flyer { left: 32%; } }
+
+
+/* Celebration: the bursts are drawn on a canvas behind everything else */
+.onb .nova-fireworks { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 5; pointer-events: none; }
 .onb .nova-plane { position: absolute; left: 0; top: 140px; width: 420px; height: 210px; }
 .onb .nova-plane-back { z-index: 1; }
 .onb .nova-plane-front { z-index: 3; }
@@ -743,7 +748,7 @@ footer { background: var(--heading); color: rgba(255,255,255,0.7); padding: 80px
   position: absolute; left: 150px; top: 18px; width: 160px; height: 216px; z-index: 2;
   transform-origin: 50% 100%;
 }
-.onb .nova-agent svg { width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 6px 10px rgba(19,41,75,.12)); }
+.onb .nova-agent svg { width: 100%; height: 100%; overflow: visible; }   /* no drop-shadow: it would be re-blurred every frame he moves; the floor shadow grounds him */
 .onb .nova-shadow {
   position: absolute; left: 175px; top: 318px; width: 110px; height: 16px; border-radius: 50%;
   background: radial-gradient(rgba(19,41,75,.25), transparent 70%);
@@ -766,6 +771,8 @@ footer { background: var(--heading); color: rgba(255,255,255,0.7); padding: 80px
 .onb #novaMouth { transform-origin: 100px 138px; transform-box: view-box; }
 .onb .nova-agent.talking #novaMouth { animation: novaMouthTalk .32s ease-in-out infinite alternate; }
 @keyframes novaMouthTalk { from { transform: scaleY(1); } to { transform: scaleY(2.1); } }
+.onb .nova-agent.yawning #novaMouth { animation: novaYawn 1.5s ease-in-out; }
+@keyframes novaYawn { 0%, 100% { transform: scale(1); } 35%, 70% { transform: scale(1.6, 3.4); } }
 
 /* Speech bubble */
 .onb .nova-bubble {
@@ -780,7 +787,7 @@ footer { background: var(--heading); color: rgba(255,255,255,0.7); padding: 80px
   padding: 22px 24px;
   box-shadow: 0 18px 40px rgba(19,41,75,.15);
   opacity: 0; transform: translateY(-8px) scale(.96); transform-origin: 100% 0%;
-  transition: opacity .35s ease, transform .45s cubic-bezier(.34,1.56,.64,1);
+  transition: opacity .35s ease, transform .45s cubic-bezier(.34,1.56,.64,1), top .5s ease, padding-top .4s ease;
   pointer-events: none;
   z-index: 30;
   scrollbar-width: thin;
@@ -894,6 +901,8 @@ footer { background: var(--heading); color: rgba(255,255,255,0.7); padding: 80px
 .onb .nova-actions { display: flex; flex-wrap: wrap; gap: 10px; }
 .onb .nova-actions .nova-primary { width: auto; }
 .onb .nova-done-body { font-size: .98rem; font-weight: 600; line-height: 1.55; color: var(--nova-muted); }
+.onb .nova-done-note { margin: -6px 0 0; font-size: .88rem; font-weight: 600; line-height: 1.5; color: var(--nova-muted); }
+.onb .nova-done-note a { color: var(--nova-accent); font-weight: 800; }
 
 /* Bubble footer: Back / explore myself */
 .onb .nova-foot {
@@ -918,7 +927,7 @@ footer { background: var(--heading); color: rgba(255,255,255,0.7); padding: 80px
   .onb .nova-nav { padding: 14px 12px; }
   .onb .nova-btn { padding: 8px 12px; font-size: .85rem; }
   .onb .nova-btn.nova-sound { padding: 8px 11px; }
-  .onb .nova-flyer { transform-origin: 50% 50%; }
+  .onb .nova-flyer { transform-origin: 50% 50%; top: 130px; }   /* Nova stands below the top buttons (room for his welcome sign); the card is a sheet at the bottom */
   .onb .nova-bubble {
     top: auto; left: 12px; right: 12px; bottom: 12px;
     width: auto; max-height: 62vh;
@@ -930,6 +939,45 @@ footer { background: var(--heading); color: rgba(255,255,255,0.7); padding: 80px
   .onb .nova-choice { font-size: .88rem; min-height: 48px; padding: 9px 12px; }
   .onb .nova-form-grid { grid-template-columns: 1fr; }
 }
+/* Q2: Nova sits on top of the card, drawn in front of it. The card stays where it is; on phones it keeps a fixed
+   height during Q2 (so his seat doesn't move as answers appear) with extra top padding for his dangling legs. */
+@media (max-width: 720px) { .onb.nova-q2 .nova-bubble { height: 62vh; padding-top: 40px; } }
+.onb .nova-seat-shadow {
+  position: absolute; left: 0; top: 0; height: 14px; margin-top: -3px; border-radius: 50%; z-index: 31; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(19,41,75,.28), rgba(19,41,75,0)); opacity: 0; transition: opacity .3s ease;
+}
+.onb .nova-seat-shadow.show { opacity: 1; }
+.onb.nova-front .nova-flyer { z-index: 35; }
+.onb .nova-ladder {
+  position: absolute; left: 0; top: 0; width: 46px; z-index: 32; pointer-events: none; transform-origin: 50% 100%;
+  border-left: 7px solid #9b6533; border-right: 7px solid #9b6533; border-radius: 3px;
+  background: repeating-linear-gradient(to bottom, transparent 0 24px, #c98a4b 24px 31px);
+  filter: drop-shadow(0 4px 6px rgba(19,41,75,.18));
+}
+.onb .nova-rope {
+  position: absolute; top: 0; left: 0; width: 6px; margin-left: -3px; z-index: 32; pointer-events: none; transform-origin: 50% 0;
+  border-radius: 3px; background: repeating-linear-gradient(160deg, #c9a26b 0 6px, #a87f4a 6px 12px);
+}
+/* Stage 3: a traditional cracker with a long thread fuse, set up on the left during the form and lit on submit */
+.onb .nova-kit { position: absolute; left: 0; top: 0; width: 0; height: 0; z-index: 9; pointer-events: none; }
+.onb .nova-kit > * { position: absolute; }
+.onb .nova-thread { left: 0; top: 0; overflow: visible; display: block; }
+.onb .nova-cracker { transform-origin: 50% 100%; filter: drop-shadow(0 4px 5px rgba(19,41,75,.22)); }
+.onb .nova-cracker svg { display: block; overflow: visible; }
+.onb .nova-cracker-top { width: 2px; height: 2px; margin: -1px 0 0 -1px; }
+.onb .nova-flame {
+  left: 0; top: 0; width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%;
+  background: radial-gradient(circle, #fff 0%, #ffe066 30%, #ff8a1a 55%, rgba(255,90,0,0) 72%);
+}
+.onb .nova-flame::after { content: ''; position: absolute; inset: -6px; border-radius: 50%; background: radial-gradient(circle, rgba(255,200,80,.5), rgba(255,140,0,0) 70%); animation: novaFlicker .09s linear infinite alternate; }
+@keyframes novaFlicker { from { transform: scale(.75); } to { transform: scale(1.25); } }
+.onb .nova-shell {
+  position: absolute; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; z-index: 9; pointer-events: none;
+  background: radial-gradient(circle, #fff 0%, #ffd166 45%, rgba(255,140,0,0) 75%);
+}
+.onb.nova-leaving { transition: opacity .5s ease; opacity: 0; }
+/* Tablets: a narrower card leaves Nova room to roam (after the base card rule so it wins) */
+@media (min-width: 721px) and (max-width: 1099px) { .onb .nova-bubble { width: min(480px, calc(78vw - 160px)); } }
 </style>
 </head>
 <body>
@@ -1004,22 +1052,54 @@ footer { background: var(--heading); color: rgba(255,255,255,0.7); padding: 80px
           </radialGradient>
           <clipPath id="novaFaceClip"><ellipse cx="100" cy="112" rx="48" ry="46"/></clipPath>
         </defs>
+        <g id="novaRoot">
 
-        <g filter="url(#novaTailFur)">
+        <g id="novaTailWag"><g filter="url(#novaTailFur)">
           <path d="M76 216 Q18 234 2 190 Q-8 150 24 126 Q26 166 48 178 Q62 186 78 184 Z" fill="url(#novaTail)"/>
           <path d="M20 140 Q22 176 60 196" stroke="#2f1708" stroke-width="3" fill="none" opacity=".5"/>
-        </g>
-        <g filter="url(#novaFur)">
+        </g></g>
+        <g id="novaLegL"><g filter="url(#novaFur)">
           <rect x="70" y="214" width="26" height="42" rx="12" fill="#7a4626"/>
-          <rect x="104" y="214" width="26" height="42" rx="12" fill="#7a4626"/>
           <ellipse cx="81" cy="258" rx="17" ry="10" fill="#6c3c1f"/>
+        </g></g>
+        <g id="novaLegR"><g filter="url(#novaFur)">
+          <rect x="104" y="214" width="26" height="42" rx="12" fill="#7a4626"/>
           <ellipse cx="119" cy="258" rx="17" ry="10" fill="#6c3c1f"/>
+        </g></g>
+        <!-- Sitting legs (shown only while Nova sits on the card): thighs come towards the viewer, shins hang over the edge -->
+        <g id="novaSitLegs" style="display:none">
+          <g id="novaShinL"><g filter="url(#novaFur)">
+            <rect x="68" y="242" width="24" height="32" rx="11" fill="#7a4626"/>
+            <ellipse cx="80" cy="277" rx="16" ry="10" fill="#6c3c1f"/>
+          </g></g>
+          <g id="novaShinR"><g filter="url(#novaFur)">
+            <rect x="108" y="242" width="24" height="32" rx="11" fill="#7a4626"/>
+            <ellipse cx="120" cy="277" rx="16" ry="10" fill="#6c3c1f"/>
+          </g></g>
+        </g>
+        <g id="novaUpper">
+        <!-- Parachute, worn while floating down (opened and packed away by the script): canopy above his head, cords to his shoulders -->
+        <g id="novaChute" style="display:none">
+          <path d="M-10 -36 L62 156 M38 -36 L66 154 M100 -38 L100 136 M162 -36 L134 154 M210 -36 L138 156" stroke="#5c3a1e" stroke-width="1.6" stroke-opacity=".75" fill="none"/>
+          <path d="M-14 -36 C-14 -150 214 -150 214 -36 Q196 -50 178 -36 Q160 -50 142 -36 Q124 -50 100 -36 Q76 -50 58 -36 Q40 -50 22 -36 Q4 -50 -14 -36 Z" fill="#0b8cff"/>
+          <path d="M58 -36 Q66 -110 100 -121 Q76 -50 58 -36 Z M142 -36 Q134 -110 100 -121 Q124 -50 142 -36 Z" fill="#ffffff"/>
+          <path d="M-14 -36 Q-8 -92 34 -112 Q20 -50 22 -36 Q4 -50 -14 -36 Z M214 -36 Q208 -92 166 -112 Q180 -50 178 -36 Q196 -50 214 -36 Z" fill="#ffc928"/>
+          <path d="M100 -121 L100 -36" stroke="#0a6fd1" stroke-width="1.5" opacity=".5"/>
+          <path d="M6 -78 Q40 -116 92 -120" fill="none" stroke="#ffffff" stroke-opacity=".45" stroke-width="4" stroke-linecap="round"/>
         </g>
         <g filter="url(#novaFur)">
           <path d="M56 156 Q58 136 100 134 Q142 136 144 156 Q154 200 148 234 Q100 244 52 234 Q46 200 56 156 Z" fill="url(#novaSuit)"/>
         </g>
         <ellipse cx="103" cy="194" rx="28" ry="32" fill="#6a3417" filter="url(#novaFelt)"/>
         <ellipse cx="98" cy="184" rx="14" ry="16" fill="#7d4220" opacity=".5"/>
+        <!-- Knees (sitting only): bent forward, resting on the card edge -->
+        <g id="novaKnees" style="display:none" filter="url(#novaFur)">
+          <ellipse cx="80" cy="243" rx="18" ry="13" fill="#8c5530"/>
+          <ellipse cx="120" cy="243" rx="18" ry="13" fill="#8c5530"/>
+          <ellipse cx="76" cy="238" rx="8" ry="4" fill="#b07a4e" opacity=".55"/>
+          <ellipse cx="116" cy="238" rx="8" ry="4" fill="#b07a4e" opacity=".55"/>
+        </g>
+        <g id="novaHead">
         <g filter="url(#novaFur)">
           <path d="M38 74 Q20 32 32 6 Q62 16 82 46 Z" fill="url(#novaSuit)"/>
           <path d="M162 74 Q180 32 168 6 Q138 16 118 46 Z" fill="url(#novaSuit)"/>
@@ -1047,7 +1127,16 @@ footer { background: var(--heading); color: rgba(255,255,255,0.7); padding: 80px
             <ellipse cx="123.5" cy="115" rx="3" ry="3.6" fill="#cfcfcf" opacity=".85"/>
           </g>
         </g>
+        <!-- Reading glasses, worn during the second question (popped on and off by the script) -->
+        <g id="novaGlasses" style="display:none">
+          <path d="M53 117 L67 120 M135 118 L148 113" stroke="#13294b" stroke-width="3" stroke-linecap="round"/>
+          <path d="M96 119 Q101.5 113 107 119" stroke="#13294b" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <circle cx="82" cy="122" r="14.5" fill="#bfe3ff" fill-opacity=".22" stroke="#13294b" stroke-width="3.2"/>
+          <circle cx="121" cy="120" r="14.5" fill="#bfe3ff" fill-opacity=".22" stroke="#13294b" stroke-width="3.2"/>
+          <path d="M73 114 Q77 110 82 110 M112 112 Q116 108 121 108" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" opacity=".7"/>
+        </g>
         <g id="novaMouth"><ellipse cx="100" cy="138" rx="4.5" ry="2.4" fill="#7a2b16"/></g>
+        </g><!-- /novaHead -->
         <g transform="translate(0 6)">
           <g fill="#00a1e0">
             <circle cx="88" cy="182" r="11"/><circle cx="102" cy="175" r="13"/><circle cx="116" cy="181" r="10"/>
@@ -1074,11 +1163,28 @@ footer { background: var(--heading); color: rgba(255,255,255,0.7); padding: 80px
             <path d="M140 160 Q170 146 178 120" stroke="#5c3218" stroke-width="31" stroke-linecap="round" fill="none"/>
             <path d="M140 160 Q170 146 178 120" stroke="#94593a" stroke-width="26" stroke-linecap="round" fill="none"/>
           </g>
+          <!-- Welcome sign held in the right hand (scaled in and out by the script) -->
+          <g id="novaSign" style="display:none">
+            <rect x="178" y="34" width="6" height="76" rx="3" fill="#a0703c"/>
+            <rect x="118" y="-24" width="126" height="62" rx="12" fill="#ffffff" stroke="#0b8cff" stroke-width="3"/>
+            <rect x="118" y="-24" width="126" height="14" rx="7" fill="#0b8cff" opacity=".12"/>
+            <text id="novaSignTop" x="181" y="1" text-anchor="middle" font-family="Nunito, system-ui, sans-serif" font-size="15" font-weight="800" fill="#13294b">Welcome to</text>
+            <text id="novaSignMain" x="181" y="26" text-anchor="middle" font-family="Nunito, system-ui, sans-serif" font-size="21" font-weight="900" fill="#0b8cff">Aakrin!</text>
+          </g>
+          <!-- Lit incense stick held in the right hand while he waits to light the cracker (shown by the script) -->
+          <g id="novaStick" style="display:none">
+            <line x1="172" y1="104" x2="262" y2="126" stroke="#b07a45" stroke-width="3" stroke-linecap="round"/>
+            <line x1="206" y1="112" x2="260" y2="125.5" stroke="#4a2a18" stroke-width="5" stroke-linecap="round"/>
+            <circle id="novaStickGlow" cx="262" cy="126" r="9" fill="#ffb347" opacity=".45"/>
+            <circle cx="262" cy="126" r="4" fill="#ff5a1a"/>
+          </g>
           <g filter="url(#novaFelt)">
             <ellipse cx="181" cy="106" rx="14" ry="16" fill="url(#novaMitten)" transform="rotate(18 181 106)"/>
             <path d="M171 99 Q181 96 191 101 M170 105 Q181 102 192 107 M170 111 Q181 108 190 113" stroke="#a6a8aa" stroke-width="1.2" fill="none"/>
           </g>
         </g>
+        </g><!-- /novaUpper -->
+        </g><!-- /novaRoot -->
       </svg>
     </div>
 
@@ -1093,6 +1199,7 @@ footer { background: var(--heading); color: rgba(255,255,255,0.7); padding: 80px
   </div>
 
   <!-- Speech bubble: Nova's line, then the answers / enquiry form for the current step -->
+  <canvas class="nova-fireworks" id="novaFireworks" aria-hidden="true"></canvas>
   <div class="nova-bubble" id="novaBubble">
     <div class="nova-bubble-head">
       <div class="nova-who">Nova · Aakrin guide</div>
@@ -2102,9 +2209,63 @@ window.addEventListener('scroll', () => {
   let runId = 0;
   let loopOn = false;
 
-  const wait = ms => new Promise(r => setTimeout(r, ms));
+  // A clock that stops while the tab is hidden. Browsers stop drawing a background tab but keep its timers and
+  // animations running, so on return everything jumped ahead. Waits use this clock (they hold while hidden), and
+  // the guide's animations and Nova's own motion are paused and shifted with it (see 'visibilitychange' below).
+  let hiddenTotal = 0, hiddenAt = 0;
+  const parkedWaits = [];
+  const activeNow = () => performance.now() - hiddenTotal - (hiddenAt ? performance.now() - hiddenAt : 0);
+  const wait = ms => new Promise(r => {
+    const due = activeNow() + ms;
+    const check = () => {
+      if (document.hidden) { parkedWaits.push(check); return; }
+      const left = due - activeNow();
+      if (left <= 0) r(); else setTimeout(check, left);
+    };
+    check();
+  });
   const anim = (el, frames, opts) => el.animate(frames, { fill: 'forwards', ...opts }).finished.catch(() => {});
-  const isMobile = () => innerWidth < 720;
+  const isMobile = () => innerWidth <= 720;   // matches the CSS phone breakpoint
+
+  /**
+   * Smooth flight path through points [{ x, y, s }] (s = scale): a Catmull-Rom curve, resampled evenly along its length
+   * so the speed never jumps between points. Each sample's tilt follows the direction of travel: the plane's nose
+   * points left ('left') or, when mirrored, right ('right'). Tilt is softened and capped, and eased to level at the end.
+   */
+  function flightPath(pts, nose, n, level) {
+    n = n || 48;
+    const P = [pts[0], ...pts, pts[pts.length - 1]], dense = [];
+    for (let i = 1; i < P.length - 2; i++) {
+      const [a, b, c, d] = [P[i - 1], P[i], P[i + 1], P[i + 2]];
+      for (let j = 0; j < 40; j++) {
+        const t = j / 40, t2 = t * t, t3 = t2 * t;
+        const cr = k => .5 * (2 * b[k] + (-a[k] + c[k]) * t + (2 * a[k] - 5 * b[k] + 4 * c[k] - d[k]) * t2 + (-a[k] + 3 * b[k] - 3 * c[k] + d[k]) * t3);
+        dense.push({ x: cr('x'), y: cr('y'), s: b.s + (c.s - b.s) * (t * t * (3 - 2 * t)) });
+      }
+    }
+    dense.push(Object.assign({}, pts[pts.length - 1]));
+    const len = [0];
+    for (let i = 1; i < dense.length; i++) len.push(len[i - 1] + Math.hypot(dense[i].x - dense[i - 1].x, dense[i].y - dense[i - 1].y));
+    const total = len[len.length - 1] || 1, out = [];
+    let j = 0;
+    for (let i = 0; i <= n; i++) {
+      const want = total * i / n;
+      while (j < dense.length - 2 && len[j + 1] < want) j++;
+      const f = clampN((want - len[j]) / ((len[j + 1] - len[j]) || 1), 0, 1);
+      const A = dense[j], B = dense[Math.min(j + 1, dense.length - 1)];
+      const p = { x: A.x + (B.x - A.x) * f, y: A.y + (B.y - A.y) * f, s: A.s + (B.s - A.s) * f, offset: i / n };
+      // Direction of travel from neighbouring samples
+      const A2 = dense[Math.max(0, j - 3)], B2 = dense[Math.min(dense.length - 1, j + 4)];
+      const dx = B2.x - A2.x, dy = B2.y - A2.y;
+      let deg = nose === 'left' ? Math.atan2(-dy, -dx) * 180 / Math.PI : Math.atan2(dy, dx) * 180 / Math.PI;
+      if (deg > 90) deg -= 180; else if (deg < -90) deg += 180;
+      const u = i / n, settle = level !== false && u > .85 ? 1 - ((u - .85) / .15) ** 2 : 1;
+      p.deg = clampN(deg * .6, -22, 22) * settle;
+      out.push(p);
+    }
+    return out;
+  }
+  function clampN(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
   const store = {
     get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
     set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
@@ -2162,7 +2323,8 @@ window.addEventListener('scroll', () => {
     },
     done: {
       title: 'Thanks — we have your details.',
-      body: 'Your requirement has been submitted to Aakrin. Our team will review it and get back to you.'
+      body: 'Your requirement has been submitted to Aakrin. Our team will review it and get back to you.',
+      fallback: 'If you don\'t hear from us within 24 hours, please email <a href="mailto:info@aakrin.com">info@aakrin.com</a>.'
     },
     exploreSelf: "I'd rather explore the website myself",
     exploreSite: 'Explore the website',
@@ -2226,7 +2388,9 @@ window.addEventListener('scroll', () => {
     action: 'https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8&orgId=00DdN00000rD67Y',
     oid: '00DdN00000rD67Y',
     leadSource: 'Web',
-    retURL: 'https://aakrin.com/favicon.svg',
+    // Salesforce redirects the hidden frame here after accepting an enquiry. Kept on this site's own domain
+    // so the page can see the frame arrive there (that's how a successful send is detected).
+    retURL: (/^https?:$/.test(location.protocol) ? location.origin : 'https://aakrin.com') + '/favicon.svg',
     debugEmail: ''  // testing only, e.g. 'you@aakrin.com'; leave empty in production
   };
 
@@ -2246,63 +2410,1103 @@ window.addEventListener('scroll', () => {
   const findRequirement = () => requirementsFor(situationId).find(r => r.id === requirementId);
 
   /* =========================================================
-     POINTER TRACKING (drives eyes + arms)
+     CHARACTER: eyes follow the cursor; body, arms, legs and tail are animated here
      ========================================================= */
+  const onbEl = $('onb');
   const eyeMotion = $('novaEyeMotion');
-  const armL = $('novaArmL');
-  const armR = $('novaArmR');
+  const rig = {
+    root: $('novaRoot'), upper: $('novaUpper'), head: $('novaHead'), tail: $('novaTailWag'),
+    legL: $('novaLegL'), legR: $('novaLegR'), armL: $('novaArmL'), armR: $('novaArmR'), sign: $('novaSign'),
+    sitLegs: $('novaSitLegs'), shinL: $('novaShinL'), shinR: $('novaShinR'), knees: $('novaKnees'), chute: $('novaChute'),
+    stick: $('novaStick'), stickGlow: $('novaStickGlow'), glasses: $('novaGlasses'), signTop: $('novaSignTop'), signMain: $('novaSignMain')
+  };
 
   const VB_W = 200, VB_H = 270;
   const EYE_CX = 100, EYE_CY = 122;
-  const SH_L = { x: 60,  y: 162 };
-  const SH_R = { x: 140, y: 160 };
-  const BASE_L = Math.atan2(208 - SH_L.y, 34  - SH_L.x);
-  const BASE_R = Math.atan2(120 - SH_R.y, 178 - SH_R.x);
-  // How far each arm may swing from rest, in degrees (positive = clockwise on screen).
-  // Swinging outwards is free; swinging inwards is limited so a mitten never covers the face or eyes.
-  // Right arm: counter-clockwise lifts the hand over the head and face, so it stops at -20° (mitten stays clear of the cheek).
-  // Left arm: counter-clockwise sweeps the hand across the body, so it stops at -35°.
-  const ARM_L_RANGE = [-35, 75];
-  const ARM_R_RANGE = [-20, 75];
+  // Arm limits in degrees from the drawn rest pose (positive = clockwise on screen). Inward swings are
+  // capped so a mitten never covers the face or eyes: right arm stops at -20°, left arm at -35°.
+  const ARM_L_RANGE = [-35, 120];
+  const ARM_R_RANGE = [-20, 100];
+  const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+  const rand = (a, b) => a + Math.random() * (b - a);
 
   let pointerX = EYE_CX, pointerY = EYE_CY;
   let eyeX = 0, eyeY = 0;
-  let armLrot = 0, armRrot = 0;
 
   function updatePointer(clientX, clientY) {
     const svg = agent.querySelector('svg'); if (!svg) return;
-    const rect = svg.getBoundingClientRect(); if (!rect.width || !rect.height) return;
+    // (while he stands, his box is known without measuring the page on every mouse move)
+    const rect = landed && typeof agentRect === 'function' ? agentRect() : svg.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
     pointerX = (clientX - rect.left) * (VB_W / rect.width);
     pointerY = (clientY - rect.top)  * (VB_H / rect.height);
   }
   addEventListener('pointermove', e => updatePointer(e.clientX, e.clientY), { passive: true });
 
-  function animateFrame() {
-    if (!loopOn) return;
+  // ----- Fur and felt: each textured part is drawn once into a picture -----
+  // The SVG noise filters that make the fur would otherwise be recalculated every frame he moves (about 17fps).
+  // Every filtered part is a still drawing inside a moving group, so a picture of it looks identical and costs
+  // almost nothing to move. If the browser won't allow it, the live filters simply stay.
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+  async function bakeFur() {
+    const svg = agent.querySelector('svg');
+    const ser = new XMLSerializer();
+    const defs = ser.serializeToString(svg.querySelector('defs'));
+    const S = 2;                                           // pixels per drawing unit: he is never shown above ~1.7, so this stays sharp
+    // Hidden parts (sitting legs, knees) have to be displayed to be measured; nothing is painted in between
+    const hidden = [rig.sitLegs, rig.knees], saved = hidden.map(el => el.style.display);
+    hidden.forEach(el => { el.style.display = ''; });
+    const jobs = [...svg.querySelectorAll('[filter]')].map(el => {
+      const b = el.getBBox();                              // margin for the fur's displacement and the soft blur
+      return { el, x: Math.floor(b.x - 9), y: Math.floor(b.y - 9), w: Math.ceil(b.width + 18), h: Math.ceil(b.height + 18) };
+    });
+    hidden.forEach((el, i) => { el.style.display = saved[i]; });
+    for (const j of jobs) {
+      try {
+        const clone = j.el.cloneNode(true);
+        clone.removeAttribute('id'); clone.removeAttribute('style');
+        // The filters cover the whole character; limit them to this part so only its own noise is worked out
+        // (the noise is laid out in drawing units, so the texture is exactly the same)
+        const box = `x="${j.x}" y="${j.y}" width="${j.w}" height="${j.h}"`;
+        const partDefs = defs.replace(/x="-40" y="-30" width="280" height="330"/g, box);
+        const src = `<svg xmlns="${SVG_NS}" width="${j.w * S}" height="${j.h * S}" viewBox="${j.x} ${j.y} ${j.w} ${j.h}">${partDefs}${ser.serializeToString(clone)}</svg>`;
+        const img = new Image();
+        img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(src);
+        await img.decode();
+        const c = document.createElement('canvas');
+        c.width = j.w * S; c.height = j.h * S;
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        const blob = await new Promise((res, rej) => { try { c.toBlob(b => b ? res(b) : rej(), 'image/png'); } catch (e) { rej(e); } });
+        const pic = document.createElementNS(SVG_NS, 'image');
+        pic.setAttribute('href', URL.createObjectURL(blob));
+        pic.setAttribute('x', j.x); pic.setAttribute('y', j.y); pic.setAttribute('width', j.w); pic.setAttribute('height', j.h);
+        pic.setAttribute('preserveAspectRatio', 'none');
+        await pic.decode?.().catch(() => {});
+        if (j.el.tagName.toLowerCase() === 'g') { j.el.removeAttribute('filter'); j.el.replaceChildren(pic); }
+        else j.el.replaceWith(pic);
+      } catch (e) { /* keep the live filter for this part */ }
+      await new Promise(r => setTimeout(r));               // let other work run between parts
+    }
+  }
+  const furReady = bakeFur().catch(() => {});
+
+  // ----- Motion state -----
+  let landed = false;                  // after landing, this code owns Nova's position on screen
+  let walkX = 0, walkY = 0;            // offset from the landing spot, in screen px
+  let walk = null;                     // { fromX, toX, fromY, toY, start, dur, pace, resolve }
+  let mood = 'idle', moodStart = 0;    // looping behaviour for the current step
+  let gesture = null;                  // one-off move { name, start, dur }
+  let gestureOut = null;               // a move cut short by a new one, fading out
+  let signScale = 0;                   // welcome sign, 0 = tucked away, 1 = held up
+  let glassesScale = 0;                // reading glasses (second question)
+  const pose = { armL: 0, armR: 0, head: 0 };   // smoothed mood values
+
+  // Looping behaviour (t = seconds since the mood started)
+  const MOODS = {
+    idle:      () => ({}),
+    // Holds the welcome sign up in the right hand and waves with the left
+    sign:      t => ({ armR: -12, armL: 100 + Math.sin(t * 8) * 22, head: 5 + Math.sin(t * 2) * 3 }),
+    roam:      () => ({}),                                                                         // movement comes from the roaming loop
+    excited:   t => ({ rootY: -Math.abs(Math.sin(t * 6)) * 6, armL: 10 + Math.sin(t * 6) * 8, armR: -Math.sin(t * 6) * 8 }),  // bouncing
+    point:     () => ({ armR: isMobile() ? 95 : 48, head: isMobile() ? 0 : 6, lean: 3 }),        // pointing at the form
+    celebrate: t => ({ armL: 105 + Math.sin(t * 10) * 10, armR: -15 + Math.sin(t * 10 + 1) * 5, head: Math.sin(t * 3) * 6 }),
+    // Q2: climbing the ladder (hands reach up in turn, feet step), sliding down the rope, and sitting on the card
+    climb:     t => { const c = Math.sin(t * 9); return { armL: 115 + c * 25, armR: 15 - c * 30, legL: c * 20, legR: -c * 20, head: -4 }; },
+    rope:      () => ({ armL: 150, armR: -20, legL: 8, legR: -8, head: 6 }),
+    perch:     t => ({ shinL: Math.sin(t * 3.2), shinR: Math.sin(t * 3.2 + 2.4), armL: -14, armR: 100, head: 6 + Math.sin(t * .8) * 5 }),
+    carry:     () => ({ armL: 150, armR: -20, head: 4 }),                                    // ladder held over his head
+    float:     t => ({ armR: -20, armL: 108 + Math.sin(t * 2.5) * 6, legL: Math.sin(t * 3) * 10, legR: -Math.sin(t * 3) * 10, head: Math.sin(t * 2.5) * 6 }),   // hanging from the parachute, holding a cord
+    guard:     t => ({ armL: 6, armR: 10, head: 7 + Math.sin(t * 1.1) * 5 }),                  // incense stick ready, watching the form
+    ears:      t => ({ armL: 116, armR: -16, lean: -5, head: -6 + Math.sin(t * 14) * 2 }),   // hands over his ears, leaning away
+    wave:      t => ({ armL: 100 + Math.sin(t * 9) * 24, head: 6 }),                           // waving goodbye from the plane
+    push:      () => ({ armL: 120, armR: 15, lean: 6 }),                                     // tipping the ladder up
+    // Idle reaction: sits down, head nodding off; every few seconds waves to get attention
+    nap:       t => { const c = t % 6, waving = c > 2.5 && c < 4;
+                      return { rootY: 22, legL: 38, legR: -38, head: waving ? 6 : Math.sin(t * .9) * 7 - 4,
+                               armL: waving ? 100 + Math.sin(t * 10) * 22 : 12, armR: 10 }; }
+  };
+
+  // One-off moves (p = progress 0..1, t = seconds since the move started); values add to the mood
+  const GESTURES = {
+    hop:      p => ({ rootY: -Math.sin(p * Math.PI) * 28, squash: p < .15 ? -.12 * Math.sin(p / .15 * Math.PI) : p > .85 ? -.1 * Math.sin((p - .85) / .15 * Math.PI) : .04 }),
+    nod:      p => ({ headY: Math.abs(Math.sin(p * Math.PI * 2)) * 5 }),
+    fistpump: (p, t) => ({ armR: -12 + Math.sin(t * 16) * 26 * (1 - p), rootY: -Math.sin(p * Math.PI) * 12 }),
+    jump:     p => ({ rootY: -Math.sin(p * Math.PI) * 40, squash: p < .12 ? -.14 : p > .9 ? -.12 : .05 }),
+    spin:     p => ({ spin: Math.cos(p * Math.PI * 2), rootY: -Math.sin(p * Math.PI) * 16 }),
+    crouch:   p => { const e = Math.sin(Math.min(1, p / .3) * Math.PI / 2) * (p > .8 ? (1 - p) / .2 : 1);   // reach down to the fuse
+                     return { squash: -.06 * e, armR: 60 * e, lean: 6 * e }; },
+    // Roaming pauses
+    look:     p => ({ head: Math.sin(p * Math.PI * 2) * 14 }),                                       // looks left and right
+    peek:     p => { const e = Math.sin(p * Math.PI);                                                 // leans towards the question card
+                     return { lean: (isMobile() ? 0 : 7) * e, head: 10 * e, headY: (isMobile() ? 3 : 0) * e }; },
+    stretch:  p => { const e = Math.sin(p * Math.PI); return { armL: 105 * e, squash: .06 * e, head: -6 * e }; },
+    tapfoot:  p => ({ legR: -Math.abs(Math.sin(p * Math.PI * 4)) * 10, head: 4 }),
+    // Sitting on the card
+    readdown: p => { const e = Math.sin(p * Math.PI); return { headY: 6 * e, head: -12 * e }; },   // peeks down at the answers
+    kick:     p => ({ shinL: -1.6 * Math.sin(p * Math.PI * 2), shinR: 1.6 * Math.sin(p * Math.PI * 2) }),   // kicks his feet
+    // Stage 3
+    land:     p => ({ squash: -.12 * Math.sin(p * Math.PI) }),
+    shake:    p => ({ head: Math.sin(p * Math.PI * 6) * 14 * (1 - p) }),                                    // shakes his head
+    bow:      p => { const e = Math.sin(p * Math.PI); return { headY: 10 * e, squash: -.08 * e, armL: -20 * e, armR: 30 * e }; },
+    shrug:    p => { const e = Math.sin(p * Math.PI); return { armL: 35 * e, armR: 30 * e, head: 10 * e }; }
+  };
+
+  function setMood(name) {
+    if (mood !== name) { mood = name; moodStart = performance.now(); }
+  }
+  function playGesture(name, dur) {
+    if (reduced) return Promise.resolve();
+    const now = performance.now();
+    if (gesture && now - gesture.start < gesture.dur) gestureOut = Object.assign({}, gesture, { fadeFrom: now });
+    gesture = { name, start: now, dur };
+    return wait(dur);
+  }
+  /** Walks to an offset from the landing spot. pace = ms per pixel (higher = slower); legs step faster when running. */
+  function walkTo(x, y, pace, maxMs) {
+    if (y === undefined) y = walkY;
+    pace = pace || 6;
+    return new Promise(resolve => {
+      if (!Number.isFinite(x) || !Number.isFinite(y)) { resolve(); return; }   // a bad target never moves him
+      if (walk) { const r = walk.resolve; walk = null; r(); }
+      const dist = Math.hypot(x - walkX, y - walkY);
+      if (reduced || !landed || dist < 4) { walkX = x; walkY = y; resolve(); return; }
+      walk = { fromX: walkX, toX: x, fromY: walkY, toY: y, start: performance.now(), dur: Math.min(maxMs || Infinity, Math.max(450, dist * pace)), pace, resolve };
+    });
+  }
+
+  /** Moves Nova without walking steps: style 'climb' / 'slide' (straight line) or 'hop' (arc of the given height).
+   *  toSize optionally changes his size along the way. */
+  function moveTo(x, y, dur, style, height, toSize) {
+    return new Promise(resolve => {
+      if (!Number.isFinite(x) || !Number.isFinite(y)) { resolve(); return; }
+      if (walk) { const r = walk.resolve; walk = null; r(); }
+      if (reduced || !landed) { walkX = x; walkY = y; if (toSize !== undefined) size = toSize; resolve(); return; }
+      walk = { fromX: walkX, toX: x, fromY: walkY, toY: y, start: performance.now(), dur, style, height: height || 40, resolve,
+               sizeFrom: size, sizeTo: toSize === undefined ? size : toSize };
+    });
+  }
+
+  // ----- Where Nova may go: the open area beside the question card (desktop) or above the sheet (phones) -----
+  function stageInfo() {
+    const r = agentRect();
+    const half = r.width / 2;
+    return { half, homeCx: r.left + half - walkX, homeTop: r.top - walkY, homeBottom: r.bottom - walkY,
+             card: bubble.classList.contains('show') ? bubble.getBoundingClientRect() : null };
+  }
+  function roamBox() {
+    const s = stageInfo(), W = innerWidth, H = innerHeight;
+    if (isMobile()) {
+      // The bottom sheet grows as answers appear (up to 62% of the screen), so keep clear of its tallest size
+      const sheetTop = H - 12 - H * 0.62;
+      return { x0: 12 + s.half - s.homeCx, x1: W - 12 - s.half - s.homeCx,
+               y0: 0, y1: Math.max(0, Math.min(90, sheetTop - 10 - s.homeBottom)) };
+    }
+    const cardLeft = s.card ? s.card.left : W;
+    const x0 = 16 + s.half - s.homeCx;
+    return { x0, x1: Math.max(x0, cardLeft - 28 - s.half - s.homeCx),
+             y0: Math.max(-140, 84 - s.homeTop), y1: Math.max(0, Math.min(110, H - 16 - s.homeBottom)) };
+  }
+  // Standing spot next to the card (desktop) or centred above the sheet (phones)
+  function cardSpot() {
+    const b = roamBox();
+    return isMobile() ? { x: clamp(0, b.x0, b.x1), y: 0 } : { x: b.x1, y: 0 };
+  }
+
+  // ----- Q1: roams freely, pausing now and then to look around, peek at the card, stretch or tap a foot -----
+  let roamToken = 0;
+  function stopRoam() { roamToken++; }
+  async function roam() {
+    const token = ++roamToken;
+    const alive = () => token === roamToken && mood === 'roam';
+    await wait(500);
+    while (alive()) {
+      const b = roamBox();
+      let tx = walkX, ty = walkY;
+      for (let i = 0; i < 8; i++) {                       // pick somewhere a reasonable distance away
+        tx = rand(b.x0, b.x1); ty = rand(b.y0, b.y1);
+        if (Math.hypot(tx - walkX, ty - walkY) > 90) break;
+      }
+      await walkTo(tx, ty, 9);
+      if (!alive()) return;
+      const pauses = [['look', 1600], ['peek', 1400], ['stretch', 1300], ['tapfoot', 1200]];
+      const [name, dur] = pauses[Math.floor(Math.random() * pauses.length)];
+      await playGesture(name, dur);
+      if (!alive()) return;
+      await wait(rand(500, 1400));
+    }
+  }
+
+  // ----- Idle reaction: after 15s with no activity Nova sits down, yawns and waves for attention -----
+  const IDLE_MS = 15000;
+  let lastActivity = performance.now();
+  let napping = null;                  // the mood to return to when the visitor is back
+  ['pointermove', 'pointerdown', 'keydown', 'wheel', 'touchstart'].forEach(ev =>
+    onbEl.addEventListener(ev, () => { lastActivity = performance.now(); if (napping) wakeUp(); }, { passive: true }));
+  function checkIdle(now) {
+    if (napping || reduced || busy || walk || !landed || seated) return;
+    if (!(phase === 'q1' || phase === 'q2' || phase === 'q3')) return;
+    if (now - lastActivity < IDLE_MS) return;
+    napping = mood;
+    stopRoam();
+    setMood('nap');
+    agent.classList.add('yawning');
+    wait(1500).then(() => agent.classList.remove('yawning'));
+    trackEvent('onb_idle_nap');
+  }
+  function wakeUp() {
+    const back = napping;
+    napping = null;
+    agent.classList.remove('yawning');
+    setMood(back);
+    playGesture('hop', 600);
+    if (back === 'roam') roam();
+  }
+
+  // ----- Q2: Nova fetches a ladder and climbs onto the card (desktop), or slides down a rope (phones), then sits -----
+  let seated = false;                  // sitting on the card: sitting legs shown, shins swing
+  let size = 1;                        // he shrinks while climbing so he fits above the card (as if further away)
+  let prop = null;                     // the ladder or rope element on screen
+  let carrying = null;                 // while carrying the ladder: { foot } where its foot will rest (screen px)
+  let seatRun = 0;                     // bumped to cancel a climb in progress (answer picked, Back, close)
+  const seatShadow = document.createElement('div');
+  seatShadow.className = 'nova-seat-shadow';
+  onbEl.appendChild(seatShadow);
+  const SEAT = 243, FEET = 266, EARS = 6;   // knees (rest on the card edge), soles of the standing feet, tips of the ears (drawing units)
+
+  function measure() {
+    const r = agentRect(), k = r.height / VB_H;
+    return { r, k, cx: r.left + r.width / 2, feetY: r.top + FEET * k, groundY: r.top - walkY + FEET * k, card: bubble.getBoundingClientRect() };
+  }
+  // Walk offset that puts Nova's centre at x and the soles of his feet at feetY (his size scales around his feet)
+  const offsetFor = (m, x, feetY) => ({ x: walkX + x - m.cx, y: walkY + feetY - m.feetY });
+
+  function navRects() { return [...onbEl.querySelectorAll('.nova-btn')].map(b => b.getBoundingClientRect()); }
+  // Size that lets him sit on the card with his ears below the top of the screen (desktop) or the top buttons (phones)
+  function seatSize(m) {
+    const room = m.card.top - (isMobile() ? Math.max(...navRects().map(b => b.bottom)) + 8 : 8);
+    return clamp(room / ((SEAT - EARS) * m.k), 0.35, 1);
+  }
+  // Where along the card's top edge he sits: on desktop the top buttons overlap the card's top area, so keep clear of them
+  function seatX(m, f) {
+    const c = m.card, half = 80 * m.k * f + 6;
+    if (isMobile()) return clamp(m.cx, c.left + 60, c.right - 60);
+    const lo = c.left + 18 + half, hi = c.right - 18 - half;
+    const btns = navRects();
+    const nl = Math.min(...btns.map(b => b.left)) - 18, nr = Math.max(...btns.map(b => b.right)) + 18;   // (mitten and fur clear of the buttons)
+    const spans = [[lo, Math.min(hi, nl - half)], [Math.max(lo, nr + half), hi]].filter(s => s[1] >= s[0]);
+    if (!spans.length) return Math.max(c.left + 4, Math.min(lo, nl - half));   // no room either side: on the card's left corner
+    spans.sort((a, b) => (b[1] - b[0]) - (a[1] - a[0]));
+    return (spans[0][0] + spans[0][1]) / 2;
+  }
+  // Seat: his knees rest on the card's top edge and the shins hang over the front
+  function seatSpot(m) {
+    const f = seatSize(m), x = seatX(m, f);
+    return Object.assign(offsetFor(m, x, m.card.top + (FEET - SEAT) * m.k * f), { size: f, screenX: x });
+  }
+
+  function removeProp() {
+    if (prop) { prop.remove(); prop = null; }
+    carrying = null;
+  }
+  function ladderFor(m) {
+    const c = m.card;
+    return { foot: { x: c.left - 64, y: m.groundY }, top: { x: c.left + 8, y: c.top + 10 } };
+  }
+  // The ladder element is laid out in its leaning position; while carried, a transform moves it above Nova's head
+  function makeLadder(L) {
+    removeProp();
+    const len = Math.hypot(L.top.x - L.foot.x, L.foot.y - L.top.y);
+    const ang = Math.atan2(L.top.x - L.foot.x, L.foot.y - L.top.y) * 180 / Math.PI;
+    prop = document.createElement('div');
+    prop.className = 'nova-ladder';
+    Object.assign(prop.style, { left: (L.foot.x - 23) + 'px', top: (L.foot.y - len) + 'px', height: len + 'px', transform: `rotate(${ang}deg)` });
+    onbEl.appendChild(prop);
+    return ang;
+  }
+  function carriedTransform() {
+    const r = agentRect(), k = r.height / VB_H;
+    const fx = r.left + r.width / 2 - 46 * k, fy = r.top + 34 * k;          // held up above his head, sticking out ahead
+    return `translate(${(fx - carrying.foot.x).toFixed(1)}px, ${(fy - carrying.foot.y).toFixed(1)}px) rotate(90deg)`;
+  }
+  function showRope(x, bottom) {
+    removeProp();
+    prop = document.createElement('div');
+    prop.className = 'nova-rope';
+    Object.assign(prop.style, { left: x + 'px', height: bottom + 'px' });
+    onbEl.appendChild(prop);
+    if (!reduced) prop.animate([{ transform: 'scaleY(0)' }, { transform: 'scaleY(1)' }], { duration: 350, easing: 'ease-out' });
+  }
+
+  let perchToken = 0;
+  function stopPerch() { perchToken++; }
+  // While sitting: shins swing (mood), and every few seconds he peeks at the answers, looks around or kicks his feet
+  async function perch() {
+    const token = ++perchToken;
+    const alive = () => token === perchToken && mood === 'perch';
+    while (alive()) {
+      await wait(rand(2000, 3800));
+      if (!alive()) return;
+      const acts = [['readdown', 1500], ['look', 1600], ['kick', 900], ['readdown', 1500]];
+      const [name, dur] = acts[Math.floor(Math.random() * acts.length)];
+      await playGesture(name, dur);
+    }
+  }
+  function sitDown() {
+    seated = true;
+    seatCardTop = bubble.getBoundingClientRect().top;
+    setMood('perch');
+    perch();
+  }
+
+  /** Animated: fetches the ladder, plants it and climbs (desktop) or slides down a rope (phones), then sits on the card. */
+  async function climbToSeat(id) {
+    const token = ++seatRun;
+    const alive = () => id === runId && token === seatRun;
+    stopRoam();
+    setMood('idle');
+    onbEl.classList.add('nova-q2');
+    if (reduced) { placeSeated(); return; }
+    if (isMobile()) {
+      await wait(150);
+      onbEl.classList.add('nova-front');
+      const seat = seatSpot(measure());
+      await walkTo(seat.x, walkY, 3);               // line up above the seat
+      if (!alive()) return;
+      const m = measure(), s2 = seatSpot(m);
+      showRope(s2.screenX, m.card.top + 8);
+      setMood('rope');
+      await wait(250);
+      if (!alive()) return;
+      seated = true;                                // legs swap to sitting as he lands
+      await moveTo(s2.x, s2.y, 700, 'slide', 0, s2.size);
+      if (!alive()) return;
+      removeProp();
+      sitDown();
+      return;
+    }
+
+    // 1. Runs off the bottom of the screen (the nearest edge) to fetch a ladder
+    let m = measure();
+    const offscreen = offsetFor(m, m.cx, innerHeight + 24 + FEET * m.k);
+    await walkTo(offscreen.x, offscreen.y, 1.6, 650);
+    if (!alive()) return;
+    m = measure();
+    const L = ladderFor(m), ang = makeLadder(L);
+    carrying = { foot: L.foot };
+    prop.style.transform = carriedTransform();
+    setMood('carry');
+    await wait(150);
+    if (!alive()) return;
+    // 2. Comes back carrying it over his head
+    await walkTo(walkX + (L.foot.x + 46 * m.k) - m.cx, 0, 2, 750);
+    if (!alive()) return;
+    // 3. Tips it up against the card
+    const from = carriedTransform();
+    carrying = null;
+    setMood('push');
+    prop.style.transform = `rotate(${ang}deg)`;
+    await prop.animate([{ transform: from }, { transform: `rotate(${ang}deg)` }], { duration: 450, easing: 'cubic-bezier(.4,1.4,.6,1)' }).finished.catch(() => {});
+    if (!alive()) return;
+    // 4. Climbs, getting smaller as he goes up so he fits above the card
+    onbEl.classList.add('nova-front');
+    m = measure();
+    const f = seatSize(m);
+    const base = offsetFor(m, L.foot.x, L.foot.y);
+    await walkTo(base.x, base.y, 3, 400);
+    if (!alive()) return;
+    setMood('climb');
+    m = measure();
+    const top = offsetFor(m, L.top.x - 4, L.top.y + 4);
+    await moveTo(top.x, top.y, 1150, 'climb', 0, f);
+    if (!alive()) return;
+    // 5. Steps onto the card and walks along its top edge to his seat
+    setMood('idle');
+    m = measure();
+    const onCard = offsetFor(m, m.card.left + 26 + 80 * m.k * f, m.card.top);
+    await moveTo(onCard.x, onCard.y, 350, 'hop', 22);
+    if (!alive()) return;
+    if (prop) { const lad = prop; prop = null; lad.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 400, fill: 'forwards' }).finished.catch(() => {}).then(() => lad.remove()); }
+    m = measure();
+    const seat = seatSpot(m);
+    const above = offsetFor(m, seat.screenX, m.card.top);
+    await walkTo(above.x, above.y, 1.7, 550);
+    if (!alive()) return;
+    // 6. Sits down: legs swing out over the edge
+    seated = true;
+    await moveTo(seat.x, seat.y, 250, 'slide', 0, seat.size);
+    if (!alive()) return;
+    sitDown();
+  }
+
+  /** Instant version (Back, reopening mid-way, reduced motion). */
+  function placeSeated() {
+    seatRun++;
+    stopRoam();
+    onbEl.classList.add('nova-q2', 'nova-front');
+    void bubble.offsetWidth;
+    if (walk) { const r = walk.resolve; walk = null; r(); }
+    const m = measure(), seat = seatSpot(m);
+    walkX = seat.x; walkY = seat.y; size = seat.size;
+    clearCracker();
+    stickOn = false;
+    sitDown();
+  }
+
+  /** Off the card and back to the ground beside it. Stage 3 replaces the hop with a parachute float. */
+  async function leaveSeat(animated) {
+    seatRun++;
+    stopPerch();
+    const wasUp = seated || onbEl.classList.contains('nova-q2');
+    seated = false;
+    if (!wasUp) return;
+    if (walk) { const r = walk.resolve; walk = null; r(); }
+    const m = measure();
+    const ground = isMobile() ? { x: walkX, y: 0 } : offsetFor(m, m.card.left - 28 - 80 * m.k, m.groundY);
+    removeProp();
+    if (animated && !reduced) {
+      setMood('idle');
+      await moveTo(ground.x, ground.y, 700, 'hop', 50, 1);
+    } else {
+      walkX = ground.x; walkY = ground.y; size = 1;
+    }
+    onbEl.classList.remove('nova-q2', 'nova-front');
+  }
+
+  // Frame-rate independent easing: the share of the remaining distance to cover this frame (rate is per second),
+  // so poses settle at the same speed on 60 Hz and 120 Hz screens and stay smooth when frames are dropped
+  const easeK = (rate, dt) => reduced ? 1 : 1 - Math.exp(-rate * dt);
+  const POSE_KEYS = ['armL', 'armR', 'head', 'lean', 'legL', 'legR', 'rootY', 'shinL', 'shinR'];
+  POSE_KEYS.forEach(k => { pose[k] = pose[k] || 0; });
+  let lastMove = 0;
+  let seatBlend = 0;                   // 0 = standing legs, 1 = sitting legs (cross-faded, never swapped in one frame)
+  let walkLook = 0;                    // -1..1: looking the way he is walking
+  let seatCardTop = 0;                 // card's top edge while he sits on it (measured when he sits down)
+
+  function applyGesture(o, g, now, w) {
+    const p = (now - g.start) / g.dur;
+    if (p >= 1 || w <= 0) return;
+    const v = GESTURES[g.name](Math.max(0, p), (now - g.start) / 1000);
+    Object.keys(v).forEach(key => { if (key === 'spin') o.spin *= 1 + (v.spin - 1) * w; else o[key] += v[key] * w; });
+  }
+
+  function moveCharacter(now) {
+    const t = now / 1000, calm = reduced ? 0 : 1;
+    const dt = lastMove ? clamp((now - lastMove) / 1000, 0, .1) : 1 / 60;
+    lastMove = now;
+    // Every value of the current behaviour eases towards its target, so changing behaviour never snaps
+    const m = MOODS[mood](reduced ? 0 : (now - moodStart) / 1000);
+    const k = easeK(13.4, dt);
+    POSE_KEYS.forEach(key => { pose[key] += ((m[key] || 0) - pose[key]) * k; });
+    const o = { armL: 0, armR: 0, head: 0, headY: 0, lean: pose.lean, legL: pose.legL, legR: pose.legR, shinL: pose.shinL, shinR: pose.shinR,
+                rootY: pose.rootY, squash: 0, spin: 1, swayX: 0 };
+
+    // One-off moves fade in over 110ms; one cut short by a new move fades out over 160ms instead of vanishing
+    if (gestureOut) {
+      const w = 1 - (now - gestureOut.fadeFrom) / 160;
+      if (w <= 0 || now - gestureOut.start >= gestureOut.dur) gestureOut = null;
+      else applyGesture(o, gestureOut, now, w);
+    }
+    if (gesture) {
+      if (now - gesture.start >= gesture.dur) gesture = null;
+      else applyGesture(o, gesture, now, clamp((now - gesture.start) / 110, 0, 1));
+    }
+
+    let look = 0;
+    if (walk) {
+      const p = Math.min(1, (now - walk.start) / walk.dur);
+      const style = walk.style || 'walk';
+      const e = style === 'walk' ? (p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2) : style === 'slide' ? p * p : style === 'float' ? 1 - (1 - p) * (1 - p) : p;
+      if (style === 'float') { o.swayX += Math.sin(t * 2.5) * 9 * calm; o.lean += Math.sin(t * 2.5 + .6) * 6 * calm; }
+      walkX = walk.fromX + (walk.toX - walk.fromX) * e;
+      walkY = walk.fromY + (walk.toY - walk.fromY) * e;
+      if (walk.sizeTo !== undefined) size = walk.sizeFrom + (walk.sizeTo - walk.sizeFrom) * e;
+      if (style === 'hop') o.rootY -= Math.sin(p * Math.PI) * walk.height;
+      if (style === 'walk') {
+        // Steps: legs swing from the hips, the body bobs and leans into the walk, arms swing. Running steps faster.
+        const phase = (now - walk.start) / 1000 * (walk.pace < 5 ? 17 : 11);
+        const env = Math.min(1, p * 6, (1 - p) * 6);
+        const step = Math.sin(phase) * env;
+        const dir = Math.sign(walk.toX - walk.fromX);
+        o.legL += step * 24; o.legR -= step * 24;
+        o.rootY -= Math.abs(Math.cos(phase)) * 4 * env;
+        o.lean += dir * (walk.pace < 5 ? 7 : 4) * env;
+        o.armL += step * 12; o.armR -= step * 8;
+        if (Math.abs(walk.toX - walk.fromX) > 30) look = dir * env;
+      }
+      if (p >= 1) { walkX = walk.toX; walkY = walk.toY; if (walk.sizeTo !== undefined) size = walk.sizeTo; const r = walk.resolve; walk = null; r(); }
+    }
+    // Turns towards where he is walking: head and eyes look that way and the body narrows slightly, as if turning
+    walkLook += (look - walkLook) * easeK(8, dt);
+    o.head += walkLook * 7;
+    const turn = 1 - Math.abs(walkLook) * .06;
+
+    // Welcome sign: pops up while greeting, wiggles, tucks away afterwards
+    signScale += ((mood === 'sign' ? 1 : 0) - signScale) * easeK(11.9, dt);
+    rig.sign.setAttribute('transform', `rotate(${(Math.sin(t * 4) * 5 * calm).toFixed(2)} 181 106) translate(181 106) scale(${signScale.toFixed(3)}) translate(-181 -106)`);
+    rig.sign.style.display = signScale < 0.02 ? 'none' : '';
+    // Parachute: billows open above him while floating down (opens upwards from his shoulders), packs away on landing
+    chuteScale += ((chuteOpen ? 1 : 0) - chuteScale) * easeK(17.3, dt);
+    const cs = isMobile() ? .8 : 1;   // a little smaller on phones, so it stays below the top buttons
+    rig.chute.setAttribute('transform', `translate(100 150) scale(${((0.3 + 0.7 * chuteScale) * cs).toFixed(3)} ${(chuteScale * cs).toFixed(3)}) translate(-100 -150)`);
+    rig.chute.style.display = chuteScale < 0.02 ? 'none' : '';
+    // Reading glasses: pop on for the second question, off again afterwards
+    glassesScale += ((phase === 'q2' ? 1 : 0) - glassesScale) * easeK(13.4, dt);
+    rig.glasses.setAttribute('transform', `translate(101 120) scale(${glassesScale.toFixed(3)}) translate(-101 -120)`);
+    rig.glasses.style.display = glassesScale < 0.02 ? 'none' : '';
+    // Incense stick: the glowing tip flickers
+    rig.stick.style.display = stickOn ? '' : 'none';
+    if (stickOn) rig.stickGlow.setAttribute('opacity', (.35 + .25 * Math.abs(Math.sin(t * 7)) * calm).toFixed(2));
+
+    const L = clamp(pose.armL + o.armL, ARM_L_RANGE[0], ARM_L_RANGE[1]);
+    const R = clamp(pose.armR + o.armR, ARM_R_RANGE[0], ARM_R_RANGE[1]);
+    const sy = 1 + o.squash, sx = (1 - o.squash * .6) * o.spin * turn;
+    rig.root.setAttribute('transform', `translate(${o.swayX.toFixed(2)} ${o.rootY.toFixed(2)}) translate(100 266) scale(${(sx * size).toFixed(3)} ${(sy * size).toFixed(3)}) translate(-100 -266)`);
+    rig.upper.setAttribute('transform', `rotate(${o.lean.toFixed(2)} 100 236)`);
+    rig.head.setAttribute('transform', `rotate(${(pose.head + o.head).toFixed(2)} 100 160) translate(0 ${o.headY.toFixed(2)})`);
+    rig.armL.setAttribute('transform', `rotate(${L.toFixed(2)} 60 162)`);
+    rig.armR.setAttribute('transform', `rotate(${R.toFixed(2)} 140 160)`);
+    rig.legL.setAttribute('transform', `rotate(${o.legL.toFixed(2)} 83 216)`);
+    rig.legR.setAttribute('transform', `rotate(${o.legR.toFixed(2)} 117 216)`);
+    rig.tail.setAttribute('transform', `rotate(${(Math.sin(t * 2.4) * 5 * calm).toFixed(2)} 74 200)`);
+    // Sitting: the standing legs fade into the sitting legs; each shin swings towards the viewer (looks shorter) and back
+    seatBlend += ((seated ? 1 : 0) - seatBlend) * easeK(20, dt);
+    if (Math.abs(seatBlend - (seated ? 1 : 0)) < .01) seatBlend = seated ? 1 : 0;
+    const standOp = (1 - seatBlend).toFixed(3), sitOp = seatBlend.toFixed(3);
+    rig.legL.style.display = rig.legR.style.display = seatBlend >= 1 ? 'none' : '';
+    rig.sitLegs.style.display = rig.knees.style.display = seatBlend <= 0 ? 'none' : '';
+    rig.legL.style.opacity = rig.legR.style.opacity = standOp;
+    rig.sitLegs.style.opacity = rig.knees.style.opacity = sitOp;
+    if (seatBlend > 0) {
+      const shin = v => `translate(0 243) scale(1 ${(0.8 + 0.2 * Math.cos(clamp(v, -1.6, 1.6) * calm)).toFixed(3)}) rotate(${(v * 4 * calm).toFixed(2)}) translate(0 -243)`;
+      rig.shinL.setAttribute('transform', shin(o.shinL));
+      rig.shinR.setAttribute('transform', shin(o.shinR));
+    }
+    if (carrying && prop) prop.style.transform = carriedTransform();
+    // Floor shadow only while standing on the ground; a small shadow on the card while sitting on it
+    shadow.style.visibility = seated || size < 0.98 ? 'hidden' : '';
+    seatShadow.classList.toggle('show', seated && !walk);
+    if (seated && !walk) {
+      const r = agentRect(), w = 120 * (r.height / VB_H) * size;
+      Object.assign(seatShadow.style, { left: (r.left + r.width / 2 - w / 2).toFixed(1) + 'px', top: seatCardTop.toFixed(1) + 'px', width: w.toFixed(1) + 'px' });
+    }
+    if (landed) applyFlyer();
+  }
+
+  // Nova's box on screen, worked out from his walk offset instead of measuring the page every frame:
+  // measured once (against the offset last written), and again only when his landing spot or the screen changes
+  let flyerApplied = { x: 0, y: 0 }, agentBox = null, agentBoxKey = '';
+  function applyFlyer() {
+    flyer.style.transform = `translate(${walkX.toFixed(1)}px, ${walkY.toFixed(1)}px) scale(${isMobile() ? 0.7 : 1})`;
+    flyerApplied = { x: +walkX.toFixed(1), y: +walkY.toFixed(1) };
+  }
+  function agentRect() {
+    const key = agent.style.top + '|' + innerWidth + '|' + innerHeight + '|' + landed;
+    if (!agentBox || key !== agentBoxKey) {
+      const r = agent.getBoundingClientRect();
+      agentBox = { left: r.left - flyerApplied.x, top: r.top - flyerApplied.y, width: r.width, height: r.height };
+      agentBoxKey = key;
+    }
+    const left = agentBox.left + walkX, top = agentBox.top + walkY;
+    return { left, top, width: agentBox.width, height: agentBox.height, right: left + agentBox.width, bottom: top + agentBox.height };
+  }
+
+  // ----- Fireworks (canvas behind Nova and the speech box) -----
+  const fwCanvas = $('novaFireworks');
+  const fw = fwCanvas.getContext('2d');
+  const FW_COLOURS = ['#0b6bff', '#ff3b5c', '#ffb000', '#14b874', '#8b5cf6', '#ff6a00'];   // vivid enough to read on the light sky
+  const sparks = [];
+  let fwDirty = false;
+
+  function burst(x, y) {
+    const colour = FW_COLOURS[Math.floor(Math.random() * FW_COLOURS.length)];
+    const count = 80 + Math.floor(Math.random() * 20);
+    sparks.push({ x, y, vx: 0, vy: 0, life: 0, max: .22, colour: '#ffffff', size: 26, flash: true });
+    for (let i = 0; i < count; i++) {
+      const a = Math.random() * Math.PI * 2, v = 90 + Math.random() * 230;
+      sparks.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 0, max: 1.1 + Math.random() * .9,
+                    colour: i % 7 ? colour : '#ffd166', size: 2.2 + Math.random() * 1.8 });
+    }
+  }
+  // Things that throw off sparks every frame: the burning fuse, the cracker's fountain, shells climbing.
+  // Each gives its position by calculation (from its animation's progress), so nothing is measured on the page.
+  const emitters = [];          // { kind: 'fuse' | 'fountain' | 'trail', pos: () => { x, y }, alive: () => bool }
+  const SPARK_GOLD = ['#ffd166', '#fff3b0', '#ff8a3d'];
+  const progressOf = a => { const p = a.effect && a.effect.getComputedTiming().progress; return p == null ? 1 : p; };
+  const MAX_SPARKS = 1100;
+  function emit() {
+    if (sparks.length > MAX_SPARKS) return;   // plenty on screen already
+    for (let j = emitters.length - 1; j >= 0; j--) {
+      const em = emitters[j];
+      if (!em.alive()) { emitters.splice(j, 1); continue; }
+      const { x, y } = em.pos();
+      const n = em.kind === 'fountain' ? 7 : 3;
+      for (let i = 0; i < n; i++) {
+        const c = SPARK_GOLD[Math.floor(Math.random() * 3)];
+        if (em.kind === 'fountain') sparks.push({ x: x + rand(-3, 3), y, vx: rand(-75, 75), vy: -rand(230, 400), life: 0, max: rand(.7, 1.1), colour: c, size: rand(1.6, 2.8) });
+        else if (em.kind === 'fuse') sparks.push({ x, y, vx: rand(-90, 90), vy: -rand(40, 150), life: 0, max: rand(.25, .5), colour: c, size: rand(1.2, 2.2) });
+        else sparks.push({ x: x + rand(-3, 3), y, vx: rand(-20, 20), vy: rand(40, 100), life: 0, max: rand(.45, .75), colour: c, size: rand(1.5, 3) });
+      }
+    }
+  }
+  // Sparks are drawn in batches (one path per colour, fade level and thickness) instead of one stroke each
+  const FADE_STEPS = 6;
+  function drawFireworks(dt) {
+    emit();
+    if (!sparks.length) {
+      if (fwDirty) { fw.clearRect(0, 0, fwCanvas.width, fwCanvas.height); fwDirty = false; }
+      return;
+    }
+    const d = Math.min(1.5, window.devicePixelRatio || 1);
+    const w = Math.round(innerWidth * d), h = Math.round(innerHeight * d);
+    if (fwCanvas.width !== w || fwCanvas.height !== h) { fwCanvas.width = w; fwCanvas.height = h; }
+    fw.setTransform(d, 0, 0, d, 0, 0);
+    fw.clearRect(0, 0, innerWidth, innerHeight);
+    const drag = Math.pow(0.985, dt * 60);
+    const batches = new Map();
+    let n = 0;
+    for (let i = 0; i < sparks.length; i++) {
+      const s = sparks[i];
+      s.life += dt;
+      if (s.life > s.max) continue;
+      sparks[n++] = s;
+      s.vx *= drag; s.vy = s.vy * drag + 170 * dt;
+      s.x += s.vx * dt; s.y += s.vy * dt;
+      const fade = Math.max(0, 1 - s.life / s.max);
+      if (s.flash) {
+        fw.globalAlpha = fade;
+        fw.fillStyle = s.colour;
+        fw.beginPath(); fw.arc(s.x, s.y, s.size * (1 + s.life * 4), 0, Math.PI * 2); fw.fill();
+        continue;
+      }
+      const key = s.colour + '|' + Math.ceil(fade * FADE_STEPS) + '|' + (s.size > 2.4 ? 1 : 0);
+      let list = batches.get(key);
+      if (!list) batches.set(key, list = []);
+      list.push(s);
+    }
+    sparks.length = n;
+    // Each spark is a short streak along its direction of travel
+    fw.lineCap = 'butt';
+    batches.forEach((list, key) => {
+      const [colour, level, thick] = key.split('|');
+      fw.globalAlpha = level / FADE_STEPS;
+      fw.strokeStyle = colour;
+      fw.lineWidth = thick === '1' ? 3.2 : 2;
+      fw.beginPath();
+      for (const s of list) { fw.moveTo(s.x - s.vx * .035, s.y - s.vy * .035); fw.lineTo(s.x, s.y); }
+      fw.stroke();
+    });
+    fw.globalAlpha = 1;
+    fwDirty = true;
+  }
+  function clearCelebration() {
+    sparks.length = 0;
+    emitters.length = 0;
+    onbEl.querySelectorAll('.nova-shell').forEach(el => el.remove());
+    clearCracker();
+    stickOn = false;
+    chuteOpen = false;
+    onbEl.classList.remove('nova-leaving');
+    fw.clearRect(0, 0, fwCanvas.width, fwCanvas.height);
+  }
+
+  // ----- Stage 3: parachute float, then the cracker with its long fuse thread, lit on submit; fly-away -----
+  const CRACKER_SVG =
+    '<svg viewBox="0 0 40 78" width="100%" height="100%" aria-hidden="true">' +
+      '<path d="M7 16 L20 1 L33 16 Z" fill="#ffc928"/><path d="M20 1 L33 16 L20 16 Z" fill="#e6a100"/>' +
+      '<path d="M18 2 Q20 -4 23 -6" fill="none" stroke="#7a4f2a" stroke-width="1.6" stroke-linecap="round"/>' +
+      '<rect x="5" y="15" width="30" height="58" rx="4" fill="#d62828"/>' +
+      '<rect x="5" y="20" width="30" height="5" fill="#ffc928"/><rect x="5" y="62" width="30" height="5" fill="#ffc928"/>' +
+      '<path d="M20 31 L27 43 L20 55 L13 43 Z" fill="#ffc928"/><path d="M20 36 L24 43 L20 50 L16 43 Z" fill="#14b874"/>' +
+      '<path d="M8 28 l3 3 M8 54 l3 3 M29 28 l3 3 M29 54 l3 3" stroke="#ffe08a" stroke-width="1.4" stroke-linecap="round"/>' +
+      '<rect x="20" y="15" width="15" height="58" rx="2" fill="#000" opacity=".13"/>' +
+      '<ellipse cx="20" cy="73" rx="16" ry="4" fill="#8a1c1c"/>' +
+    '</svg>';
+  let kit = null;               // { el, cracker, thread, ash, len, layout, ready }
+  let prepRun = 0;              // cancels setting the cracker up
+  let stickOn = false;          // incense stick in his right hand
+  let chuteOpen = false;
+  let chuteScale = 0;
+
+  /** Q2 answered: jumps off the card, opens his parachute and floats down to the ground (growing back to full size). */
+  async function floatDown(id) {
+    const token = ++seatRun;
+    const alive = () => id === runId && token === seatRun;
+    stopPerch();
+    removeProp();
+    const m = measure();
+    const land = isMobile() ? { x: walkX, y: 0 } : offsetFor(m, m.card.left - 28 - 80 * m.k, m.groundY);
+    if (reduced) {
+      seated = false; walkX = land.x; walkY = land.y; size = 1;
+      onbEl.classList.remove('nova-q2', 'nova-front');
+      return;
+    }
+    setMood('idle');
+    seated = false;
+    // Jumps up and away from the card (on phones a little above his usual spot, so the canopy stays below the top buttons)
+    // (desktop: out to the left and a little down, clear of the top buttons)
+    await moveTo(walkX + (isMobile() ? 0 : -80), isMobile() ? -24 : walkY + 24, 380, 'hop', 18);
+    if (!alive()) return;
+    chuteOpen = true;
+    setMood('float');
+    await moveTo(land.x, land.y, isMobile() ? 1500 : 2000, 'float', 0, 1);
+    chuteOpen = false;
+    if (!alive()) return;
+    setMood('idle');
+    playGesture('land', 450);
+    onbEl.classList.remove('nova-q2', 'nova-front');
+  }
+
+  function clearCracker() {
+    prepRun++;
+    if (kit) { kit.el.remove(); kit = null; }
+  }
+
+  /**
+   * Where everything goes (Nova standing on the ground, walkY = 0): Nova at the left edge of the open area, the cracker
+   * further right (left of the card on desktop, at the right edge on phones), and the thread lying on the ground between
+   * them, from the cracker's base to the spot just right of his feet where his stick reaches when he crouches.
+   */
+  function crackerLayout() {
+    if (landed) applyFlyer();
+    const m = measure(), k = m.k, sc = k / 0.8;
+    const ground = m.groundY - 2 * sc;
+    const right = isMobile() ? innerWidth - 12 : Math.min(innerWidth - 12, m.card.left - 16);
+    const novaCx = 12 + 104 * k;                          // room for his tail and arm
+    const tip = { x: novaCx + 115 * k, y: ground };
+    const w = 42 * sc, h = 82 * sc;
+    const cx = Math.max(tip.x + 50 * sc, Math.min(right - w / 2 - 4, tip.x + 330 * sc));
+    const base = { x: cx - 10 * sc, y: ground - 3 * sc };
+    // How far the thread may loop towards the viewer (below the ground line): stay on screen and above the phone sheet
+    const floor = (isMobile() ? bubble.getBoundingClientRect().top : innerHeight) - 8;
+    // (a short gap gets a deeper loop, so the thread is still long)
+    const gap = base.x - tip.x, want = gap < 160 * sc ? (240 * sc - gap) * .45 : clamp(gap * .3, 12 * sc, 40 * sc);
+    const dip = Math.max(4, Math.min(floor - ground, want));
+    return { m, sc, ground, nova: offsetFor(m, novaCx, m.groundY), placeAt: offsetFor(m, cx - 118 * k, m.groundY),
+             cracker: { x: cx, w, h }, tip, base, dip };
+  }
+  // A long, loose thread: from the cracker's base it loops forward and wanders back to Nova's end
+  function threadPath(L) {
+    const a = L.base, b = L.tip, dx = b.x - a.x, d = L.dip;
+    const p = (f, dy) => (a.x + dx * f).toFixed(1) + ' ' + (L.ground + dy).toFixed(1);
+    if (-dx < 160 * L.sc) return `M${a.x.toFixed(1)} ${a.y.toFixed(1)} C${p(-.35, d * 1.3)} ${p(1.35, d * 1.3)} ${b.x.toFixed(1)} ${b.y.toFixed(1)}`;   // one big U
+    return `M${a.x.toFixed(1)} ${a.y.toFixed(1)} C${p(.05, d * .9)} ${p(.3, d)} ${p(.42, d * .55)} ` +
+           `S${p(.62, -d * .05)} ${p(.72, d * .35)} S${p(.95, d * .25)} ${b.x.toFixed(1)} ${b.y.toFixed(1)}`;
+  }
+
+  /** Builds the cracker and thread. animate = Nova is about to walk it out; otherwise everything is ready at once. */
+  function buildCracker(L, ready) {
+    if (kit) { kit.el.remove(); kit = null; }
+    const el = document.createElement('div');
+    el.className = 'nova-kit';
+    const d = threadPath(L), sw = (2.6 * L.sc).toFixed(1);
+    el.innerHTML =
+      `<svg class="nova-thread" width="1" height="1">` +
+        `<path class="nova-ash" d="${d}" fill="none" stroke="#8d8d8d" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="2 5" opacity=".55" style="display:none"/>` +
+        `<path class="nova-thread-line" d="${d}" fill="none" stroke="#8a5a30" stroke-width="${sw}" stroke-linecap="round"/>` +
+      `</svg>` +
+      `<div class="nova-cracker" style="left:${(L.cracker.x - L.cracker.w / 2).toFixed(1)}px;top:${(L.ground - L.cracker.h).toFixed(1)}px;` +
+        `width:${L.cracker.w.toFixed(1)}px;height:${L.cracker.h.toFixed(1)}px">${CRACKER_SVG}</div>`;
+    onbEl.appendChild(el);
+    const thread = el.querySelector('.nova-thread-line'), len = thread.getTotalLength();
+    thread.style.strokeDasharray = `${len} ${len}`;
+    thread.style.strokeDashoffset = ready ? '0' : String(len);
+    kit = { el, cracker: el.querySelector('.nova-cracker'), thread, ash: el.querySelector('.nova-ash'), len, layout: L, ready };
+    if (!ready) kit.cracker.style.opacity = '0';
+    return kit;
+  }
+
+  /** Instant version (Back, reopening mid-way, reduced motion, or submitted before he finished). */
+  function placeCracker() {
+    prepRun++;
+    if (walk) { const r = walk.resolve; walk = null; r(); }
+    const L = crackerLayout();
+    walkX = L.nova.x; walkY = L.nova.y; size = 1;
+    buildCracker(L, true);
+    lastFilled = filledCount();
+    stickOn = true;
+    setMood('guard');
+  }
+
+  /**
+   * While the visitor fills in the form: Nova walks over and puts the cracker down, walks back to the left side
+   * unrolling the long thread behind him, then lights an incense stick and waits.
+   */
+  async function prepareCracker(id) {
+    if (kit && kit.ready) return;
+    const token = ++prepRun;
+    const alive = () => id === runId && token === prepRun;
+    if (reduced) { placeCracker(); return; }
+    const L = crackerLayout();
+    buildCracker(L, false);
+    lastFilled = filledCount();
+    // 1. Over to where the cracker goes; takes it out and sets it down
+    setMood('idle');
+    await walkTo(L.placeAt.x, L.placeAt.y, 3.5);
+    if (!alive()) return;
+    playGesture('crouch', 700);
+    await wait(260);
+    if (!alive()) return;
+    kit.cracker.style.opacity = '';
+    kit.cracker.animate([{ transform: 'translateY(-26px) scale(.5)', opacity: 0 }, { transform: 'translateY(0) scale(1.08)', opacity: 1, offset: .7 }, { transform: 'none' }],
+      { duration: 420, easing: 'ease-out' });
+    await wait(500);
+    if (!alive()) return;
+    // 2. Walks back to the left, the thread unrolling behind him
+    const kitNow = kit, dist = Math.abs(L.nova.x - walkX), dur = Math.max(900, dist * 6);
+    kitNow.thread.animate([{ strokeDashoffset: kitNow.len }, { strokeDashoffset: 0 }], { duration: dur, easing: 'ease-in-out', fill: 'forwards' });
+    await moveTo(L.nova.x, L.nova.y, dur, 'walk');
+    if (!alive()) return;
+    kitNow.thread.getAnimations().forEach(a => a.cancel());
+    kitNow.thread.style.strokeDashoffset = '0';
+    kitNow.ready = true;
+    // 3. Lights an incense stick and holds it ready
+    stickOn = true;
+    playGesture('fistpump', 700);
+    setMood('guard');
+  }
+
+  // Each newly filled-in form field gets a cheer
+  let lastFilled = 0;
+  function filledCount() {
+    return FIELD_ORDER.filter(k => String(values[k] || '').trim()).length;
+  }
+  function onFieldsChanged() {
+    const n = filledCount();
+    if (n > lastFilled && kit && !reduced && !gesture && !walk) playGesture('nod', 500);
+    lastFilled = n;
+  }
+
+  /** Form error: shakes his head and points at the form. */
+  function reactToError() {
+    if (reduced || !landed) return;
+    const back = mood;
+    setMood('point');
+    playGesture('shake', 900).then(() => { if (mood === 'point') setMood(back === 'point' ? 'guard' : back); });
+  }
+
+  /**
+   * Submit pressed: Nova crouches and touches his stick to the end of the thread, the flame runs along it to the cracker
+   * while he covers his ears, the cracker fountains and fires its shells, which burst across the sky. Resolves false if
+   * the guide was closed or restarted.
+   */
+  async function lightCracker(id) {
+    stageBusy = true;
+    try { return await lightCrackerRun(id); } finally { stageBusy = false; }
+  }
+  async function lightCrackerRun(id) {
+    const alive = () => id === runId;
+    if (!kit || !kit.ready) placeCracker();
+    const k = kit, L = k.layout;
+    bubble.classList.remove('show');
+    stickOn = true;
+    setMood('guard');
+    // Crouches and lights the end of the thread
+    const crouching = playGesture('crouch', 900);
+    await wait(330);
+    if (!alive()) return false;
+    const flame = document.createElement('div');
+    flame.className = 'nova-flame';
+    const at = len => { const pt = k.thread.getPointAtLength(len); return `translate(${pt.x.toFixed(1)}px, ${pt.y.toFixed(1)}px)`; };
+    flame.style.transform = at(k.len);
+    k.el.appendChild(flame);
+    let burning = null;                                  // the flame's run along the thread, once it starts
+    const flameAt = () => k.thread.getPointAtLength(k.len * (1 - (burning ? progressOf(burning) : 0)));
+    emitters.push({ kind: 'fuse', pos: flameAt, alive: () => flame.isConnected });
+    await crouching;
+    if (!alive()) return false;
+    // The flame runs along the thread (burning it away) while Nova covers his ears
+    stickOn = false;
+    setMood('ears');
+    const burn = clamp(k.len / 0.28, 1000, 1800), N = 40;
+    k.ash.style.display = '';
+    k.thread.animate([{ strokeDashoffset: 0 }, { strokeDashoffset: k.len }], { duration: burn, easing: 'linear', fill: 'forwards' });
+    burning = flame.animate(Array.from({ length: N + 1 }, (_, i) => ({ transform: at(k.len * (1 - i / N)) })),
+      { duration: burn, easing: 'linear', fill: 'forwards' });
+    await burning.finished.catch(() => {});
+    flame.remove();
+    if (!alive()) return false;
+    // Fountain of sparks from the top, the cracker shaking
+    const top = document.createElement('div');
+    top.className = 'nova-cracker-top';
+    Object.assign(top.style, { left: L.cracker.x.toFixed(1) + 'px', top: (L.ground - L.cracker.h).toFixed(1) + 'px' });
+    k.el.appendChild(top);
+    const spout = { x: L.cracker.x, y: L.ground - L.cracker.h };
+    emitters.push({ kind: 'fountain', pos: () => spout, alive: () => top.isConnected });
+    k.cracker.animate([{ transform: 'rotate(0)' }, { transform: 'rotate(-3deg)' }, { transform: 'rotate(3deg)' }, { transform: 'rotate(0)' }],
+      { duration: 160, iterations: 6 });
+    await wait(600);
+    if (!alive()) return false;
+    // Six shells fly up one after another and burst; Nova starts cheering after the second one
+    const shells = 6;
+    for (let i = 0; i < shells; i++) {
+      launchShell(L.cracker.x, L.ground - L.cracker.h, id);
+      if (i === 1) { setMood('celebrate'); playGesture('jump', 700).then(() => alive() && playGesture('spin', 800)).then(() => alive() && playGesture('jump', 700)); }
+      await wait(300);
+      if (!alive()) return false;
+    }
+    top.remove();
+    // Finale, then the spent cracker fades away
+    [250, 550].forEach(ms => wait(ms).then(() => {
+      if (alive()) { burst(innerWidth * rand(.15, .45), innerHeight * rand(.12, .3)); burst(innerWidth * rand(.55, .85), innerHeight * rand(.12, .3)); }
+    }, ms));
+    k.cracker.animate([{ filter: 'none', opacity: 1 }, { filter: 'brightness(.45) grayscale(.6)', opacity: 1, offset: .3 }, { filter: 'brightness(.45) grayscale(.6)', opacity: 0 }],
+      { duration: 1600, fill: 'forwards' });
+    // The thank-you comes up while the last bursts are still in the sky
+    await wait(700);
+    if (!alive()) return false;
+    bubble.classList.add('show');
+    return true;
+  }
+  function launchShell(x0, y0, id) {
+    const el = document.createElement('div');
+    el.className = 'nova-shell';
+    Object.assign(el.style, { left: x0.toFixed(1) + 'px', top: y0.toFixed(1) + 'px' });
+    onbEl.appendChild(el);
+    const ax = clamp(x0 + rand(-220, 220), 60, innerWidth - 60), ay = Math.max(50, Math.min(y0 - 70, innerHeight * rand(.1, .32)));   // always climbs
+    const climb = el.animate([{ transform: 'translate(0,0)' }, { transform: `translate(${(ax - x0).toFixed(1)}px, ${(ay - y0).toFixed(1)}px)` }],
+      { duration: 900, easing: 'cubic-bezier(.2,.65,.4,1)', fill: 'forwards' });
+    emitters.push({ kind: 'trail', alive: () => el.isConnected, pos: () => { const p = progressOf(climb); return { x: x0 + (ax - x0) * p, y: y0 + (ay - y0) * p + 5 }; } });
+    climb.finished.catch(() => {}).then(() => {
+      el.remove();
+      if (id === runId) burst(ax, ay);
+    });
+  }
+
+  /** Ending: Nova bows, his paper plane swoops back, he hops on, waves and flies off; then the guide fades away. */
+  async function flyAway() {
+    stageBusy = true;
+    try { await flyAwayRun(); } finally { stageBusy = false; }
+  }
+  async function flyAwayRun() {
+    const id = runId;
+    clearCracker();
+    stickOn = false;
+    stopRoam(); stopPerch();
+    bubble.classList.remove('show');
+    if (reduced) return;
+    setMood('idle');
+    // Out into the middle of the open area first, so the plane has room to land around him
+    const b = roamBox();
+    await walkTo((b.x0 + b.x1) / 2, isMobile() ? 150 : 0, 4);   // (phones: lower down, the card is gone; on the plane his sign stays clear of the top buttons)
+    if (id !== runId) return;
+    await playGesture('bow', 900);
+    if (id !== runId) return;
+    // Says goodbye: holds up a 'Goodbye!' sign, waving
+    rig.signTop.textContent = 'See you soon!';
+    rig.signMain.textContent = 'Goodbye!';
+    setMood('sign');
+    live.textContent = 'Goodbye! See you soon.';
+    speak('Goodbye! See you soon.');
+    await wait(1100);
+    if (id !== runId) return;
+    // The plane comes back from the left, nose first: it is mirrored so the nose points right
+    // (mirrored about the plane's centre, which keeps his seat in the same place; the trail uses the same centre)
+    const s = isMobile() ? 0.7 : 1;
+    [back, front, trail].forEach(el => { el.getAnimations().forEach(a => a.cancel()); el.style.opacity = ''; });
+    trail.style.transformOrigin = '-90px 15px';
+    const MIRROR = 'translateX(40px) scaleX(-1)';
+    const pr = front.getBoundingClientRect();
+    const inX = -(pr.right + 80) / s, inY = -innerHeight * .22 / s;
+    const swoop = { duration: 1300, easing: 'cubic-bezier(.2,.8,.3,1)', fill: 'forwards' };
+    const frames = flightPath([{ x: inX, y: inY, s: 1 }, { x: inX * .45, y: inY * .2 + 30, s: 1 }, { x: 40, y: -6, s: 1 }, { x: 0, y: 0, s: 1 }], 'right')
+      .map(p => ({ offset: p.offset, transform: `translate(${p.x.toFixed(1)}px, ${p.y.toFixed(1)}px) rotate(${p.deg.toFixed(2)}deg) ${MIRROR}` }));
+    await Promise.all([anim(back, frames, swoop), anim(front, frames, swoop), anim(trail, frames, swoop)]);
+    if (id !== runId) return;
+    // Hops on (back to his seat on the plane): rises easing out, drops easing in
+    await anim(agent, [{ transform: 'translateY(0)', easing: 'cubic-bezier(.3,.7,.5,1)' }, { transform: 'translateY(-140px)', offset: .55, easing: 'cubic-bezier(.5,0,.7,.4)' },
+                       { transform: 'translateY(-102px)' }], { duration: 650 });
+    agent.style.top = (AGENT_LANDED_TOP - 102) + 'px';
+    agent.getAnimations().forEach(a => a.cancel());
+    if (id !== runId) return;
+    await wait(500);
+    // Flies off to the bottom right, where he first came in, nose first; the guide fades into the website
+    landed = false;
+    const from = flyer.style.transform, fr = front.getBoundingClientRect();
+    const outX = (innerWidth - fr.left + 120) / s, outY = (innerHeight - fr.top + 120) / s;
+    // (climbs a little first, then curves away down to the corner; the nose follows the curve)
+    const out = flightPath([{ x: 0, y: 0, s: 1 }, { x: outX * .25, y: -40, s: 1 }, { x: outX * .6, y: outY * .35, s: 1 }, { x: outX, y: outY, s: 1 }], 'right', 48, false);
+    out[0].deg = 0;
+    const fly = anim(flyer, out.map((p, i) => ({ offset: p.offset,
+      transform: `${from} translate(${p.x.toFixed(1)}px, ${p.y.toFixed(1)}px) rotate(${(p.deg * Math.min(1, i / 6)).toFixed(2)}deg)` })),
+      { duration: 1800, easing: 'cubic-bezier(.45,0,.75,.6)' });
+    await wait(1100);
+    onbEl.classList.add('nova-leaving');
+    await fly;
+  }
+
+  // ----- Tab hidden and shown again: pause everything, then carry on exactly where it was -----
+  let pausedAnims = [];
+  document.addEventListener('visibilitychange', () => {
+    const now = performance.now();
+    if (document.hidden) {
+      if (hiddenAt) return;
+      hiddenAt = now;
+      pausedAnims = document.getAnimations().filter(a => a.playState === 'running' && a.effect && a.effect.target && onbEl.contains(a.effect.target));
+      pausedAnims.forEach(a => a.pause());
+      return;
+    }
+    if (!hiddenAt) return;
+    const gap = now - hiddenAt;
+    hiddenTotal += gap;
+    hiddenAt = 0;
+    if (walk) walk.start += gap;
+    if (gesture) gesture.start += gap;
+    if (gestureOut) { gestureOut.start += gap; gestureOut.fadeFrom += gap; }
+    moodStart += gap;
+    lastActivity += gap;
+    lastFrame = lastMove = 0;
+    pausedAnims.forEach(a => { try { a.play(); } catch (e) {} });
+    pausedAnims = [];
+    parkedWaits.splice(0).forEach(c => c());
+  });
+
+  // ----- Screen resized or rotated: put Nova and his props back in the right place for the new layout -----
+  // (width changes only: a phone's on-screen keyboard changes the height while the visitor types)
+  let lastWidth = innerWidth, relayoutTimer = 0;
+  let stageBusy = false;               // lighting the cracker or flying away: left alone until it finishes
+  addEventListener('resize', () => {
+    if (innerWidth === lastWidth) return;
+    lastWidth = innerWidth;
+    clearTimeout(relayoutTimer);
+    relayoutTimer = setTimeout(relayout, 200);
+  });
+  function relayout() {
+    if (!landed || stageBusy || !document.documentElement.classList.contains('onb-open')) return;
+    if (phase === 'q2') { placeSeated(); return; }
+    if (phase === 'q3') {
+      seatRun++;                       // stops a float down in progress
+      if (walk) { const r = walk.resolve; walk = null; r(); }
+      seated = false; size = 1; chuteOpen = false;
+      onbEl.classList.remove('nova-q2', 'nova-front');
+      placeCracker();
+      return;
+    }
+    const b = roamBox();
+    if (walk) { const r = walk.resolve; walk = null; r(); }
+    walkX = clamp(walkX, b.x0, b.x1); walkY = clamp(walkY, b.y0, b.y1);
+  }
+
+  let lastFrame = 0;
+  function animateFrame(now) {
+    if (!loopOn) { lastFrame = 0; return; }
+    if (hiddenAt) { requestAnimationFrame(animateFrame); return; }   // tab hidden: everything holds still
+    now = now || performance.now();
+    const dt = lastFrame ? Math.min(0.05, (now - lastFrame) / 1000) : 0.016;
+    lastFrame = now;
+
     const edx = pointerX - EYE_CX, edy = pointerY - EYE_CY;
     const ed  = Math.hypot(edx, edy) || 1;
     const eStr = Math.min(1, ed / 70);
     const eTx = (edx / ed) * 4.5 * eStr;
     const eTy = (edy / ed) * 3.5 * eStr;
-    const kEye = reduced ? 1 : 0.16;
-    eyeX += (eTx - eyeX) * kEye;
-    eyeY += (eTy - eyeY) * kEye;
+    const kEye = easeK(10.5, dt), lk = Math.abs(walkLook);
+    eyeX += (eTx * (1 - lk) + walkLook * 4.5 - eyeX) * kEye;
+    eyeY += (eTy * (1 - lk) - eyeY) * kEye;
     eyeMotion.setAttribute('transform', `translate(${eyeX.toFixed(2)} ${eyeY.toFixed(2)})`);
 
-    const angL = Math.atan2(pointerY - SH_L.y, pointerX - SH_L.x);
-    const angR = Math.atan2(pointerY - SH_R.y, pointerX - SH_R.x);
-    let tL = (angL - BASE_L) * 180 / Math.PI;
-    let tR = (angR - BASE_R) * 180 / Math.PI;
-    tL = ((tL + 180) % 360 + 360) % 360 - 180;
-    tR = ((tR + 180) % 360 + 360) % 360 - 180;
-    tL = Math.max(ARM_L_RANGE[0], Math.min(ARM_L_RANGE[1], tL));
-    tR = Math.max(ARM_R_RANGE[0], Math.min(ARM_R_RANGE[1], tR));
-    const kArm = reduced ? 1 : 0.14;
-    armLrot += (tL - armLrot) * kArm;
-    armRrot += (tR - armRrot) * kArm;
-    armL.setAttribute('transform', `rotate(${armLrot.toFixed(2)} ${SH_L.x} ${SH_L.y})`);
-    armR.setAttribute('transform', `rotate(${armRrot.toFixed(2)} ${SH_R.x} ${SH_R.y})`);
-
+    moveCharacter(now);
+    checkIdle(now);
+    drawFireworks(dt);
     requestAnimationFrame(animateFrame);
   }
 
@@ -2457,7 +3661,7 @@ window.addEventListener('scroll', () => {
   }
 
   /**
-   * Types a line and speaks it. Lines Nova follows up on her own pass untilSpoken, so the next
+   * Types a line and speaks it. Lines Nova follows up on his own pass untilSpoken, so the next
    * line never cuts the speech off. Questions return once typed, so the answers appear at once.
    * Resolves false if the run was superseded (Back, Replay, close).
    */
@@ -2590,6 +3794,16 @@ window.addEventListener('scroll', () => {
     renderFooter(true);
     focusHeading();
   }
+  // Shown when Salesforce's reply couldn't be confirmed (offline, blocked, or the reply never arrived)
+  let sendConfirmed = null;
+  function addFallbackNote() {
+    const body = bodyEl.querySelector('.nova-done-body');
+    if (!body || bodyEl.querySelector('.nova-done-note')) return;
+    const note = document.createElement('p');
+    note.className = 'nova-done-note';
+    note.innerHTML = COPY.done.fallback;
+    body.after(note);
+  }
   function showDone() {
     const wrap = document.createElement('div');
     wrap.style.display = 'grid'; wrap.style.gap = '14px';
@@ -2599,19 +3813,24 @@ window.addEventListener('scroll', () => {
         '<button type="button" class="nova-primary" data-a="explore">' + escapeHtml(COPY.exploreSite) + '</button>' +
         '<button type="button" class="nova-secondary" data-a="restart">' + escapeHtml(COPY.startOver) + '</button>' +
       '</div>';
-    wrap.querySelector('[data-a="explore"]').addEventListener('click', () => {
+    wrap.querySelector('[data-a="explore"]').addEventListener('click', async e => {
+      e.currentTarget.disabled = true;
+      trackEvent('onb_fly_away');
+      await flyAway();                 // Nova bows, hops on his plane and flies off; the guide fades out
       close();
       const about = document.getElementById('about');
       if (about) about.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' });
     });
     wrap.querySelector('[data-a="restart"]').addEventListener('click', startOver);
     showBody(wrap);
+    if (sendConfirmed === false) addFallbackNote();
     renderFooter(true);
     focusHeading();
   }
 
   function enterPhase(p) {
     phase = p;
+    lastActivity = performance.now();   // idle timer starts fresh on every step
     renderStep();
     clearBody();
     renderFooter(false);
@@ -2621,6 +3840,13 @@ window.addEventListener('scroll', () => {
   function showInstant(p) {
     stopSpeaking();
     enterPhase(p);
+    stopRoam(); stopPerch(); napping = null;
+    if (p === 'q2') placeSeated();
+    else {
+      leaveSeat(false);
+      if (p === 'q1') { clearCracker(); stickOn = false; setMood('roam'); roam(); }
+      else placeCracker();
+    }
     const text = p === 'q1' ? COPY.situation.title : p === 'q2' ? COPY.requirement.title : COPY.details.title;
     msg.textContent = text;
     heading.classList.add('typed');
@@ -2632,6 +3858,9 @@ window.addEventListener('scroll', () => {
 
   async function askSituation(id) {
     enterPhase('q1');
+    // Q1: Nova roams freely while the visitor reads
+    setMood('roam');
+    roam();
     trackEvent('onb_step_situation');
     if (await say(COPY.situation.title, id)) showSituation();
   }
@@ -2647,12 +3876,17 @@ window.addEventListener('scroll', () => {
     trackEvent('quiz_question_1');
     clearBody(); renderFooter(false);
     stopSpeaking();
+    // Heads off for the ladder straight away; he climbs while replying and while the next question is typed,
+    // and the answers only appear once he is sitting on the card (so a quick click never skips him)
+    const seating = climbToSeat(id);
     if (await say(opt.ack, id, true)) {
       await wait(300);
       if (id === runId) {
         enterPhase('q2');
         trackEvent('onb_step_requirement');
-        if (await say(COPY.requirement.title, id)) showRequirement();
+        const typed = await say(COPY.requirement.title, id);
+        await seating;
+        if (typed && id === runId) showRequirement();
       }
     }
     if (id === runId) busy = false;
@@ -2667,10 +3901,17 @@ window.addEventListener('scroll', () => {
     trackEvent('quiz_question_2');
     clearBody(); renderFooter(false);
     stopSpeaking();
+    // Fist pump up on the card, then jumps off, floats down under his parachute and sets up the cracker on the left
+    stopPerch();
+    setMood('idle');
+    playGesture('fistpump', 900);
+    const walking = wait(900).then(() => floatDown(id));
+    walking.then(() => { if (id === runId) prepareCracker(id); });
     if (await say(COPY.requirementAck, id, true)) {
-      await wait(250);
+      await Promise.all([wait(250), walking]);
       if (id === runId) {
         enterPhase('q3');
+        setMood('guard');
         trackEvent('quiz_contact_step');
         if (await say(COPY.details.title, id)) showDetails();
       }
@@ -2685,11 +3926,23 @@ window.addEventListener('scroll', () => {
     else if (phase === 'q3') showInstant('q2');
   }
 
-  async function onSubmitted() {
+  /** Submit pressed (sending = the Web-to-Lead post in progress): Nova lights the cracker straight away. */
+  async function onSubmitted(sending) {
     const id = runId;
     markDone();
-    enterPhase('done');
     trackEvent('quiz_completed');
+    sendConfirmed = null;
+    sending.then(ok => {
+      sendConfirmed = ok;
+      trackEvent(ok ? 'enquiry_send_confirmed' : 'enquiry_send_unconfirmed');
+      if (!ok) addFallbackNote();
+    });
+    if (!reduced) {
+      trackEvent('quiz_celebration');
+      if (!(await lightCracker(id))) return;
+    }
+    enterPhase('done');
+    setMood('celebrate');
     if (await say(COPY.done.title, id)) showDone();
   }
 
@@ -2791,6 +4044,7 @@ window.addEventListener('scroll', () => {
       if (!(key in values)) return;
       if (!started) { started = true; trackEvent('quiz_form_started'); }
       values[key] = e.target.value;
+      onFieldsChanged();
       if (key === 'country') { values.state = ''; fillStates(); }
       setError(key, '');
       if (!form.querySelector('.nova-field-error:not(:empty)')) alertBox.hidden = true;
@@ -2824,6 +4078,7 @@ window.addEventListener('scroll', () => {
       alertBox.hidden = !firstInvalid;
       if (firstInvalid) {
         trackEvent('form_validation_error');
+        reactToError();
         el(firstInvalid).focus();
         return;
       }
@@ -2835,8 +4090,8 @@ window.addEventListener('scroll', () => {
       form.querySelectorAll('input, select, textarea').forEach(x => { x.disabled = true; });
       trackEvent('quiz_form_submitted');
 
-      await submitWebToLead(buildLeadFields());
-      onSubmitted();
+      // Nova lights the cracker straight away, whatever Salesforce replies
+      onSubmitted(submitWebToLead(buildLeadFields()));
     });
 
     return form;
@@ -2889,7 +4144,10 @@ window.addEventListener('scroll', () => {
     return fields.filter(([, v]) => v !== '');
   }
 
-  /** Posts into the hidden frame. Resolves when the frame loads Salesforce's response (or after 8s). */
+  /**
+   * Posts into the hidden frame. Resolves true once Salesforce has redirected the frame to retURL (the enquiry
+   * was accepted), or false after 8s otherwise (offline, blocked, or Salesforce never redirected).
+   */
   function submitWebToLead(fields) {
     let frame = document.querySelector('iframe[name="enquiryLeadFrame"]');
     if (!frame) {
@@ -2910,16 +4168,21 @@ window.addEventListener('scroll', () => {
     });
     return new Promise(resolve => {
       let settled = false;
-      const finish = () => {
+      const finish = ok => {
         if (settled) return;
         settled = true;
         clearTimeout(timer);
-        frame.removeEventListener('load', finish);
+        frame.removeEventListener('load', onLoad);
         form.remove();
-        resolve();
+        resolve(ok);
       };
-      const timer = setTimeout(finish, 8000);
-      frame.addEventListener('load', finish);
+      // The frame also "loads" Salesforce's own reply page and browser error pages; those belong to another origin
+      // and can't be read, so only arriving at retURL on this site counts as success.
+      const onLoad = () => {
+        try { if (frame.contentWindow.location.href.split(/[?#]/)[0] === WEB_TO_LEAD.retURL) finish(true); } catch (e) {}
+      };
+      const timer = setTimeout(() => finish(false), 8000);
+      frame.addEventListener('load', onLoad);
       document.body.appendChild(form);
       form.submit();
     });
@@ -2932,8 +4195,26 @@ window.addEventListener('scroll', () => {
 
   function resetStage() {
     [flyer, agent, back, front, trail, shadow].forEach(el => el.getAnimations().forEach(a => a.cancel()));
+    landed = false;
+    seatRun++;
+    stopRoam();
+    stopPerch();
+    seated = false;
+    removeProp();
+    onbEl.classList.remove('nova-q2', 'nova-front');
+    napping = null;
+    if (walk) { const r = walk.resolve; walk = null; r(); }
+    walkX = 0;
+    walkY = 0;
+    size = 1;
+    gesture = gestureOut = null;
+    setMood('idle');
+    clearCelebration();
     flyer.style.transform = '';
     [back, front, trail, shadow].forEach(el => { el.style.opacity = ''; });
+    trail.style.transformOrigin = '';
+    rig.signTop.textContent = 'Welcome to';
+    rig.signMain.textContent = 'Aakrin!';
     agent.style.top = '';
     agent.classList.remove('idle');
   }
@@ -2941,11 +4222,12 @@ window.addEventListener('scroll', () => {
   /** Nova already standing (no fly-in): repeat opens, Back, reduced motion. */
   function placeLanded() {
     resetStage();
-    flyer.style.transform = `translate(0, 0) scale(${isMobile() ? 0.7 : 1})`;
+    applyFlyer();
     [back, front, trail].forEach(el => { el.style.opacity = '0'; });
     shadow.style.opacity = '1';
     agent.style.top = AGENT_LANDED_TOP + 'px';
     agent.classList.add('idle');
+    landed = true;
   }
 
   async function playIntro(id) {
@@ -2959,24 +4241,15 @@ window.addEventListener('scroll', () => {
     const start = { x: innerWidth + 260 * s, y: innerHeight + 160 * s };
     const centre = { x: innerWidth / 2, y: innerHeight / 2 };
     const approach = { x: home.x + 70 * s, y: home.y - 14 * s };
-    const at = (p, scale, deg) =>
-      `translate(${Math.round(p.x - home.x)}px, ${Math.round(p.y - home.y)}px) scale(${scale}) rotate(${deg.toFixed(1)}deg)`;
-    // Nose angle for travelling from a to b: positive when heading up-left
-    const heading = (a, b) => {
-      if (Math.hypot(b.x - a.x, b.y - a.y) < 40) return 0;
-      const deg = Math.atan2(a.y - b.y, a.x - b.x) * 180 / Math.PI;
-      return Math.max(-20, Math.min(20, deg * 0.6));
-    };
-
     // On wide screens Nova lands left of centre, so the plane passes over the centre on the way.
-    // Elsewhere Nova's spot is the centre itself, and the straight line in already ends there.
+    // Elsewhere Nova's spot is the centre itself, and the curve in already ends there.
+    // One smooth curve through the points; the nose follows the direction of travel and levels off to land.
     const viaCentre = centre.x - home.x > 80 * s;
-    const frames = [{ transform: at(start, .45 * s, heading(start, viaCentre ? centre : approach)) }];
-    if (viaCentre) frames.push({ transform: at(centre, .8 * s, heading(centre, approach)), offset: .55 });
-    frames.push(
-      { transform: at(approach, .95 * s, 3), offset: .85 },                        // slight nose-up flare before touching down
-      { transform: `translate(0, 0) scale(${s}) rotate(0deg)` }
-    );
+    const pts = [{ x: start.x, y: start.y, s: .45 * s }];
+    if (viaCentre) pts.push({ x: centre.x, y: centre.y, s: .8 * s });
+    pts.push({ x: approach.x, y: approach.y, s: .95 * s }, { x: home.x, y: home.y, s });
+    const frames = flightPath(pts, 'left').map(p => ({ offset: p.offset,
+      transform: `translate(${(p.x - home.x).toFixed(1)}px, ${(p.y - home.y).toFixed(1)}px) scale(${p.s.toFixed(3)}) rotate(${p.deg.toFixed(2)}deg)` }));
     await anim(flyer, frames, { duration: 3000, easing: 'cubic-bezier(.25,.8,.35,1)' });
     if (id !== runId) return false;
 
@@ -3016,6 +4289,10 @@ window.addEventListener('scroll', () => {
     agent.getAnimations().forEach(a => a.cancel());
     agent.style.top = AGENT_LANDED_TOP + 'px';
     agent.classList.add('idle');
+    // From here the motion code positions Nova (same spot the flight ended on), so he can walk
+    flyer.getAnimations().forEach(a => a.cancel());
+    landed = true;
+    applyFlyer();
     return true;
   }
 
@@ -3025,10 +4302,15 @@ window.addEventListener('scroll', () => {
     msg.textContent = '';
     heading.classList.remove('typed');
     if (intro && !reduced) {
+      // The fur pictures are usually ready within a few hundred ms; the plane is still off-screen meanwhile
+      await Promise.race([furReady, wait(1500)]);
+      if (id !== runId) return;
       if (!(await playIntro(id))) return;
     } else {
       placeLanded();
     }
+    // Greeting: Nova holds up a 'Welcome to Aakrin!' sign and waves while saying hello
+    setMood('sign');
     enterPhase('greeting');
     bubble.classList.add('show');
     await wait(intro ? 350 : 150);
@@ -3074,6 +4356,12 @@ window.addEventListener('scroll', () => {
     busy = false;
     stopSpeaking();
     loopOn = false;
+    stopRoam();
+    stopPerch();
+    napping = null;
+    if (walk) { const r = walk.resolve; walk = null; r(); }
+    gesture = gestureOut = null;
+    clearCelebration();
     markDone();
     // Interrupted before the first question, or finished: start fresh next time
     if (phase === 'intro' || phase === 'greeting' || phase === 'done') phase = 'intro';
