@@ -8,6 +8,9 @@ import { env } from "@/lib/env";
 export function AnalyticsScripts() {
   const { clarityProjectId, apolloAppId } = env;
 
+  console.log("clarityPeoject", clarityProjectId);
+  console.log("appolloId", apolloAppId);
+
   return (
     <>
       {clarityProjectId && (
