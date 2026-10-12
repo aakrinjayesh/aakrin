@@ -760,7 +760,7 @@ export function Onboarding({ config }: { config: WebToLeadConfig }) {
       >
         <div ref={stageRef} className="onb-sky relative h-full overflow-hidden">
           <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-            <div ref={skyRef} className="absolute -inset-8">
+            <div ref={skyRef} className="absolute -inset-8 will-change-transform">
               <span className="nova-cloud nova-c1" />
               <span className="nova-cloud nova-c2" />
               <span className="nova-cloud nova-c3" />

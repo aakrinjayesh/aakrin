@@ -85,10 +85,10 @@ export function ChoiceGroup({
             onKeyDown={(event) => onKeyDown(event, index)}
             onClick={() => onSelect(option.id)}
             className={cn(
-              "flex min-h-14 cursor-pointer items-center gap-3 rounded-lg border-[1.5px] px-4 py-3 text-left text-md font-medium text-ink transition-[border-color,background-color] duration-150",
-              checked
-                ? "border-accent-strong bg-accent-tint"
-                : "border-line bg-surface hover:border-ink",
+              // The outline is an inset ring, not a border: a border colour change is four
+              // transitions (one per side), each firing events, on every hover
+              "flex min-h-14 cursor-pointer items-center gap-3 rounded-lg px-4 py-3 text-left text-md font-medium text-ink ring-[1.5px] transition-[box-shadow,background-color] duration-150 ring-inset",
+              checked ? "bg-accent-tint ring-accent-strong" : "bg-surface ring-line hover:ring-ink",
             )}
           >
             <span

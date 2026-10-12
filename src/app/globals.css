@@ -222,6 +222,8 @@ html.onb-pending .onb-cover {
    (desktop/tablet), or centred under the top buttons (phones, where the engine also scales
    the flyer to 0.7). Until the fly-in starts it waits off the bottom-right corner. */
 .nova-flyer {
+  /* Moves every frame: its own compositor layer, so moving it doesn't repaint the page */
+  will-change: transform;
   position: absolute;
   top: 50%;
   left: calc((100% - var(--onb-card-w)) / 2 - 230px);
@@ -457,6 +459,8 @@ html.onb-pending .onb-cover {
 
 /* Sky */
 .nova-cloud {
+  /* Drifting clouds with soft shadows: slid by the compositor instead of repainted */
+  will-change: transform;
   position: absolute;
   border-radius: 999px;
   background: #fff;

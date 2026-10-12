@@ -471,6 +471,9 @@ export class NovaEngine {
   private screenPointer = { x: 0, y: 0 };
   private skyShift = { x: 0, y: 0 };
   private lastRootY = 0;
+  private cardRect: DOMRect | null = null;
+  private written = new WeakMap<Element, Map<string, string>>();
+  private cardRectAt = 0;
   private zTimer = 0;
   private contrailOn = false;
   private pointer = { x: EYE.x, y: EYE.y };
@@ -690,6 +693,15 @@ export class NovaEngine {
     if (this.hiddenAt) return;
     const dt = this.lastFrame ? Math.min(0.05, (time - this.lastFrame) / 1000) : 0.016;
     this.lastFrame = time;
+    // The card only moves on step changes and resizes, so it is measured a few times a second,
+    // and before this frame writes anything (measuring after a style change would force the
+    // browser to recalculate the whole layout mid-frame)
+    if (time - this.cardRectAt > 200) {
+      this.cardRectAt = time;
+      this.cardRect =
+        this.landed && this.cardShown() ? this.els.card.getBoundingClientRect() : null;
+    }
+    const cardRect = this.landed && this.cardShown() ? this.cardRect : null;
 
     // Eyes follow the pointer (or focus), or look where he is walking
     const edx = this.pointer.x - EYE.x;
@@ -700,14 +712,15 @@ export class NovaEngine {
     const lk = Math.abs(this.walkLook);
     this.eye.x += ((edx / ed) * 4.5 * strength * (1 - lk) + this.walkLook * 4.5 - this.eye.x) * k;
     this.eye.y += ((edy / ed) * 3.5 * strength * (1 - lk) - this.eye.y) * k;
-    this.eyeMotion.setAttribute(
+    this.put(
+      this.eyeMotion,
       "transform",
       `translate(${this.eye.x.toFixed(2)} ${this.eye.y.toFixed(2)})`,
     );
 
     this.moveCharacter(time);
     this.checkIdle(time);
-    this.updateTail();
+    this.updateTail(cardRect);
     this.driftSky(dt);
     this.drawFireworks(dt);
   };
@@ -721,8 +734,12 @@ export class NovaEngine {
     const tx = ((W / 2 - this.screenPointer.x) / W) * 26;
     const ty = ((H / 2 - this.screenPointer.y) / H) * 14;
     const k = this.easeK(2.5, dt);
-    this.skyShift.x += (tx - this.skyShift.x) * k;
-    this.skyShift.y += (ty - this.skyShift.y) * k;
+    const nx = this.skyShift.x + (tx - this.skyShift.x) * k;
+    const ny = this.skyShift.y + (ty - this.skyShift.y) * k;
+    // Settled: no write, so the browser has nothing to redo
+    if (Math.abs(nx - this.skyShift.x) < 0.02 && Math.abs(ny - this.skyShift.y) < 0.02) return;
+    this.skyShift.x = nx;
+    this.skyShift.y = ny;
     sky.style.transform = `translate(${this.skyShift.x.toFixed(1)}px, ${this.skyShift.y.toFixed(1)}px)`;
   }
 
@@ -730,15 +747,13 @@ export class NovaEngine {
    * The card's speech tail points at Nova's head: on its left edge on wider screens, on its
    * top edge on phones (Nova above the sheet). Hidden while he sits on the card or is away.
    */
-  private updateTail() {
-    const card = this.els.card;
-    let show =
-      this.landed && this.cardShown() && !this.seated && !this.stageBusy && !this.walkIsBig();
+  private updateTail(cardRect: DOMRect | null) {
+    let show = !!cardRect && !this.seated && !this.stageBusy && !this.walkIsBig();
     let x = 0;
     let y = 0;
     let up = false;
-    if (show) {
-      const c = card.getBoundingClientRect();
+    if (show && cardRect) {
+      const c = cardRect;
       const r = this.agentRect();
       const k = r.height / VB_H;
       const feetY = r.top + FEET * k;
@@ -2372,30 +2387,36 @@ export class NovaEngine {
 
     // Sign: pops up while greeting/leaving, wiggles, tucks away afterwards
     this.signScale += ((this.mood === "sign" ? 1 : 0) - this.signScale) * this.easeK(11.9, dt);
-    rig.sign.setAttribute(
-      "transform",
-      `rotate(${(Math.sin(t * 4) * 5 * calm).toFixed(2)} 181 106) translate(181 106) scale(${this.signScale.toFixed(3)}) translate(-181 -106)`,
-    );
-    rig.sign.style.display = this.signScale < 0.02 ? "none" : "";
+    // (hidden: no wiggle to write)
+    if (this.signScale >= 0.02)
+      this.put(
+        rig.sign,
+        "transform",
+        `rotate(${(Math.sin(t * 4) * 5 * calm).toFixed(2)} 181 106) translate(181 106) scale(${this.signScale.toFixed(3)}) translate(-181 -106)`,
+      );
+    this.put(rig.sign, "style.display", this.signScale < 0.02 ? "none" : "");
     // Parachute: billows open upwards from his shoulders, packs away on landing
     this.chuteScale += ((this.chuteOpen ? 1 : 0) - this.chuteScale) * this.easeK(17.3, dt);
     const cs = isPhone() ? 0.8 : 1;
-    rig.chute.setAttribute(
+    this.put(
+      rig.chute,
       "transform",
       `translate(100 150) scale(${((0.3 + 0.7 * this.chuteScale) * cs).toFixed(3)} ${(this.chuteScale * cs).toFixed(3)}) translate(-100 -150)`,
     );
-    rig.chute.style.display = this.chuteScale < 0.02 ? "none" : "";
+    this.put(rig.chute, "style.display", this.chuteScale < 0.02 ? "none" : "");
     // Reading glasses for the second question
     this.glassesScale += ((this.phase === "q2" ? 1 : 0) - this.glassesScale) * this.easeK(13.4, dt);
-    rig.glasses.setAttribute(
+    this.put(
+      rig.glasses,
       "transform",
       `translate(101 120) scale(${this.glassesScale.toFixed(3)}) translate(-101 -120)`,
     );
-    rig.glasses.style.display = this.glassesScale < 0.02 ? "none" : "";
+    this.put(rig.glasses, "style.display", this.glassesScale < 0.02 ? "none" : "");
     // Incense stick: the glowing tip flickers
-    rig.stick.style.display = this.stickOn ? "" : "none";
+    this.put(rig.stick, "style.display", this.stickOn ? "" : "none");
     if (this.stickOn)
-      rig.stickGlow.setAttribute(
+      this.put(
+        rig.stickGlow,
         "opacity",
         (0.35 + 0.25 * Math.abs(Math.sin(t * 7)) * calm).toFixed(2),
       );
@@ -2417,17 +2438,19 @@ export class NovaEngine {
     const sy = 1 + o.squash;
     const sx =
       (1 - o.squash * 0.6) * o.spin * turn * Math.sign(flip || 1) * (0.25 + 0.75 * Math.abs(flip));
-    rig.root.setAttribute(
+    this.put(
+      rig.root,
       "transform",
       `translate(${o.swayX.toFixed(2)} ${o.rootY.toFixed(2)}) rotate(${this.tilt.toFixed(2)} 100 266) translate(100 266) scale(${(sx * this.size).toFixed(3)} ${(sy * this.size).toFixed(3)}) translate(-100 -266)`,
     );
-    rig.upper.setAttribute("transform", `rotate(${o.lean.toFixed(2)} 100 236)`);
-    rig.head.setAttribute(
+    this.put(rig.upper, "transform", `rotate(${o.lean.toFixed(2)} 100 236)`);
+    this.put(
+      rig.head,
       "transform",
       `rotate(${(pose.head + o.head).toFixed(2)} 100 160) translate(0 ${o.headY.toFixed(2)})`,
     );
-    rig.armL.setAttribute("transform", `rotate(${L.toFixed(2)} 60 162)`);
-    rig.armR.setAttribute("transform", `rotate(${R.toFixed(2)} 140 160)`);
+    this.put(rig.armL, "transform", `rotate(${L.toFixed(2)} 60 162)`);
+    this.put(rig.armR, "transform", `rotate(${R.toFixed(2)} 140 160)`);
     this.stretchArm(rig.armL, ARM_L_AXIS, o.reachL);
     this.stretchArm(rig.armR, ARM_R_AXIS, o.reachR);
     // A lifted knee (climbing): the leg rises and, seen from behind, the shin foreshortens
@@ -2436,25 +2459,30 @@ export class NovaEngine {
       (lift > 0.1
         ? ` translate(0 216) scale(1 ${(1 - lift / 90).toFixed(3)}) translate(0 -216)`
         : "");
-    rig.legL.setAttribute("transform", leg(o.legL, o.liftL, 83));
-    rig.legR.setAttribute("transform", leg(o.legR, o.liftR, 117));
-    rig.tail.setAttribute(
-      "transform",
-      `rotate(${(Math.sin(t * 2.4) * 5 * calm).toFixed(2)} 74 200)`,
-    );
+    this.put(rig.legL, "transform", leg(o.legL, o.liftL, 83));
+    this.put(rig.legR, "transform", leg(o.legR, o.liftR, 117));
+    this.put(rig.tail, "transform", `rotate(${(Math.sin(t * 2.4) * 5 * calm).toFixed(2)} 74 200)`);
     // Sitting: standing legs cross-fade into sitting legs; each shin swings towards the viewer
     const seatTarget = this.seated ? 1 : 0;
     this.seatBlend += (seatTarget - this.seatBlend) * this.easeK(20, dt);
     if (Math.abs(this.seatBlend - seatTarget) < 0.01) this.seatBlend = seatTarget;
-    rig.legL.style.display = rig.legR.style.display = this.seatBlend >= 1 ? "none" : "";
-    rig.sitLegs.style.display = rig.knees.style.display = this.seatBlend <= 0 ? "none" : "";
-    rig.legL.style.opacity = rig.legR.style.opacity = (1 - this.seatBlend).toFixed(3);
-    rig.sitLegs.style.opacity = rig.knees.style.opacity = this.seatBlend.toFixed(3);
+    const standDisplay = this.seatBlend >= 1 ? "none" : "";
+    this.put(rig.legL, "style.display", standDisplay);
+    this.put(rig.legR, "style.display", standDisplay);
+    const sitDisplay = this.seatBlend <= 0 ? "none" : "";
+    this.put(rig.sitLegs, "style.display", sitDisplay);
+    this.put(rig.knees, "style.display", sitDisplay);
+    const standOpacity = (1 - this.seatBlend).toFixed(3);
+    this.put(rig.legL, "style.opacity", standOpacity);
+    this.put(rig.legR, "style.opacity", standOpacity);
+    const sitOpacity = this.seatBlend.toFixed(3);
+    this.put(rig.sitLegs, "style.opacity", sitOpacity);
+    this.put(rig.knees, "style.opacity", sitOpacity);
     if (this.seatBlend > 0) {
       const shin = (v: number) =>
         `translate(0 243) scale(1 ${(0.8 + 0.2 * Math.cos(clamp(v, -1.6, 1.6) * calm)).toFixed(3)}) rotate(${(v * 4 * calm).toFixed(2)}) translate(0 -243)`;
-      rig.shinL.setAttribute("transform", shin(o.shinL));
-      rig.shinR.setAttribute("transform", shin(o.shinR));
+      this.put(rig.shinL, "transform", shin(o.shinL));
+      this.put(rig.shinR, "transform", shin(o.shinR));
     }
     if (this.carrying && this.prop) this.prop.style.transform = this.carriedTransform();
     // Floor shadow only while standing on the ground; a small one on the card while sitting.
@@ -2507,6 +2535,20 @@ export class NovaEngine {
       "transform",
       `translate(${(axis.dx * by).toFixed(2)} ${(axis.dy * by).toFixed(2)})`,
     );
+  }
+
+  /**
+   * Per-frame pose writes go through here and are skipped when the value hasn't changed:
+   * even an identical write makes the browser re-check the element's styles. Only for parts
+   * nothing else writes to, so the remembered values stay true.
+   */
+  private put(el: Element, key: string, value: string) {
+    let last = this.written.get(el);
+    if (!last) this.written.set(el, (last = new Map()));
+    if (last.get(key) === value) return;
+    last.set(key, value);
+    if (key.startsWith("style.")) (el as HTMLElement).style.setProperty(key.slice(6), value);
+    else el.setAttribute(key, value);
   }
 
   /** Nova's box on screen, from his walk offset (measured once per layout, not every frame) */
