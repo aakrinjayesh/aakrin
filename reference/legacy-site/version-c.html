@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aakrin | Salesforce Consulting Partner in Bangalore</title>
+<meta name="description" content="Aakrin sets up, fixes, connects and supports Salesforce for growing businesses. Certified Salesforce consultants for implementation, data migration, integration, development and support.">
+<link rel="canonical" href="https://aakrin.com/">
+<meta name="theme-color" content="#16131D">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Aakrin">
+<meta property="og:title" content="Aakrin | Get Salesforce working the way your business does">
+<meta property="og:description" content="Certified Salesforce consultants who set up, fix, connect and support Salesforce for growing teams.">
+<meta property="og:url" content="https://aakrin.com/">
+<meta property="og:image" content="https://aakrin.com/team-collaboration.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+<!-- Lets CSS hide scroll-reveal content only when JS is running to reveal it -->
+<script>
+document.documentElement.classList.add('js');
+// Show the onboarding chat full screen on a first visit (or with ?chat=1) before first paint.
+// Set AUTO_OPEN_FIRST_VISIT to false to open it only from the launcher button and the hero link.
+(function () {
+  var AUTO_OPEN_FIRST_VISIT = true;
+  var show = /[?&]chat=1/.test(location.search);
+  try { if (AUTO_OPEN_FIRST_VISIT && !localStorage.getItem('aakrin_onboarding_v1')) show = true; } catch (e) {}
+  if (show) document.documentElement.classList.add('onb-open', 'onb-auto');
+})();
+</script>
+
+<!-- Microsoft Clarity -->
+<script>
+  // (function(c,l,a,r,i,t,y){
+  //   c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+  //   t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+  //   y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+  // })(window, document, "clarity", "script", "ym7dl733c2");
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "Aakrin Consulting Services",
+  "url": "https://aakrin.com/",
+  "logo": "https://aakrin.com/A-Aakrin-logo-1.svg",
+  "email": "info@aakrin.com",
+  "description": "Salesforce consulting partner: implementation, data migration, integration, development and support.",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "#112, First Floor, Confident Oxygen Mall, Chambenahalli, Sarjapura Road",
+    "addressLocality": "Bangalore",
+    "postalCode": "562125",
+    "addressCountry": "IN"
+  },
+  "sameAs": ["https://www.linkedin.com/company/aakrin"]
+}
+</script>
+
+<style>
+/* Layout: one 1200px column. Hero answers "what do you do / is it for me / what next" in one screen,
+   then problems > process > proof > industries > insights > contact. Header sticky; phones get a bottom CTA bar. */
+:root {
+  /* Color: taken from the Aakrin logo (ink, orange, violet) */
+  --ink: #16131D;
+  --text: #4E4A59;
+  --muted: #6F6A7B;
+  --bg: #F6F5F8;
+  --surface: #FFFFFF;
+  --line: #E4E1EA;
+  --accent: #E55014;        /* logo orange: large marks and rules only */
+  --accent-strong: #C8450F; /* buttons and links, AA with white */
+  --accent-hover: #A9380B;
+  --accent-tint: #FCEDE6;
+  --on-dark: #F3F1F6;
+  --on-dark-muted: #B5AFC2;
+
+  /* Type */
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Instrument Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --fs-xs: 0.8125rem;
+  --fs-sm: 0.9375rem;
+  --fs-md: 1.0625rem;
+  --fs-lg: 1.25rem;
+  --fs-xl: 1.625rem;
+  --fs-2xl: clamp(1.875rem, 3.2vw, 2.5rem);
+  --fs-hero: clamp(2.25rem, 5vw, 3.6rem);
+
+  /* Motion */
+  --ease-out: cubic-bezier(.2, .7, .2, 1);
+
+  --gutter: clamp(16px, 4vw, 32px);
+  --radius: 12px;
+  --header-h: 68px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--fs-md);
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; }
+h1, h2, h3 { font-family: var(--font-display); color: var(--ink); line-height: 1.12; margin: 0; text-wrap: balance; letter-spacing: -0.015em; }
+p { margin: 0; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+[id] { scroll-margin-top: calc(var(--header-h) + 16px); }
+
+.wrap { max-width: 1200px; margin-inline: auto; padding-inline: var(--gutter); }
+.section { padding-block: clamp(64px, 9vw, 112px); }
+.eyebrow { font-size: var(--fs-xs); font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent-strong); }
+.section-head { display: grid; gap: 14px; max-width: 46rem; margin-bottom: clamp(32px, 5vw, 56px); }
+.section-head h2 { font-size: var(--fs-2xl); }
+.section-head p { max-width: 62ch; }
+
+.skip-link { position: absolute; left: 16px; top: -100px; z-index: 100; background: var(--ink); color: var(--on-dark); padding: 10px 16px; border-radius: 6px; text-decoration: none; }
+.skip-link:focus { top: 12px; }
+
+/* Buttons: everything styled as a button is a real link or <button> */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 48px; padding: 12px 22px; border-radius: 8px;
+  font: 600 var(--fs-sm)/1.2 var(--font-body); text-decoration: none; cursor: pointer;
+  border: 1.5px solid transparent; transition: background-color .15s, border-color .15s, color .15s, transform .15s;
+}
+.btn:active { transform: translateY(1px); }
+.btn-primary { background: var(--accent-strong); color: #fff; }
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-secondary { background: transparent; color: var(--ink); border-color: var(--ink); }
+.btn-secondary:hover { background: var(--ink); color: var(--on-dark); }
+.link-arrow { font-weight: 600; color: var(--accent-strong); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+.link-arrow::after { content: "→"; transition: transform .2s var(--ease-out); }
+a:hover .link-arrow::after, .link-arrow:hover::after { transform: translateX(4px); }
+
+/* ===== Header ===== */
+.site-header {
+  position: sticky; top: 0; z-index: 50;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  backdrop-filter: saturate(1.4) blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.header-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: var(--header-h); }
+.brand { display: inline-flex; padding: 6px 0; }
+.brand img { height: 34px; width: auto; }
+.nav-list { display: flex; align-items: center; gap: 4px; }
+.nav-list a:not(.btn) { display: block; padding: 10px 12px; border-radius: 6px; font-size: var(--fs-sm); font-weight: 500; color: var(--ink); text-decoration: none; }
+.nav-list a:not(.btn):hover { background: var(--bg); }
+.nav-list .btn { margin-left: 8px; min-height: 42px; padding: 10px 18px; }
+.nav-toggle { display: none; width: 44px; height: 44px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); cursor: pointer; align-items: center; justify-content: center; }
+.nav-toggle span, .nav-toggle span::before, .nav-toggle span::after { display: block; width: 18px; height: 2px; background: var(--ink); position: relative; content: ""; transition: transform .2s; }
+.nav-toggle span::before { position: absolute; top: -6px; }
+.nav-toggle span::after { position: absolute; top: 6px; }
+.nav-toggle[aria-expanded="true"] span { background: transparent; }
+.nav-toggle[aria-expanded="true"] span::before { transform: translateY(6px) rotate(45deg); }
+.nav-toggle[aria-expanded="true"] span::after { transform: translateY(-6px) rotate(-45deg); }
+
+/* ===== Hero: what we do, who it's for, proof, next step ===== */
+.hero { background: var(--surface); border-bottom: 1px solid var(--line); overflow: hidden; }
+.hero-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(32px, 5vw, 72px); align-items: center; padding-block: clamp(40px, 6vw, 88px); }
+.hero-copy { display: grid; gap: 22px; min-width: 0; }
+.hero h1 { font-size: var(--fs-hero); }
+.hero h1 .mark { position: relative; white-space: nowrap; color: var(--accent-strong); }
+.hero h1 .mark svg { position: absolute; left: -2%; bottom: -0.2em; width: 104%; height: 0.36em; overflow: visible; }
+.hero h1 .mark path { fill: none; stroke: var(--accent); stroke-width: 5; stroke-linecap: round; }
+.hero-lede { font-size: var(--fs-lg); line-height: 1.55; max-width: 34em; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.trust-row { display: flex; align-items: center; flex-wrap: wrap; gap: 14px 24px; padding-top: 18px; border-top: 1px solid var(--line); }
+.trust-row img { width: 56px; height: auto; }
+.trust-row p { font-size: var(--fs-sm); color: var(--muted); line-height: 1.4; }
+.trust-row strong { display: block; color: var(--ink); font-weight: 600; }
+.trust-stats { display: flex; gap: 22px; flex-wrap: wrap; }
+.trust-stats b { font: 700 var(--fs-lg)/1 var(--font-display); color: var(--ink); font-variant-numeric: tabular-nums; margin-right: 4px; }
+
+/* Problem picker: visitors start from their problem, not our service list */
+.picker { background: var(--bg); border: 1px solid var(--line); border-radius: 16px; padding: clamp(18px, 3vw, 28px); min-width: 0; }
+.picker h2 { font-size: var(--fs-lg); margin-bottom: 4px; }
+.picker > p { font-size: var(--fs-sm); color: var(--muted); margin-bottom: 16px; }
+.picker ul { display: grid; gap: 8px; }
+.picker a {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 14px 16px; border-radius: 10px; background: var(--surface); border: 1px solid var(--line);
+  text-decoration: none; color: var(--ink); font-weight: 500; font-size: var(--fs-md); line-height: 1.35;
+  transition: border-color .2s, transform .2s var(--ease-out), box-shadow .2s;
+}
+.picker a::after { content: "→"; color: var(--accent-strong); transition: transform .2s var(--ease-out); flex: none; }
+.picker a:hover { border-color: var(--ink); transform: translateX(4px); box-shadow: 0 8px 20px -14px rgba(22,19,29,.4); }
+.picker a:hover::after { transform: translateX(3px); }
+
+/* ===== Clients ===== */
+.clients { padding-block: 40px 48px; }
+.clients-label { text-align: center; font: 500 var(--fs-sm)/1.4 var(--font-body); color: var(--muted); margin-bottom: 20px; letter-spacing: 0; }
+.logo-wall { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; --cols: 8; }
+.logo-wall li {
+  flex: 0 0 calc((100% - (var(--cols) - 1) * 10px) / var(--cols));
+  background: var(--surface); border-radius: 8px; height: 76px;
+  display: flex; align-items: center; justify-content: center; padding: 12px;
+}
+/* Logos are not links, so they get no hover state */
+.logo-wall img { max-height: 48px; max-width: 100%; width: auto; object-fit: contain; filter: grayscale(1); opacity: .85; }
+.clients-more { text-align: center; margin-top: 16px; font-size: var(--fs-sm); color: var(--muted); }
+
+/* ===== Problems we solve ===== */
+.help { background: var(--surface); border-block: 1px solid var(--line); }
+.help-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.help-card {
+  display: grid; grid-template-rows: auto 1fr auto; gap: 12px; padding: 26px; min-width: 0;
+  border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface);
+  text-decoration: none; color: inherit;
+  transition: border-color .2s, transform .25s var(--ease-out), box-shadow .25s;
+}
+.help-card:hover { border-color: var(--ink); transform: translateY(-4px); box-shadow: 0 18px 36px -24px rgba(22,19,29,.45); }
+.help-card h3 { font-size: var(--fs-lg); line-height: 1.25; }
+.help-card p { font-size: var(--fs-sm); }
+.help-foot { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding-top: 14px; border-top: 1px solid var(--line); }
+.help-tag { font-size: var(--fs-xs); font-weight: 600; color: var(--muted); }
+.help-foot .link-arrow { font-size: var(--fs-sm); }
+/* Brief highlight when a visitor arrives from the hero picker */
+.help-card.flash { animation: flash 1.6s var(--ease-out); }
+@keyframes flash {
+  0% { box-shadow: 0 0 0 0 rgba(229,80,20,.55); border-color: var(--accent); background: var(--accent-tint); }
+  70% { box-shadow: 0 0 0 14px rgba(229,80,20,0); border-color: var(--accent); }
+  100% { box-shadow: 0 0 0 0 rgba(229,80,20,0); background: var(--surface); }
+}
+
+/* ===== Approach (a real sequence, so it's numbered) ===== */
+.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; counter-reset: step; }
+.step { display: grid; gap: 10px; align-content: start; padding-top: 20px; border-top: 2px solid var(--line); position: relative; min-width: 0; }
+.step::before { counter-increment: step; content: "0" counter(step); font: 700 var(--fs-sm)/1 var(--font-display); color: var(--accent-strong); font-variant-numeric: tabular-nums; }
+.step::after { content: ""; position: absolute; top: -2px; left: 0; width: 100%; height: 2px; background: var(--accent); transform-origin: left; }
+.step h3 { font-size: var(--fs-lg); }
+.step p { font-size: var(--fs-sm); }
+
+/* ===== Proof band (dark) ===== */
+.proof { background: var(--ink); color: var(--on-dark-muted); }
+.proof h2, .proof h3 { color: var(--on-dark); }
+.proof .eyebrow { color: var(--accent); }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+.stat { display: grid; gap: 4px; }
+.stat b { font: 700 clamp(2.25rem, 4.5vw, 3.25rem)/1 var(--font-display); color: var(--on-dark); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+.stat b sup { color: var(--accent); font-size: .55em; vertical-align: top; position: relative; top: .1em; }
+.stat span { font-size: var(--fs-sm); }
+.certs { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding-block: clamp(32px, 5vw, 48px); border-bottom: 1px solid rgba(255,255,255,.12); }
+.certs-label { font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: .1em; font-weight: 600; color: var(--on-dark); margin-right: 8px; }
+.certs li { font-size: var(--fs-xs); padding: 6px 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,.18); color: var(--on-dark); }
+.case { display: grid; grid-template-columns: 1fr 1.2fr; gap: clamp(32px, 5vw, 64px); align-items: center; padding-top: clamp(40px, 6vw, 64px); }
+.case-photo { border-radius: 12px; aspect-ratio: 3 / 2; object-fit: cover; width: 100%; }
+.case-body { display: grid; gap: 18px; min-width: 0; }
+.case-body h2 { font-size: var(--fs-2xl); }
+.case-facts { display: grid; gap: 14px; margin: 0; }
+.case-facts div { display: grid; grid-template-columns: 8.5rem 1fr; gap: 16px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,.12); }
+.case-facts dt { font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: .1em; color: var(--on-dark); font-weight: 600; padding-top: 3px; }
+.case-facts dd { margin: 0; font-size: var(--fs-sm); }
+
+/* ===== Industries ===== */
+.industry-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.industry { background: var(--surface); padding: 24px; display: grid; gap: 6px; align-content: start; min-width: 0; }
+.industry h3 { font-size: var(--fs-lg); font-weight: 600; }
+.industry p { font-size: var(--fs-sm); }
+.industry-cta { background: var(--accent-tint); text-decoration: none; transition: background-color .2s; }
+.industry-cta h3 { color: var(--accent-hover); }
+.industry-cta:hover { background: #F9DDCF; }
+
+/* ===== Insights ===== */
+.insights-head { display: flex; justify-content: space-between; align-items: end; gap: 16px; flex-wrap: wrap; margin-bottom: clamp(32px, 5vw, 48px); }
+.insights-head .section-head { margin-bottom: 0; }
+.post-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.post {
+  display: grid; gap: 12px; align-content: start; padding: 24px; min-width: 0;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  text-decoration: none; transition: border-color .2s, transform .25s var(--ease-out);
+}
+.post:hover { border-color: var(--ink); transform: translateY(-3px); }
+.post time { font-size: var(--fs-xs); color: var(--muted); font-variant-numeric: tabular-nums; }
+.post h3 { font-size: var(--fs-lg); font-weight: 600; line-height: 1.3; }
+.post .link-arrow { font-size: var(--fs-sm); margin-top: 4px; }
+
+/* ===== Contact ===== */
+.contact { background: var(--surface); border-top: 1px solid var(--line); }
+.contact-grid { display: grid; grid-template-columns: 1fr 1.15fr; gap: clamp(32px, 6vw, 80px); align-items: start; }
+.contact-info { display: grid; gap: 28px; min-width: 0; }
+.contact-info .section-head { margin-bottom: 0; }
+.next-steps { display: grid; gap: 14px; counter-reset: next; }
+.next-steps li { display: grid; grid-template-columns: 32px 1fr; gap: 12px; align-items: start; font-size: var(--fs-sm); }
+.next-steps li::before { counter-increment: next; content: counter(next); width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: var(--accent-tint); color: var(--accent-hover); font-weight: 600; font-size: var(--fs-xs); }
+.next-steps b { color: var(--ink); }
+.contact-lines { display: grid; gap: 16px; padding-top: 24px; border-top: 1px solid var(--line); font-size: var(--fs-sm); margin: 0; }
+.contact-lines dt { font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: .1em; color: var(--muted); font-weight: 600; }
+.contact-lines dd { margin: 2px 0 0; color: var(--ink); }
+.contact-lines a { color: var(--accent-strong); font-weight: 600; }
+
+.form { display: grid; gap: 18px; background: var(--bg); border: 1px solid var(--line); border-radius: 14px; padding: clamp(20px, 4vw, 36px); min-width: 0; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.field { display: grid; gap: 6px; min-width: 0; }
+.field label { font-size: var(--fs-sm); font-weight: 600; color: var(--ink); }
+.field label small { font-weight: 400; color: var(--muted); }
+.field input, .field select, .field textarea { width: 100%; min-height: 48px; padding: 12px 14px; border-radius: 8px; border: 1.5px solid var(--line); background: var(--surface); color: var(--ink); font: 400 1rem/1.4 var(--font-body); transition: border-color .15s, box-shadow .15s; }
+.field textarea { min-height: 120px; resize: vertical; }
+.field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--ink); box-shadow: 0 0 0 3px var(--accent-tint); }
+.field input:user-invalid, .field textarea:user-invalid { border-color: #B42318; }
+.field select.prefilled { animation: prefill 1.2s var(--ease-out); }
+@keyframes prefill { 0%, 40% { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-tint); } }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.form .btn { width: 100%; }
+.form-note { font-size: var(--fs-xs); color: var(--muted); text-align: center; }
+.form-status { font-size: var(--fs-sm); padding: 12px 14px; border-radius: 8px; }
+.form-status.ok { background: #E7F6EC; color: #14532D; }
+.form-status.err { background: #FDECEA; color: #8A1C12; }
+
+/* ===== Footer ===== */
+.site-footer { background: var(--ink); color: var(--on-dark-muted); font-size: var(--fs-sm); padding-block: 56px 32px; }
+.footer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.2fr; gap: 40px; padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,.12); }
+.footer-grid h2 { font: 600 var(--fs-xs)/1.4 var(--font-body); text-transform: uppercase; letter-spacing: .12em; color: var(--on-dark); margin-bottom: 14px; }
+.footer-grid ul { display: grid; gap: 8px; }
+.footer-grid a { color: var(--on-dark-muted); text-decoration: none; }
+.footer-grid a:hover { color: var(--on-dark); text-decoration: underline; text-underline-offset: 3px; }
+.footer-brand img { height: 32px; width: auto; margin-bottom: 14px; }
+.footer-brand p { max-width: 30ch; }
+.footer-bottom { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-top: 24px; font-size: var(--fs-xs); }
+.footer-bottom a { color: inherit; }
+
+/* ===== Contact shortcuts ===== */
+.wa-float { position: fixed; right: 20px; bottom: 20px; z-index: 40; display: inline-flex; align-items: center; gap: 8px; padding: 12px 16px; border-radius: 999px; background: #1F7A45; color: #fff; text-decoration: none; font-weight: 600; font-size: var(--fs-sm); box-shadow: 0 10px 24px -10px rgba(0,0,0,.45); transition: transform .2s var(--ease-out), background-color .2s; }
+.wa-float:hover { background: #17633A; transform: translateY(-2px); }
+.wa-float svg { width: 20px; height: 20px; flex: none; }
+.mobile-bar { display: none; }
+.chat-launch {
+  position: fixed; right: 20px; bottom: 80px; z-index: 40;
+  display: inline-flex; align-items: center; gap: 10px; padding: 12px 18px; border-radius: 999px; border: 0;
+  background: var(--ink); color: var(--on-dark); font: 600 var(--fs-sm)/1.2 var(--font-body); cursor: pointer;
+  box-shadow: 0 10px 24px -10px rgba(0,0,0,.5); transition: transform .2s var(--ease-out);
+}
+.chat-launch:hover { transform: translateY(-2px); }
+.chat-launch::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 0 rgba(229,80,20,.6); animation: ping 2.4s infinite; }
+@keyframes ping { 0% { box-shadow: 0 0 0 0 rgba(229,80,20,.6); } 70%, 100% { box-shadow: 0 0 0 8px rgba(229,80,20,0); } }
+.picker-quiz {
+  margin-top: 14px; width: 100%; padding: 12px 4px 2px; border: 0; border-top: 1px dashed var(--line); background: none;
+  font: 500 var(--fs-sm)/1.4 var(--font-body); color: var(--text); text-align: left; cursor: pointer;
+}
+.picker-quiz b { color: var(--accent-strong); font-weight: 600; }
+.picker-quiz:hover b { text-decoration: underline; text-underline-offset: 3px; }
+
+/* ===== Onboarding chat: full screen, the default view on a first visit ===== */
+html.onb-open { overflow: hidden; }
+.onb {
+  position: fixed; inset: 0; z-index: 70;
+  display: flex; flex-direction: column;
+  background: radial-gradient(900px 480px at 50% -12%, var(--accent-tint) 0%, transparent 70%), var(--surface);
+  opacity: 0; visibility: hidden; transition: opacity .3s, visibility 0s .3s;
+}
+html.onb-open .onb { opacity: 1; visibility: visible; transition: opacity .3s; }
+.onb-inner { width: 100%; max-width: 760px; margin-inline: auto; padding-inline: var(--gutter); }
+.onb-head {
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px;
+  padding: calc(16px + env(safe-area-inset-top, 0px)) var(--gutter) 16px;
+}
+.onb-head img { height: 32px; width: auto; }
+.onb-progress-wrap { display: grid; gap: 6px; justify-items: center; width: min(240px, 30vw); }
+.onb-progress-wrap span { font-size: var(--fs-xs); font-weight: 600; color: var(--muted); letter-spacing: .04em; }
+.onb-progress { width: 100%; height: 4px; border-radius: 4px; background: var(--line); overflow: hidden; }
+.onb-progress i { display: block; height: 100%; width: 0; background: var(--accent); border-radius: 4px; transition: width .4s var(--ease-out); }
+.onb-skip { justify-self: end; min-height: 44px; padding: 10px 18px; font-size: var(--fs-sm); }
+.onb-body { flex: 1; overflow-y: auto; padding-block: 16px 24px; overscroll-behavior: contain; }
+.onb-thread { display: flex; flex-direction: column; gap: 14px; }
+.onb-row { display: flex; gap: 12px; align-items: flex-end; animation: rise .35s var(--ease-out) both; }
+.onb-row.user { justify-content: flex-end; }
+.onb-avatar { flex: none; width: 36px; height: 36px; border-radius: 50%; background: var(--ink); color: var(--accent); display: grid; place-items: center; font: 700 1rem/1 var(--font-display); }
+.onb-bubble { max-width: 580px; padding: 14px 18px; border-radius: 18px; font-size: var(--fs-md); line-height: 1.55; }
+.onb-row.bot .onb-bubble { background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-bottom-left-radius: 4px; box-shadow: 0 6px 20px -14px rgba(22,19,29,.3); }
+.onb-row.user .onb-bubble { background: var(--ink); color: var(--on-dark); border-bottom-right-radius: 4px; font-weight: 500; }
+.onb-bubble h2 { font-size: var(--fs-xl); margin-bottom: 6px; }
+.onb-bubble strong { font-weight: 600; }
+.onb-typing { display: inline-flex; gap: 4px; padding: 4px 2px; }
+.onb-typing i { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); animation: dot 1s infinite ease-in-out; }
+.onb-typing i:nth-child(2) { animation-delay: .15s; }
+.onb-typing i:nth-child(3) { animation-delay: .3s; }
+@keyframes dot { 0%, 80%, 100% { transform: none; opacity: .4; } 40% { transform: translateY(-4px); opacity: 1; } }
+.onb-dock { padding-block: 16px calc(28px + env(safe-area-inset-bottom, 0px)); }
+.onb-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.onb-chips:empty { display: none; }
+.onb-chip {
+  min-height: 48px; padding: 12px 20px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--surface);
+  color: var(--ink); font: 500 var(--fs-md)/1.3 var(--font-body); cursor: pointer;
+  animation: rise .3s var(--ease-out) both; transition: border-color .15s, transform .15s var(--ease-out), box-shadow .15s;
+}
+.onb-chip:hover { border-color: var(--ink); transform: translateY(-2px); box-shadow: 0 8px 18px -12px rgba(22,19,29,.4); }
+.onb-explore { display: block; margin: 14px auto 0; background: none; border: 0; padding: 8px; font: 500 var(--fs-sm)/1.3 var(--font-body); color: var(--muted); cursor: pointer; }
+.onb-explore[hidden] { display: none; }
+.onb-explore:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+.onb-results { display: grid; gap: 16px; padding-left: 48px; animation: rise .4s var(--ease-out) both; }
+.onb-matches { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.onb-match { border: 1px solid var(--line); background: var(--surface); border-radius: 12px; padding: 18px; display: grid; gap: 6px; align-content: start; min-width: 0; }
+.onb-match.best { border-color: var(--accent); background: var(--accent-tint); }
+.onb-match small { font: 600 0.6875rem/1 var(--font-body); text-transform: uppercase; letter-spacing: .08em; color: var(--accent-hover); }
+.onb-match h3 { font-size: var(--fs-md); line-height: 1.3; }
+.onb-match p { font-size: var(--fs-xs); }
+.onb-ctas { display: flex; flex-wrap: wrap; gap: 10px; }
+.onb-restart { background: none; border: 0; padding: 12px 8px; font: 500 var(--fs-sm)/1.3 var(--font-body); color: var(--muted); cursor: pointer; }
+.onb-restart:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+@media (max-width: 720px) {
+  .onb-head { grid-template-columns: 1fr auto; }
+  .onb-head img { height: 26px; }
+  .onb-progress-wrap { display: none; }
+  .onb-skip { padding: 8px 14px; font-size: var(--fs-xs); min-height: 40px; }
+  .onb-avatar { display: none; }
+  .onb-bubble { font-size: var(--fs-sm); }
+  .onb-bubble h2 { font-size: var(--fs-lg); }
+  .onb-results { padding-left: 0; }
+  .onb-matches { grid-template-columns: 1fr; }
+  .onb-chip { font-size: var(--fs-sm); padding: 10px 16px; min-height: 44px; }
+  .onb-ctas .btn { flex: 1 1 100%; }
+}
+
+/* ===== Motion =====
+   Hero plays one short load sequence; sections below fade up once as they enter view.
+   Content stays visible without JS, and everything is off for reduced-motion users. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-copy > *, .picker { animation: rise .8s var(--ease-out) both; }
+  .hero-copy > :nth-child(2) { animation-delay: .08s; }
+  .hero-copy > :nth-child(3) { animation-delay: .16s; }
+  .hero-copy > :nth-child(4) { animation-delay: .24s; }
+  .hero-copy > :nth-child(5) { animation-delay: .32s; }
+  .picker { animation-delay: .25s; }
+  .picker li { animation: slide-in .6s var(--ease-out) both; animation-delay: calc(.4s + var(--i, 0) * 70ms); }
+  .hero h1 .mark path { stroke-dasharray: 320; stroke-dashoffset: 320; animation: draw 1s .6s var(--ease-out) forwards; }
+
+  .js .reveal { opacity: 0; transform: translateY(28px); transition: opacity .8s var(--ease-out), transform .8s var(--ease-out); transition-delay: calc(var(--i, 0) * 80ms); }
+  .js .reveal.in { opacity: 1; transform: none; }
+  .js .step::after { transform: scaleX(0); transition: transform 1s var(--ease-out); transition-delay: calc(.2s + var(--i, 0) * 150ms); }
+  .js .step.in::after { transform: scaleX(1); }
+}
+@keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes slide-in { from { opacity: 0; transform: translateX(16px); } to { opacity: 1; transform: none; } }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+
+/* ===== Responsive ===== */
+@media (max-width: 1080px) {
+  .logo-wall { --cols: 6; }
+  .steps { grid-template-columns: repeat(2, 1fr); row-gap: 36px; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 900px) {
+  .nav-toggle { display: inline-flex; }
+  .site-nav { position: absolute; left: 0; right: 0; top: 100%; background: var(--surface); border-bottom: 1px solid var(--line); padding: 8px var(--gutter) 20px; box-shadow: 0 20px 30px -20px rgba(22,19,29,.3); }
+  .site-nav:not(.open) { display: none; }
+  .nav-list { flex-direction: column; align-items: stretch; gap: 0; }
+  .nav-list a:not(.btn) { padding: 14px 4px; border-bottom: 1px solid var(--line); border-radius: 0; font-size: var(--fs-md); }
+  .nav-list .btn { margin: 16px 0 0; width: 100%; }
+  .hero-grid { grid-template-columns: 1fr; }
+  .help-grid { grid-template-columns: repeat(2, 1fr); }
+  .industry-grid { grid-template-columns: repeat(2, 1fr); }
+  .stats { grid-template-columns: repeat(2, 1fr); row-gap: 32px; }
+  .case { grid-template-columns: 1fr; }
+  .post-grid { grid-template-columns: 1fr; }
+  .contact-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .logo-wall { --cols: 3; }
+  .logo-wall li { height: 64px; padding: 10px; }
+  .hero-actions .btn { flex: 1 1 100%; }
+  .hero h1 .mark { white-space: normal; }
+  .help-grid, .steps, .industry-grid { grid-template-columns: 1fr; }
+  .case-facts div { grid-template-columns: 1fr; gap: 4px; }
+  .form-row { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .wa-float, .chat-launch { display: none; }
+  .mobile-bar {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+    padding: 10px var(--gutter) calc(10px + env(safe-area-inset-bottom, 0px));
+    background: var(--surface); border-top: 1px solid var(--line);
+    transform: translateY(110%); transition: transform .3s var(--ease-out);
+  }
+  .mobile-bar.show { transform: none; }
+  .mobile-bar .btn { min-height: 46px; padding: 10px; }
+  body { padding-bottom: 72px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="#top" aria-label="Aakrin home">
+      <img src="A-Aakrin-logo-1.svg" alt="Aakrin" width="155" height="34">
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu"><span></span></button>
+    <nav class="site-nav" id="site-nav" aria-label="Main">
+      <ul class="nav-list">
+        <li><a href="#help">How we help</a></li>
+        <li><a href="#approach">Our process</a></li>
+        <li><a href="#results">Results</a></li>
+        <li><a href="#industries">Industries</a></li>
+        <li><a href="#insights">Blog</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a class="btn btn-primary" href="https://calendly.com/akshat-shah-aakrin/new-meeting?utm_source=website&amp;utm_medium=header" target="_blank" rel="noopener" data-track="cta_book_header">Book a free call</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- Hero: in under 10 seconds a visitor learns what we do, sees their own problem listed, sees proof, and has one next step -->
+  <section class="hero" id="top">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">Certified Salesforce partner · Bangalore</p>
+        <h1>Get Salesforce working the way <span class="mark">your business does.<svg viewBox="0 0 300 20" preserveAspectRatio="none" aria-hidden="true"><path d="M4 14 C 80 4, 200 2, 296 10"/></svg></span></h1>
+        <p class="hero-lede">We set up, fix, connect and support Salesforce for growing companies, so your team spends less time fighting the CRM and more time selling and serving customers.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="https://calendly.com/akshat-shah-aakrin/new-meeting?utm_source=website&amp;utm_medium=hero" target="_blank" rel="noopener" data-track="cta_book_hero">Book a free 30-minute call</a>
+          <a class="btn btn-secondary" href="#contact" data-track="cta_enquire_hero">Send us your requirement</a>
+        </div>
+        <div class="trust-row">
+          <img src="partner_logo.png" alt="Salesforce" width="728" height="512">
+          <ul class="trust-stats" aria-label="Aakrin in numbers">
+            <li><b>200+</b>projects</li>
+            <li><b>80+</b>active clients</li>
+            <li><b>14+</b>certifications</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="picker">
+        <h2>What do you need help with?</h2>
+        <p>Pick the one closest to your situation.</p>
+        <ul>
+          <li style="--i:0"><a href="#help-new" data-track="picker_new">We're new to Salesforce</a></li>
+          <li style="--i:1"><a href="#help-switch" data-track="picker_switch">We're moving from another CRM or Excel</a></li>
+          <li style="--i:2"><a href="#help-fit" data-track="picker_fit">Salesforce doesn't fit how we work</a></li>
+          <li style="--i:3"><a href="#help-connect" data-track="picker_connect">Our systems don't talk to each other</a></li>
+          <li style="--i:4"><a href="#help-build" data-track="picker_build">We need a custom feature built</a></li>
+          <li style="--i:5"><a href="#help-support" data-track="picker_support">We need someone to look after our org</a></li>
+        </ul>
+        <button type="button" class="picker-quiz" data-onb-open="hero">Not sure which fits? <b>Answer 4 quick questions →</b></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Clients: static logo wall, deliberately non-interactive -->
+  <section class="clients" aria-labelledby="clients-label">
+    <div class="wrap">
+      <h2 class="clients-label" id="clients-label">Trusted by teams at</h2>
+      <ul class="logo-wall">
+        <li><img src="infosys.png" alt="Infosys" width="700" height="438" loading="lazy"></li>
+        <li><img src="Abbott.png" alt="Abbott" width="531" height="577" loading="lazy"></li>
+        <li><img src="yash_technologies.avif" alt="Yash Technologies" width="200" height="100" loading="lazy"></li>
+        <li><img src="hackett_group.gif" alt="The Hackett Group" width="350" height="100" loading="lazy"></li>
+        <li><img src="mouritech_logo.jpg" alt="MOURI Tech" width="200" height="200" loading="lazy"></li>
+        <li><img src="Emudhra.png" alt="eMudhra" width="300" height="200" loading="lazy"></li>
+        <li><img src="astropay_logo.png" alt="AstroPay" width="3438" height="978" loading="lazy"></li>
+        <li><img src="artech_logo.png" alt="Artech" width="1435" height="580" loading="lazy"></li>
+        <li><img src="zessta_logo.jpg" alt="Zessta" width="200" height="200" loading="lazy"></li>
+        <li><img src="nvish_logo.png" alt="Nvish" width="192" height="192" loading="lazy"></li>
+        <li><img src="Infoglen.jpg" alt="Infoglen" width="200" height="200" loading="lazy"></li>
+        <li><img src="igen_american_softwares_logo.jpg" alt="iGen American Softwares" width="200" height="200" loading="lazy"></li>
+        <li><img src="skillnet_solutions_inc_logo.jpg" alt="Skillnet Solutions" width="200" height="200" loading="lazy"></li>
+        <li><img src="wiselinkglobal_logo.jpg" alt="Wiselink Global" width="200" height="200" loading="lazy"></li>
+        <li><img src="rapidflow_apps_inc__logo.jpg" alt="Rapidflow Apps" width="200" height="200" loading="lazy"></li>
+        <li><img src="camelot.jpg" alt="Camelot" width="200" height="200" loading="lazy"></li>
+        <li><img src="crossdoor.jpg" alt="Crossdoor Consultants" width="600" height="600" loading="lazy"></li>
+        <li><img src="maple_tax.jpg" alt="Maple Tax Consulting" width="200" height="200" loading="lazy"></li>
+        <li><img src="biztron_softech.webp" alt="Biztron Softech" width="170" height="78" loading="lazy"></li>
+        <li><img src="lunio_logo.png" alt="Lunio" width="554" height="554" loading="lazy"></li>
+        <li><img src="wildnet_logo.jpg" alt="Wildnet Technologies" width="738" height="415" loading="lazy"></li>
+        <li><img src="ces_logo.jpg" alt="CES" width="200" height="200" loading="lazy"></li>
+        <li><img src="innovius_logo.jpg" alt="Innovius" width="2083" height="2083" loading="lazy"></li>
+      </ul>
+      <p class="clients-more">and many more</p>
+    </div>
+  </section>
+
+  <!-- Problems we solve: written as the visitor's situation, with our service as the answer -->
+  <section class="section help" id="help" aria-labelledby="help-title">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">How we help</p>
+        <h2 id="help-title">Tell us the problem. We'll handle the Salesforce side.</h2>
+        <p>Every engagement is run by certified consultants who have solved the same problem for other companies.</p>
+      </div>
+      <div class="help-grid">
+        <a class="help-card reveal" id="help-new" href="#contact" data-service="Salesforce Implementation">
+          <h3>We're new to Salesforce</h3>
+          <p>We help you choose the right clouds and licences, then set Salesforce up around how your teams sell and serve, on a fixed timeline.</p>
+          <span class="help-foot"><span class="help-tag">Consulting · Implementation</span><span class="link-arrow">Get started</span></span>
+        </a>
+        <a class="help-card reveal" id="help-switch" href="#contact" data-service="Data Migration">
+          <h3>We're moving from another CRM or Excel</h3>
+          <p>We clean, map and move your records, check every field, and switch your team over without losing history.</p>
+          <span class="help-foot"><span class="help-tag">Data Migration</span><span class="link-arrow">Plan my move</span></span>
+        </a>
+        <a class="help-card reveal" id="help-fit" href="#contact" data-service="Salesforce Customization">
+          <h3>Salesforce doesn't fit how we work</h3>
+          <p>We reshape objects, Flows, layouts and permissions so screens match your process, and move you to Lightning if you're still on Classic.</p>
+          <span class="help-foot"><span class="help-tag">Customization · Lightning</span><span class="link-arrow">Fix my setup</span></span>
+        </a>
+        <a class="help-card reveal" id="help-connect" href="#contact" data-service="API Integration">
+          <h3>Our systems don't talk to each other</h3>
+          <p>We connect Salesforce to your ERP, finance, marketing and custom apps through APIs, so nobody re-types data between tools.</p>
+          <span class="help-foot"><span class="help-tag">API Integration</span><span class="link-arrow">Connect my systems</span></span>
+        </a>
+        <a class="help-card reveal" id="help-build" href="#contact" data-service="Salesforce Development">
+          <h3>We need a custom feature built</h3>
+          <p>We build it with Apex and Lightning Web Components, or find and configure an AppExchange app that already does the job.</p>
+          <span class="help-foot"><span class="help-tag">Development · AppExchange</span><span class="link-arrow">Scope my feature</span></span>
+        </a>
+        <a class="help-card reveal" id="help-support" href="#contact" data-service="Support &amp; Maintenance">
+          <h3>We need someone to look after our org</h3>
+          <p>Admin help, bug fixes and ongoing tuning, with tickets handled 24×7 so small issues don't pile up.</p>
+          <span class="help-foot"><span class="help-tag">Support &amp; Maintenance</span><span class="link-arrow">Get support</span></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Process -->
+  <section class="section" id="approach" aria-labelledby="approach-title">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Our process</p>
+        <h2 id="approach-title">What working with us looks like</h2>
+      </div>
+      <ol class="steps">
+        <li class="step reveal"><h3>Discovery</h3><p>A consultant maps your current process, pain points and goals, and agrees clear objectives with you before anything is built.</p></li>
+        <li class="step reveal"><h3>Build</h3><p>Developers configure and code in a sandbox to Salesforce standards, with regular reviews so there are no surprises.</p></li>
+        <li class="step reveal"><h3>Go-live &amp; training</h3><p>We test with your users, go live, and run role-based training so people actually use the new setup.</p></li>
+        <li class="step reveal"><h3>Ongoing support</h3><p>Raise a ticket any time, 24×7. We fix issues and keep tuning the org as your business changes.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Proof band -->
+  <section class="section proof" id="results" aria-labelledby="results-title">
+    <div class="wrap">
+      <ul class="stats">
+        <li class="stat reveal"><b><span data-count="200">200</span><sup>+</sup></b><span>projects completed</span></li>
+        <li class="stat reveal"><b><span data-count="80">80</span><sup>+</sup></b><span>active clients</span></li>
+        <li class="stat reveal"><b><span data-count="14">14</span><sup>+</sup></b><span>Salesforce certifications</span></li>
+        <li class="stat reveal"><b><span data-count="98">98</span><sup>%</sup></b><span>client satisfaction</span></li>
+      </ul>
+      <ul class="certs reveal" aria-label="Salesforce certifications held by our team">
+        <li class="certs-label">Certified in</li>
+        <li>Application Architect</li>
+        <li>Data Architect</li>
+        <li>Platform Developer I &amp; II</li>
+        <li>Platform App Builder</li>
+        <li>Administrator</li>
+        <li>Field Service Consultant</li>
+        <li>Tableau CRM Consultant</li>
+      </ul>
+      <div class="case">
+        <img class="case-photo reveal" src="team-meeting.jpg" alt="Aakrin team reviewing a Service Cloud rollout" width="1400" height="933" loading="lazy">
+        <div class="case-body reveal">
+          <p class="eyebrow">Recent project</p>
+          <h2 id="results-title">Rebuilding customer support on Service Cloud</h2>
+          <dl class="case-facts">
+            <div><dt>The problem</dt><dd>The client's customer support process was slow and hard to manage.</dd></div>
+            <div><dt>What we built</dt><dd>Service Cloud with Omni-Channel routing that sends every inquiry to the right agent automatically.</dd></div>
+            <div><dt>Outcome</dt><dd>A significant rise in customer satisfaction scores.</dd></div>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Industries -->
+  <section class="section" id="industries" aria-labelledby="industries-title">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Industries</p>
+        <h2 id="industries-title">We know the processes behind the data</h2>
+      </div>
+      <div class="industry-grid reveal">
+        <div class="industry"><h3>Hi-Tech</h3><p>Hi-tech manufacturers, distributors and independent software vendors (ISVs).</p></div>
+        <div class="industry"><h3>Pharma &amp; Life Sciences</h3><p>End-to-end solutions for API and formulations businesses.</p></div>
+        <div class="industry"><h3>Financial Services</h3><p>Customer experiences built around e-KYC and data security.</p></div>
+        <div class="industry"><h3>Manufacturing</h3><p>Sales, Service and Marketing Cloud with Einstein analytics to turn connected data into action.</p></div>
+        <div class="industry"><h3>Healthcare</h3><p>Patient and payer data connected across Sales, Service and Marketing Cloud.</p></div>
+        <div class="industry"><h3>Energy &amp; Utilities</h3><p>Multi-country Lightning transformation for a large energy major.</p></div>
+        <div class="industry"><h3>Retail &amp; CPG</h3><p>Personalised, consistent experiences in store and online.</p></div>
+        <div class="industry"><h3>Higher Education</h3><p>Consultants with deep experience of the HEDA data architecture.</p></div>
+        <div class="industry"><h3>Real Estate</h3><p>Property management, sales automation and client engagement.</p></div>
+        <div class="industry"><h3>Recruitment</h3><p>Hiring workflows, candidate tracking and recruitment automation.</p></div>
+        <div class="industry"><h3>Non-Profit</h3><p>Through our 1% pledge with Salesforce, we give 1% of our effort to non-profits.</p></div>
+        <a class="industry industry-cta" href="#contact" data-track="cta_industry_other"><h3>Different industry? →</h3><p>Tell us how your business runs and we'll show you how Salesforce fits.</p></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Blog -->
+  <section class="section" id="insights" aria-labelledby="insights-title" style="padding-top:0">
+    <div class="wrap">
+      <div class="insights-head reveal">
+        <div class="section-head">
+          <p class="eyebrow">Blog</p>
+          <h2 id="insights-title">Salesforce guides from our team</h2>
+        </div>
+        <a class="link-arrow" href="https://aakrin.com/blog/" target="_blank" rel="noopener">All articles</a>
+      </div>
+      <div class="post-grid">
+        <a class="post reveal" href="https://aakrin.com/2024/03/05/the-10-best-crm-for-saas-in-2024-boost-your-software-sales-growth/" target="_blank" rel="noopener">
+          <time datetime="2024-03-05">5 Mar 2024</time>
+          <h3>The 10 best CRMs for SaaS: boost your software sales and growth</h3>
+          <span class="link-arrow">Read article</span>
+        </a>
+        <a class="post reveal" href="https://aakrin.com/2024/02/09/develop-your-business-with-salesforce/" target="_blank" rel="noopener">
+          <time datetime="2024-02-09">9 Feb 2024</time>
+          <h3>Develop your business with Salesforce</h3>
+          <span class="link-arrow">Read article</span>
+        </a>
+        <a class="post reveal" href="https://aakrin.com/2024/02/02/embracing-tomorrow-salesforce-predictions-for-2024/" target="_blank" rel="noopener">
+          <time datetime="2024-02-02">2 Feb 2024</time>
+          <h3>Embracing tomorrow: Salesforce predictions for 2024</h3>
+          <span class="link-arrow">Read article</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="section contact" id="contact" aria-labelledby="contact-title">
+    <div class="wrap contact-grid">
+      <div class="contact-info reveal">
+        <div class="section-head">
+          <p class="eyebrow">Contact</p>
+          <h2 id="contact-title">Tell us what you're working on</h2>
+        </div>
+        <ol class="next-steps">
+          <li><span><b>We reply within one business day</b> with a few questions about your org.</span></li>
+          <li><span><b>A free 30-minute call</b> with a certified consultant, not a sales script.</span></li>
+          <li><span><b>A written plan</b> with scope, timeline and cost.</span></li>
+        </ol>
+        <dl class="contact-lines">
+          <div><dt>Email</dt><dd><a href="mailto:info@aakrin.com">info@aakrin.com</a></dd></div>
+          <div><dt>Prefer to pick a time?</dt><dd><a href="https://calendly.com/akshat-shah-aakrin/new-meeting?utm_source=website&amp;utm_medium=contact" target="_blank" rel="noopener" data-track="cta_book_contact">Book a call on Calendly</a></dd></div>
+          <div><dt>Office</dt><dd>#112, First Floor, Confident Oxygen Mall,<br>Chambenahalli, Sarjapura Road,<br>Bangalore 562125, India</dd></div>
+        </dl>
+      </div>
+
+      <form class="form reveal" id="enquiry-form" novalidate>
+        <div class="form-row">
+          <div class="field"><label for="f-name">Name</label><input id="f-name" name="name" type="text" autocomplete="name" required></div>
+          <div class="field"><label for="f-email">Work email</label><input id="f-email" name="email" type="email" autocomplete="email" required></div>
+        </div>
+        <div class="form-row">
+          <div class="field"><label for="f-company">Company <small>(optional)</small></label><input id="f-company" name="company" type="text" autocomplete="organization"></div>
+          <div class="field"><label for="f-phone">Phone <small>(optional)</small></label><input id="f-phone" name="phone" type="tel" autocomplete="tel"></div>
+        </div>
+        <div class="field">
+          <label for="f-service">What do you need help with?</label>
+          <select id="f-service" name="service">
+            <option value="">Choose one</option>
+            <option>Salesforce Implementation</option>
+            <option>Data Migration</option>
+            <option>Salesforce Customization</option>
+            <option>API Integration</option>
+            <option>Salesforce Development</option>
+            <option>Support &amp; Maintenance</option>
+            <option>Salesforce Consulting</option>
+            <option>Lightning Migration</option>
+            <option>AppExchange</option>
+            <option>Not sure yet</option>
+          </select>
+        </div>
+        <div class="field"><label for="f-message">Message</label><textarea id="f-message" name="message" required placeholder="Which Salesforce clouds you use, team size, and what you'd like to change."></textarea></div>
+        <div class="hp" aria-hidden="true"><label for="f-website">Website</label><input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+        <div class="form-status" id="form-status" role="status" hidden></div>
+        <button class="btn btn-primary" type="submit" data-track="form_submit">Send enquiry</button>
+        <p class="form-note">We use your details only to reply to this enquiry.</p>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="aakrin_logo_white.svg" alt="Aakrin" width="146" height="32" loading="lazy">
+        <p>Salesforce consulting for teams that want the platform to fit their business.</p>
+      </div>
+      <div>
+        <h2>Company</h2>
+        <ul>
+          <li><a href="#help">How we help</a></li>
+          <li><a href="#approach">Our process</a></li>
+          <li><a href="#industries">Industries</a></li>
+          <li><a href="https://aakrin.com/blog/" target="_blank" rel="noopener">Blog</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Connect</h2>
+        <ul>
+          <li><a href="https://www.linkedin.com/company/aakrin" target="_blank" rel="noopener">LinkedIn</a></li>
+          <li><a href="https://wa.me/917259688052" target="_blank" rel="noopener">WhatsApp</a></li>
+          <li><a href="mailto:info@aakrin.com">info@aakrin.com</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Office</h2>
+        <p>#112, First Floor, Confident Oxygen Mall, Chambenahalli, Sarjapura Road, Bangalore 562125, India</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© <span id="year">2026</span> Aakrin Consulting Services. All rights reserved.</p>
+      <a href="#top">Back to top ↑</a>
+    </div>
+  </div>
+</footer>
+
+<a class="wa-float" href="https://wa.me/917259688052" target="_blank" rel="noopener" data-track="cta_whatsapp_float" aria-label="Chat with us on WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></svg>
+  WhatsApp
+</a>
+
+<button type="button" class="chat-launch" data-onb-open="launcher" aria-haspopup="dialog">Find my Salesforce fit</button>
+
+<!-- Onboarding chat: full screen on a first visit (or with ?chat=1); reopened from the launcher or hero link -->
+<div class="onb" id="onb" role="dialog" aria-modal="true" aria-label="Find your Salesforce fit">
+  <div class="onb-head">
+    <img src="A-Aakrin-logo-1.svg" alt="Aakrin" width="146" height="32">
+    <div class="onb-progress-wrap" aria-hidden="true">
+      <span id="onb-step">Step 1 of 4</span>
+      <div class="onb-progress"><i id="onb-bar"></i></div>
+    </div>
+    <button type="button" class="btn btn-secondary onb-skip" data-onb-close="skip">Skip, explore the website</button>
+  </div>
+  <div class="onb-body" id="onb-body"><div class="onb-inner"><div class="onb-thread" id="onb-thread" aria-live="polite"></div></div></div>
+  <div class="onb-dock"><div class="onb-inner">
+    <div class="onb-chips" id="onb-dock"></div>
+    <button type="button" class="onb-explore" id="onb-explore" data-onb-close="explore_link">I'd rather explore the website myself</button>
+  </div></div>
+</div>
+
+<div class="mobile-bar" id="mobile-bar">
+  <a class="btn btn-secondary" href="https://wa.me/917259688052" target="_blank" rel="noopener" data-track="cta_whatsapp_bar">WhatsApp</a>
+  <a class="btn btn-primary" href="https://calendly.com/akshat-shah-aakrin/new-meeting?utm_source=website&amp;utm_medium=mobile_bar" target="_blank" rel="noopener" data-track="cta_book_bar">Book a free call</a>
+</div>
+
+<script>
+(function () {
+  // Where enquiries are sent. Paste a form endpoint here (Formspree, Web3Forms, Basin, or your own API)
+  // that accepts a JSON POST. While empty, the form opens the visitor's email app with the details filled in.
+  var FORM_ENDPOINT = '';
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function track(name) { if (typeof window.clarity === 'function') window.clarity('event', name); }
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Clarity events for every CTA, so real clicks can be told apart from dead clicks
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest('[data-track]');
+    if (el) track(el.dataset.track);
+  });
+
+  // Mobile menu
+  var toggle = document.querySelector('.nav-toggle');
+  var nav = document.getElementById('site-nav');
+  function setMenu(open) {
+    nav.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  }
+  toggle.addEventListener('click', function () { setMenu(!nav.classList.contains('open')); });
+  nav.addEventListener('click', function (e) { if (e.target.closest('a')) setMenu(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setMenu(false); });
+
+  // Hero picker: highlight the matching problem card when the visitor lands on it
+  document.querySelectorAll('.picker a').forEach(function (a) {
+    a.addEventListener('click', function () {
+      var card = document.querySelector(a.getAttribute('href'));
+      if (!card) return;
+      card.classList.add('in');
+      card.classList.remove('flash');
+      setTimeout(function () { void card.offsetWidth; card.classList.add('flash'); }, reduceMotion ? 0 : 500);
+    });
+  });
+
+  // Any link with data-service pre-selects that service in the enquiry form
+  var serviceSelect = document.getElementById('f-service');
+  document.addEventListener('click', function (e) {
+    var link = e.target.closest('[data-service]');
+    if (!link) return;
+    serviceSelect.value = link.dataset.service;
+    if (serviceSelect.value !== link.dataset.service) serviceSelect.value = '';
+    serviceSelect.classList.remove('prefilled'); void serviceSelect.offsetWidth; serviceSelect.classList.add('prefilled');
+    track('service_pick_' + link.dataset.service.toLowerCase().replace(/[^a-z]+/g, '_'));
+    setTimeout(function () { document.getElementById('f-name').focus({ preventScroll: true }); }, 500);
+  });
+
+  // Scroll reveal: stagger siblings, reveal once, count stats up
+  var reveals = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+  reveals.forEach(function (el) {
+    var siblings = Array.prototype.filter.call(el.parentNode.children, function (c) { return c.classList.contains('reveal'); });
+    el.style.setProperty('--i', siblings.indexOf(el));
+  });
+
+  function countUp(el) {
+    var target = +el.dataset.count, start = null, dur = 1200;
+    function step(t) {
+      if (!start) start = t;
+      var p = Math.min((t - start) / dur, 1);
+      el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  if (!('IntersectionObserver' in window) || reduceMotion) {
+    reveals.forEach(function (el) { el.classList.add('in'); });
+  } else {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('in');
+        entry.target.querySelectorAll('[data-count]').forEach(countUp);
+        io.unobserve(entry.target);
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.1 });
+    reveals.forEach(function (el) { io.observe(el); });
+  }
+
+  // Mobile CTA bar appears once the hero is out of view
+  var bar = document.getElementById('mobile-bar');
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) {
+      bar.classList.toggle('show', !entries[0].isIntersecting);
+    }).observe(document.querySelector('.hero'));
+  }
+
+  // ===== Onboarding chat =====
+  // Whether it opens on a first visit is decided in <head> (AUTO_OPEN_FIRST_VISIT) so the site never flashes behind it.
+  var STORAGE_KEY = 'aakrin_onboarding_v1';
+  var CALENDLY = 'https://calendly.com/akshat-shah-aakrin/new-meeting';
+  var BLOG_URL = 'https://aakrin.com/blog/';
+
+  var SERVICES = {
+    impl:      { title: 'Salesforce Implementation', form: 'Salesforce Implementation', desc: 'A rollout planned around how your teams sell and serve, delivered on schedule.' },
+    consulting:{ title: 'Salesforce Consulting', form: 'Salesforce Consulting', desc: 'Choose the right clouds, licences and roadmap before you spend on build.' },
+    api:       { title: 'API Integration', form: 'API Integration', desc: 'Connect ERP, finance, marketing and custom apps so data moves without re-keying.' },
+    dev:       { title: 'Salesforce Development', form: 'Salesforce Development', desc: 'Apex, Lightning Web Components and automation, built to Salesforce best practice.' },
+    custom:    { title: 'Salesforce Customization', form: 'Salesforce Customization', desc: 'Objects, Flows, layouts and permissions shaped around your process.' },
+    migration: { title: 'Data Migration', form: 'Data Migration', desc: 'Clean, map and validate records from legacy CRMs and spreadsheets.' },
+    support:   { title: 'Support & Maintenance', form: 'Support & Maintenance', desc: 'Admin help, fixes and ongoing tuning so the org keeps up with the business.' },
+    lightning: { title: 'Lightning Migration', form: 'Lightning Migration', desc: 'Move from Classic to Lightning for a faster experience on desktop and mobile.' },
+    appx:      { title: 'AppExchange', form: 'AppExchange', desc: 'Select, configure or build AppExchange apps that extend your org.' }
+  };
+
+  var STEPS = [
+    {
+      key: 'journey',
+      text: function () { return '<h2>Hi, welcome to Aakrin.</h2>We help companies get more out of Salesforce. Answer 4 quick questions and I\'ll point you to the right starting point.<br><br><strong>Where are you with Salesforce?</strong>'; },
+      options: [
+        { id: 'new', label: 'New to Salesforce', score: { impl: 3, consulting: 2 } },
+        { id: 'using', label: 'Using it, want more from it', score: { custom: 2, support: 2, lightning: 1, dev: 1 } },
+        { id: 'switching', label: 'Moving from another CRM', score: { migration: 3, impl: 2 } },
+        { id: 'exploring', label: 'Just exploring', score: { consulting: 2, appx: 1 } }
+      ]
+    },
+    {
+      key: 'industry',
+      text: function () { return 'Got it. <strong>Which industry are you in?</strong>'; },
+      options: [
+        { id: 'hitech', label: 'Hi-Tech' },
+        { id: 'pharma', label: 'Pharma & Life Sciences' },
+        { id: 'finance', label: 'Financial Services' },
+        { id: 'healthcare', label: 'Healthcare' },
+        { id: 'manufacturing', label: 'Manufacturing' },
+        { id: 'retail', label: 'Retail & CPG' },
+        { id: 'energy', label: 'Energy & Utilities' },
+        { id: 'education', label: 'Higher Education' },
+        { id: 'realestate', label: 'Real Estate' },
+        { id: 'recruitment', label: 'Recruitment' },
+        { id: 'nonprofit', label: 'Non-Profit' },
+        { id: 'other', label: 'Something else' }
+      ]
+    },
+    {
+      key: 'need',
+      text: function (a) {
+        return (a.industry.id === 'other' ? 'Thanks.' : 'We\'ve done a lot of work in ' + escapeHtml(a.industry.label) + '.') +
+          ' <strong>What do you need help with most?</strong>';
+      },
+      options: [
+        { id: 'setup', label: 'Set up Salesforce', score: { impl: 4, consulting: 1 } },
+        { id: 'integrate', label: 'Connect other systems', score: { api: 4, appx: 1 } },
+        { id: 'build', label: 'Custom features & automation', score: { dev: 4, custom: 3, lightning: 1 } },
+        { id: 'data', label: 'Move or clean up data', score: { migration: 4 } },
+        { id: 'support', label: 'Ongoing support', score: { support: 4, lightning: 1 } },
+        { id: 'unsure', label: 'Not sure yet', score: { consulting: 4 } }
+      ]
+    },
+    {
+      key: 'timeline',
+      text: function () { return 'Last one. <strong>When are you looking to start?</strong>'; },
+      options: [
+        { id: 'asap', label: 'Right away' },
+        { id: 'quarter', label: 'In 1–3 months' },
+        { id: 'later', label: 'In 3–6 months' },
+        { id: 'research', label: 'Just researching' }
+      ]
+    }
+  ];
+
+  var onbEl = document.getElementById('onb');
+  var thread = document.getElementById('onb-thread');
+  var dock = document.getElementById('onb-dock');
+  var exploreLink = document.getElementById('onb-explore');
+  var onbBody = document.getElementById('onb-body');
+  var answers = {}, runId = 0, lastFocus = null;
+
+  function escapeHtml(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function wait(ms) { return new Promise(function (r) { setTimeout(r, reduceMotion ? 0 : ms); }); }
+  function markDone() { try { localStorage.setItem(STORAGE_KEY, '1'); } catch (e) {} }
+  function scrollDown() { onbBody.scrollTo({ top: onbBody.scrollHeight, behavior: reduceMotion ? 'auto' : 'smooth' }); }
+
+  function addRow(who, html) {
+    var row = document.createElement('div');
+    row.className = 'onb-row ' + who;
+    row.innerHTML = (who === 'bot' ? '<div class="onb-avatar" aria-hidden="true">A</div>' : '') + '<div class="onb-bubble">' + html + '</div>';
+    thread.appendChild(row);
+    scrollDown();
+    return row;
+  }
+
+  function botSay(html, id) {
+    var typing = addRow('bot', '<span class="onb-typing" aria-label="Typing"><i></i><i></i><i></i></span>');
+    return wait(650).then(function () {
+      if (id !== runId) return false;
+      typing.remove();
+      addRow('bot', html);
+      return true;
+    });
+  }
+
+  function setProgress(step) {
+    document.getElementById('onb-bar').style.width = (Math.min(step, STEPS.length) / STEPS.length * 100) + '%';
+    document.getElementById('onb-step').textContent = step >= STEPS.length ? 'Your starting point' : 'Step ' + (step + 1) + ' of ' + STEPS.length;
+  }
+
+  function showChips(options, onPick) {
+    dock.innerHTML = '';
+    var wrap = dock;
+    options.forEach(function (opt, i) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'onb-chip';
+      b.style.animationDelay = (reduceMotion ? 0 : i * 35) + 'ms';
+      b.textContent = opt.label;
+      b.addEventListener('click', function () { dock.innerHTML = ''; onPick(opt); });
+      wrap.appendChild(b);
+    });
+    wrap.firstChild.focus({ preventScroll: true });
+  }
+
+  function ask(stepIdx, id) {
+    setProgress(stepIdx);
+    if (stepIdx >= STEPS.length) return showResults(id);
+    var step = STEPS[stepIdx];
+    botSay(step.text(answers), id).then(function (ok) {
+      if (!ok) return;
+      showChips(step.options, function (opt) {
+        answers[step.key] = opt;
+        if (typeof window.clarity === 'function') window.clarity('set', 'onb_' + step.key, opt.id);
+        addRow('user', escapeHtml(opt.label));
+        ask(stepIdx + 1, id);
+      });
+    });
+  }
+
+  function matchServices() {
+    var totals = {};
+    Object.keys(SERVICES).forEach(function (k) { totals[k] = 0; });
+    [answers.journey.score, answers.need.score].forEach(function (s) {
+      Object.keys(s || {}).forEach(function (k) { totals[k] += s[k]; });
+    });
+    return Object.keys(totals).sort(function (a, b) { return totals[b] - totals[a]; }).slice(0, 3);
+  }
+
+  function showResults(id) {
+    var matches = matchServices();
+    var callFirst = answers.timeline.id !== 'research';
+    var industry = answers.industry.id === 'other' ? 'your' : 'a ' + escapeHtml(answers.industry.label);
+    var intro = callFirst
+      ? 'Thanks. Here\'s where we\'d start for ' + industry + ' team. Since you want to move ' + (answers.timeline.id === 'asap' ? 'quickly' : 'soon') + ', a free call with a certified consultant is the fastest way to a plan.'
+      : 'Thanks. Here\'s where we\'d start for ' + industry + ' team. While you\'re researching, our blog is a good next stop, and you can book a call whenever you\'re ready.';
+
+    botSay(intro, id).then(function (ok) {
+      if (!ok) return;
+      var calendly = CALENDLY + '?utm_source=website&utm_medium=onboarding_chat&utm_campaign=' +
+        encodeURIComponent(answers.need.id) + '&utm_content=' + encodeURIComponent(answers.industry.id);
+      var callBtn = '<a class="btn ' + (callFirst ? 'btn-primary' : 'btn-secondary') + '" data-onb-cta="call" href="' + calendly + '" target="_blank" rel="noopener">Book a free 30-minute call</a>';
+      var blogBtn = '<a class="btn ' + (callFirst ? 'btn-secondary' : 'btn-primary') + '" data-onb-cta="blog" href="' + BLOG_URL + '" target="_blank" rel="noopener">Read our Salesforce guides</a>';
+
+      var results = document.createElement('div');
+      results.className = 'onb-results';
+      results.innerHTML = '<div class="onb-matches">' + matches.map(function (k, i) {
+        var s = SERVICES[k];
+        return '<div class="onb-match' + (i === 0 ? ' best' : '') + '">' + (i === 0 ? '<small>Best match</small>' : '<small>Also a fit</small>') +
+          '<h3>' + escapeHtml(s.title) + '</h3><p>' + escapeHtml(s.desc) + '</p></div>';
+      }).join('') + '</div>' +
+        '<div class="onb-ctas">' + (callFirst ? callBtn : blogBtn) +
+        '<button type="button" class="btn btn-secondary" data-onb-cta="enquire">Send my answers to the team</button>' +
+        (callFirst ? blogBtn : callBtn) +
+        '<button type="button" class="btn btn-secondary" data-onb-cta="site">Explore the website</button>' +
+        '<button type="button" class="onb-restart" data-onb-cta="restart">Start over</button></div>';
+      exploreLink.hidden = true;
+      thread.appendChild(results);
+      scrollDown();
+      setProgress(STEPS.length);
+      markDone();
+      if (typeof window.clarity === 'function') window.clarity('set', 'onb_matches', matches.join(','));
+      track('onboarding_complete');
+
+      results.addEventListener('click', function (e) {
+        var cta = e.target.closest('[data-onb-cta]');
+        if (!cta) return;
+        var action = cta.dataset.onbCta;
+        track('onboarding_cta_' + action);
+        if (action === 'restart') start();
+        if (action === 'site') closeOnb();
+        if (action === 'enquire') {
+          serviceSelect.value = SERVICES[matches[0]].form;
+          var msg = document.getElementById('f-message');
+          if (!msg.value) {
+            msg.value = 'Where we are: ' + answers.journey.label + '\nIndustry: ' + answers.industry.label +
+              '\nMain need: ' + answers.need.label + '\nTimeline: ' + answers.timeline.label + '\n\n';
+          }
+          closeOnb(true);
+          document.getElementById('contact').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
+          serviceSelect.classList.remove('prefilled'); void serviceSelect.offsetWidth; serviceSelect.classList.add('prefilled');
+          setTimeout(function () { document.getElementById('f-name').focus({ preventScroll: true }); }, 600);
+        }
+      });
+    });
+  }
+
+  function start() {
+    runId++;
+    answers = {};
+    thread.innerHTML = '';
+    dock.innerHTML = '';
+    exploreLink.hidden = false;
+    ask(0, runId);
+  }
+
+  function openOnb(source) {
+    if (document.documentElement.classList.contains('onb-open')) return;
+    lastFocus = document.activeElement;
+    onbBody.scrollTop = 0;
+    document.documentElement.classList.add('onb-open');
+    track('onboarding_open_' + (source || 'unknown'));
+    start();
+  }
+
+  function closeOnb(keepFocus) {
+    if (!document.documentElement.classList.contains('onb-open')) return;
+    runId++;
+    markDone();
+    document.documentElement.classList.remove('onb-open', 'onb-auto');
+    if (!keepFocus && lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
+  }
+
+  document.querySelectorAll('[data-onb-open]').forEach(function (b) {
+    b.addEventListener('click', function () { openOnb(b.dataset.onbOpen); });
+  });
+  // "Skip" in the header and "explore myself" under the answers both take the visitor to the site
+  document.querySelectorAll('[data-onb-close]').forEach(function (b) {
+    b.addEventListener('click', function () { track('onboarding_skipped_' + b.dataset.onbClose); closeOnb(); });
+  });
+  document.addEventListener('keydown', function (e) {
+    if (!document.documentElement.classList.contains('onb-open')) return;
+    if (e.key === 'Escape') { track('onboarding_skipped_escape'); closeOnb(); return; }
+    if (e.key === 'Tab') { // keep keyboard focus inside the open panel
+      var f = onbEl.querySelectorAll('button, a[href]');
+      if (!f.length) return;
+      var first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+
+  // Opened before first paint by the <head> script: start the conversation now
+  if (document.documentElement.classList.contains('onb-auto')) {
+    track('onboarding_open_' + (/[?&]chat=1/.test(location.search) ? 'url' : 'first_visit'));
+    start();
+  }
+
+  // Enquiry form
+  var form = document.getElementById('enquiry-form');
+  var statusEl = document.getElementById('form-status');
+  function showStatus(kind, msg) { statusEl.hidden = false; statusEl.className = 'form-status ' + kind; statusEl.textContent = msg; }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (form.elements.website.value) return; // a bot filled the hidden field
+    if (!form.checkValidity()) {
+      var bad = form.querySelector(':invalid');
+      showStatus('err', 'Please fill in your name, a valid email and a short message.');
+      if (bad) bad.focus();
+      return;
+    }
+    var data = {};
+    new FormData(form).forEach(function (v, k) { if (k !== 'website') data[k] = v; });
+    track('form_submit_valid');
+
+    if (!FORM_ENDPOINT) {
+      var body = 'Name: ' + data.name + '\nEmail: ' + data.email + '\nCompany: ' + (data.company || '-') +
+        '\nPhone: ' + (data.phone || '-') + '\nService: ' + (data.service || '-') + '\n\n' + data.message;
+      window.location.href = 'mailto:info@aakrin.com?subject=' + encodeURIComponent('Website enquiry: ' + (data.service || 'General')) +
+        '&body=' + encodeURIComponent(body);
+      showStatus('ok', 'Your email app should open with this message ready to send. If it doesn\'t, email us at info@aakrin.com.');
+      return;
+    }
+
+    var btn = form.querySelector('button[type="submit"]');
+    btn.disabled = true; btn.textContent = 'Sending…';
+    fetch(FORM_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(data)
+    }).then(function (r) {
+      if (!r.ok) throw new Error(r.status);
+      form.reset();
+      showStatus('ok', 'Thanks, we\'ve got your enquiry. Expect a reply within one business day.');
+      track('form_submit_success');
+    }).catch(function () {
+      showStatus('err', 'Your enquiry didn\'t send. Check your connection and try again, or email info@aakrin.com.');
+      track('form_submit_error');
+    }).finally(function () {
+      btn.disabled = false; btn.textContent = 'Send enquiry';
+    });
+  });
+})();
+</script>
+
+<!-- Apollo tracker, loaded after the page is interactive -->
+<script>
+window.addEventListener('load', function () {
+  var n = Math.random().toString(36).substring(7), o = document.createElement('script');
+  o.src = 'https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache=' + n;
+  o.async = true;
+  o.onload = function () { window.trackingFunctions.onLoad({ appId: '6819ca5be4098f001573dd60' }); };
+  document.head.appendChild(o);
+});
+</script>
+</body>
+</html>

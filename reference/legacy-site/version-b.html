@@ -1,0 +1,2173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script type="text/javascript">
+    // (function(c,l,a,r,i,t,y){
+    //     c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+    //     t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+    //     y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    // })(window, document, "clarity", "script", "ym7dl733c2");
+</script>
+<script>
+// Show the onboarding chat on first visit (or with ?chat=1) before first paint
+(function() {
+  var show = /[?&]chat=1/.test(location.search);
+  try { if (!localStorage.getItem('aakrin_onboarding_v2')) show = true; } catch (e) {}
+  if (show) document.documentElement.classList.add('onb-open');
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aakrin | Best Salesforce Consulting Firm</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,800;0,9..144,900;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #1B6EF3;
+  --primary-light: #5B9BFF;
+  --primary-pale: #B8D4FF;
+  --primary-dark: #0D4FBE;
+  --primary-glow: rgba(27,110,243,0.12);
+  --heading: #0F1B35;
+  --text: #5A6480;
+  --light-bg: #F0F5FF;
+  --white: #ffffff;
+  --border: #D6E4FF;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 16px;
+  line-height: 1.9;
+  color: var(--text);
+  background: var(--white);
+  overflow-x: hidden;
+}
+a { text-decoration: none; color: inherit; }
+ul { list-style: none; }
+img { max-width: 100%; height: auto; display: block; }
+
+/* TOPBAR */
+.topbar {
+  background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+  padding: 8px 0;
+  font-size: 13px;
+  color: var(--white);
+}
+.topbar .container { display: flex; justify-content: flex-end; gap: 24px; align-items: center; }
+.topbar a { color: var(--white); font-weight: 500; }
+
+/* HEADER */
+header {
+  background: var(--white);
+  box-shadow: 0 2px 20px rgba(27,110,243,0.08);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+}
+.container { max-width: 1240px; margin: 0 auto; padding: 0 24px; }
+nav { display: flex; align-items: center; gap: 8px; }
+nav a {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--heading);
+  padding: 8px 14px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+nav a:hover, nav a.active { color: var(--primary); }
+.btn-schedule {
+  background: var(--primary) !important;
+  color: var(--white) !important;
+  padding: 10px 22px !important;
+  border-radius: 30px !important;
+  font-weight: 700 !important;
+  transition: all 0.3s !important;
+}
+.btn-schedule:hover { background: var(--primary-dark) !important; transform: translateY(-1px); }
+.hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+.hamburger span { display: block; width: 26px; height: 3px; background: var(--heading); border-radius: 2px; transition: all 0.3s; }
+.mobile-nav {
+  display: none;
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: var(--heading);
+  z-index: 9999;
+  flex-direction: column; align-items: center; justify-content: center; gap: 20px;
+}
+.mobile-nav.open { display: flex; }
+.mobile-nav a {
+  font-family: 'Fraunces', serif;
+  font-size: 28px;
+  color: var(--white);
+  font-weight: 700;
+}
+.mobile-nav-close {
+  position: absolute; top: 24px; right: 24px;
+  font-size: 32px; color: var(--white); cursor: pointer; line-height: 1;
+}
+
+/* ========== HERO SLIDER ========== */
+.hero-slider-section {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: #0a1628;
+  min-height: 600px;
+}
+.slider-wrapper {
+  display: flex;
+  transition: transform 0.9s cubic-bezier(0.77, 0, 0.175, 1);
+  will-change: transform;
+}
+.slide {
+  min-width: 100%;
+  display: flex;
+  align-items: stretch;
+  min-height: 600px;
+  position: relative;
+  overflow: hidden;
+}
+.slide-1 { background: linear-gradient(135deg, #EEF4FF 0%, #F5F9FF 60%, #E8F0FF 100%); }
+.slide-2 { background: linear-gradient(135deg, #0a1628 0%, #0d2a5c 60%, #0a1a45 100%); }
+
+.slide-content {
+  flex: 0 0 52%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 70px 60px 70px 80px;
+  position: relative;
+  z-index: 2;
+}
+.slide-image {
+  flex: 0 0 48%;
+  position: relative;
+  overflow: hidden;
+}
+.slide-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+.slide-1 .slide-image::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 140px; height: 100%;
+  background: linear-gradient(to right, #EEF4FF, transparent);
+  z-index: 2;
+  pointer-events: none;
+}
+.slide-2 .slide-image::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 140px; height: 100%;
+  background: linear-gradient(to right, #0a1628, transparent);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Slide 1 text */
+.slide-1 .slide-eyebrow {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #1B6EF3;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s 0.2s ease, transform 0.6s 0.2s ease;
+}
+.slide-1 .slide-eyebrow::before {
+  content: '';
+  width: 32px; height: 2px;
+  background: #1B6EF3;
+  display: block;
+}
+.slide-1 .slide-heading {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(22px, 4.5vw, 50px);
+  font-weight: 700;
+  color: #0F1B35;
+  line-height: 1.12;
+  margin-bottom: 32px;
+  letter-spacing: -0.5px;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s 0.35s ease, transform 0.7s 0.35s ease;
+}
+.slide-1 .slide-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #1B6EF3;
+  color: #fff;
+  padding: 14px 36px;
+  border-radius: 30px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  text-decoration: none;
+  width: fit-content;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: background 0.3s, box-shadow 0.3s, opacity 0.6s 0.55s ease, transform 0.6s 0.55s ease;
+}
+.slide-1 .slide-btn:hover {
+  background: #0D4FBE;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(27,110,243,0.35);
+}
+
+/* Slide 2 text */
+.slide-2 .slide-eyebrow {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #de5d19;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s 0.2s ease, transform 0.6s 0.2s ease;
+}
+.slide-2 .slide-eyebrow::before {
+  content: '';
+  width: 32px; height: 2px;
+  background: #de5d19;
+  display: block;
+}
+.slide-2 .slide-heading {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(36px, 4.5vw, 50px);
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.12;
+  margin-bottom: 32px;
+  letter-spacing: -0.5px;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s 0.35s ease, transform 0.7s 0.35s ease;
+}
+.slide-2 .slide-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #de5d19;
+  color: #fff;
+  padding: 14px 36px;
+  border-radius: 30px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  text-decoration: none;
+  width: fit-content;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: background 0.3s, box-shadow 0.3s, opacity 0.6s 0.55s ease, transform 0.6s 0.55s ease;
+}
+.slide-2 .slide-btn:hover {
+  background: #c24e10;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(222,93,25,0.4);
+}
+
+/* Active slide reveals text */
+.slide.is-active .slide-eyebrow,
+.slide.is-active .slide-heading,
+.slide.is-active .slide-btn {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+/* Arrows */
+.slider-arrows {
+  position: absolute;
+  right: 36px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 10;
+}
+.slider-arrow {
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.35);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: #fff;
+  font-size: 18px;
+  transition: all 0.2s;
+  backdrop-filter: blur(6px);
+  user-select: none;
+}
+.slider-arrow:hover {
+  background: rgba(255,255,255,0.3);
+  transform: scale(1.12);
+}
+
+/* Dots */
+.slider-dots {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 10;
+}
+.slider-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.4);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.slider-dot.active {
+  width: 28px;
+  border-radius: 4px;
+  background: #1B6EF3;
+}
+
+/* Progress bar */
+.slider-progress {
+  position: absolute;
+  bottom: 0; left: 0;
+  height: 3px;
+  background: #1B6EF3;
+  width: 0%;
+  z-index: 10;
+}
+
+/* ========== CERTIFICATIONS ========== */
+.certifications { background: var(--white); padding: 40px 0; border-bottom: 1px solid var(--border); }
+.cert-header { text-align: center; margin-bottom: 30px; }
+.cert-header h2 { font-family: 'Fraunces', serif; font-size: 22px; color: var(--heading); font-weight: 700; }
+.cert-strip { overflow: hidden; }
+.cert-track { display: flex; gap: 40px; animation: scroll-certs 30s linear infinite; width: max-content; }
+.cert-track:hover { animation-play-state: paused; }
+@keyframes scroll-certs { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+.cert-item {
+  display: flex; align-items: center; gap: 10px;
+  white-space: nowrap; padding: 10px 20px;
+  background: var(--light-bg); border-radius: 8px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px; font-weight: 600; color: var(--heading);
+  border: 1px solid var(--border);
+}
+.cert-item .dot { width: 10px; height: 10px; background: var(--primary); border-radius: 50%; flex-shrink: 0; }
+
+.cert-slider {
+  overflow: hidden;
+  background: #f5f7ff;
+  border-radius: 12px;
+  padding: 30px 0;
+  position: relative;
+}
+
+.cert-track {
+  display: flex;
+  gap: 40px;
+  width: max-content;
+  animation: scrollCerts 25s linear infinite;
+}
+
+.cert-track:hover {
+  animation-play-state: paused;
+}
+
+/* Animation */
+@keyframes scrollCerts {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Salesforce Badge Style */
+.sf-badge {
+  width: 220px;
+  min-height: 140px;
+  border-radius: 14px;
+  padding: 24px;
+  background: linear-gradient(145deg, #1f3c88, #254aa5);
+  color: #fff;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+
+
+.sf-badge:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+}
+
+.sf-badge:hover {
+  transform: scale(1.08);
+}
+
+/* Logo */
+.sf-logo {
+  background: #00a1e0;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.sf-logo-img {
+  width: 60px;
+  margin-bottom: 10px;
+}
+
+/* Certified text */
+.cert-title {
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+/* Name */
+.cert-name {
+  font-size: 15px;
+  color: #cbd5f5;
+  margin-top: 4px;
+}
+
+/* ========== SECTION HEADERS ========== */
+.section-label {
+  display: flex; align-items: center; gap: 10px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 12px; font-weight: 700;
+  color: var(--primary);
+  text-transform: uppercase; letter-spacing: 2.5px;
+  margin-bottom: 14px;
+}
+.section-label::before { content: ''; width: 24px; height: 2px; background: var(--primary); }
+.section-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 800;
+  color: var(--heading);
+  line-height: 1.15;
+  margin-bottom: 20px;
+  letter-spacing: -0.5px;
+}
+.section-desc { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; color: var(--text); line-height: 1.85; max-width: 680px; }
+.section { padding: 90px 0; }
+
+/* ========== ABOUT ========== */
+.about-section { background: var(--white); }
+.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+.about-img-main { border-radius: 16px; overflow: hidden; aspect-ratio: 4/3; background: linear-gradient(135deg, var(--primary), var(--primary-light)); display: flex; align-items: center; justify-content: center; }
+.about-features { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 32px; }
+.feature-chip {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px; background: var(--light-bg); border-radius: 8px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px; font-weight: 600; color: var(--heading);
+  border-left: 3px solid var(--primary);
+}
+
+/* ========== SERVICES ========== */
+.services-section { background: var(--light-bg); }
+.services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 50px; }
+.service-card { background: var(--white); border-radius: 16px; padding: 36px 30px; border: 1px solid var(--border); transition: all 0.35s; position: relative; overflow: hidden; }
+.service-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 0; background: var(--primary); transition: height 0.35s; }
+.service-card:hover::before { height: 100%; }
+.service-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(27,110,243,0.12); }
+.service-icon { width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 22px; font-size: 26px; color: var(--white); }
+.service-card h3 { font-family: 'Fraunces', serif; font-size: 19px; font-weight: 700; color: var(--heading); margin-bottom: 12px; line-height: 1.3; }
+.service-card p { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; color: var(--text); line-height: 1.75; margin-bottom: 20px; }
+.read-more { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 13px; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 6px; transition: gap 0.2s; }
+.read-more:hover { gap: 12px; }
+.read-more::after { content: '→'; }
+
+/* ========== FOOTER ========== */
+footer { background: var(--heading); color: rgba(255,255,255,0.7); padding: 80px 0 0; }
+.footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 50px; padding-bottom: 60px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.footer-brand p { font-family: 'Plus Jakarta Sans', sans-serif; margin-top: 16px; font-size: 14px; line-height: 1.8; max-width: 260px; }
+.footer-social { display: flex; gap: 12px; margin-top: 24px; }
+.social-btn { width: 38px; height: 38px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 15px; color: rgba(255,255,255,0.6); transition: all 0.2s; }
+.social-btn:hover { background: var(--primary); border-color: var(--primary); color: var(--white); }
+.footer-col-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--white); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+.footer-col-title::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.15); }
+.footer-links { display: flex; flex-direction: column; gap: 10px; }
+.footer-links a { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; color: rgba(255,255,255,0.6); transition: color 0.2s; display: flex; align-items: center; gap: 8px; }
+.footer-links a::before { content: '›'; color: var(--primary-light); font-size: 16px; }
+.footer-links a:hover { color: var(--white); }
+.footer-contact-item { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px; font-size: 14px; }
+.footer-contact-item .icon { width: 36px; height: 36px; background: rgba(27,110,243,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; color: var(--primary-light); flex-shrink: 0; }
+.newsletter-form { display: flex; flex-direction: column; gap: 10px; }
+.newsletter-form input { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 11px 16px; color: var(--white); font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; outline: none; }
+.newsletter-form input::placeholder { color: rgba(255,255,255,0.4); }
+.newsletter-form button { background: var(--primary); color: var(--white); border: none; border-radius: 8px; padding: 12px; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 14px; cursor: pointer; }
+.footer-bottom { padding: 24px 0; text-align: center; font-size: 13px; color: rgba(255,255,255,0.4); }
+.footer-bottom a { color: var(--primary-light); }
+
+/* Floating */
+.floating-cta { position: fixed; bottom: 30px; right: 30px; z-index: 999; display: flex; flex-direction: column; gap: 12px; align-items: flex-end; }
+.float-btn { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; color: var(--white); box-shadow: 0 4px 20px rgba(0,0,0,0.2); transition: transform 0.2s; cursor: pointer; text-decoration: none; }
+.float-btn:hover { transform: scale(1.1); }
+.float-whatsapp { background: #25d366; }
+.float-phone { background: var(--primary); }
+.float-contact { background: var(--primary-dark); }
+.scroll-top { position: fixed; bottom: 30px; left: 30px; width: 44px; height: 44px; background: var(--heading); color: var(--white); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; opacity: 0; transition: all 0.3s; z-index: 998; }
+.scroll-top.show { opacity: 1; }
+.scroll-top:hover { background: var(--primary); }
+
+/* aakrin section */
+.aakrin-section { background: var(--white); }
+.aakrin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 70px; align-items: center; }
+.aakrin-img-col { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.aakrin-img-box { border-radius: 14px; overflow: hidden; aspect-ratio: 1; background: linear-gradient(135deg, var(--light-bg), var(--border)); display: flex; align-items: center; justify-content: center; }
+.aakrin-img-box.tall { grid-row: 1/3; aspect-ratio: auto; min-height: 340px; }
+
+/* methodology */
+.methodology-section { background: var(--light-bg); }
+.tabs-wrapper { display: grid; grid-template-columns: 240px 1fr; gap: 0; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 30px rgba(27,110,243,0.08); }
+.tabs-nav { background: var(--heading); }
+.tab-btn { width: 100%; padding: 24px 28px; display: flex; align-items: center; gap: 14px; background: transparent; border: none; cursor: pointer; color: rgba(255,255,255,0.6); font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 600; text-align: left; transition: all 0.2s; border-left: 4px solid transparent; }
+.tab-btn:hover { color: var(--white); background: rgba(255,255,255,0.05); }
+.tab-btn.active { color: var(--white); border-left-color: var(--primary-light); background: rgba(255,255,255,0.08); }
+.tab-btn .tab-icon { font-size: 20px; }
+.tab-panel { background: var(--white); padding: 50px; display: none; align-items: center; gap: 50px; }
+.tab-panel.active { display: flex; }
+.tab-panel-img { width: 260px; flex-shrink: 0; border-radius: 12px; overflow: hidden; aspect-ratio: 4/3; background: var(--light-bg); display: flex; align-items: center; justify-content: center; }
+.tab-panel-content h4 { font-family: 'Fraunces', serif; font-size: 26px; font-weight: 800; color: var(--heading); margin-bottom: 16px; }
+.tab-panel-content p { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; color: var(--text); line-height: 1.85; }
+
+/* projects */
+.projects-section { background: var(--white); }
+.projects-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 50px; }
+.project-card { position: relative; border-radius: 16px; overflow: hidden; aspect-ratio: 4/3; background: var(--heading); }
+.project-card-bg { position: absolute; inset: 0; transition: transform 0.5s; }
+.project-card:hover .project-card-bg { transform: scale(1.05); }
+.project-card-bg.bg1 { background: linear-gradient(135deg, #0a1628, #0d2a5c); }
+.project-card-bg.bg2 { background: linear-gradient(135deg, var(--primary), var(--primary-light)); }
+.project-card-bg.bg3 { background: linear-gradient(135deg, #0f2460, #1a3483); }
+.project-card-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 30px; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); color: var(--white); }
+.project-num { font-family: 'Fraunces', serif; font-size: 42px; font-weight: 800; opacity: 0.2; line-height: 1; margin-bottom: 8px; }
+.project-card h4 { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+.project-card p { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; opacity: 0.8; line-height: 1.6; }
+
+/* blog */
+.blog-section { background: var(--light-bg); }
+.blog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 50px; }
+.blog-card { background: var(--white); border-radius: 16px; overflow: hidden; border: 1px solid var(--border); transition: all 0.3s; }
+.blog-card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(27,110,243,0.1); }
+.blog-card-img { aspect-ratio: 16/9; background: linear-gradient(135deg, var(--primary), var(--primary-light)); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.blog-card-body { padding: 28px; }
+.blog-meta { display: flex; align-items: center; gap: 10px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; color: var(--text); margin-bottom: 14px; font-weight: 600; flex-wrap: wrap; }
+.blog-meta .dot { width: 4px; height: 4px; background: var(--border); border-radius: 50%; }
+.blog-card h3 { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 700; color: var(--heading); line-height: 1.4; margin-bottom: 16px; }
+
+/* contact */
+.cta-section { background: #f0f4f8; padding: 72px 0; }
+.info-card { background: #fff; border: 1px solid #d1dde8; border-radius: 14px; padding: 22px 26px; display: flex; align-items: flex-start; gap: 16px; box-shadow: 0 2px 10px rgba(26,58,107,0.06); margin-bottom: 20px; }
+.icon-box { width: 44px; height: 44px; background: #eaf0f7; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; border: 1px solid #c8d8e8; }
+.card-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: #8fa8c0; margin-bottom: 5px; }
+.card-value { font-size: 17px; font-weight: 700; color: #1a3a6b; font-family: 'Fraunces', serif; display: block; margin-bottom: 3px; text-decoration: none; }
+.card-note { font-size: 12.5px; color: #5a7190; }
+.whatsapp-btn { background: #25D366; border-radius: 14px; padding: 16px 24px; display: flex; align-items: center; gap: 14px; text-decoration: none; box-shadow: 0 4px 14px rgba(37,211,102,0.25); }
+.form-col { background: #fff; border: 1px solid #d1dde8; border-radius: 16px; padding: 32px; box-shadow: 0 2px 16px rgba(26,58,107,0.07); }
+.form-title { font-size: 20px; font-weight: 800; color: #1a3a6b; font-family: 'Fraunces', serif; margin-bottom: 6px; }
+.form-sub { font-size: 13px; color: #5a7190; margin-bottom: 24px; }
+.enquiry-form { display: flex; flex-direction: column; gap: 14px; }
+.enquiry-form input, .enquiry-form textarea { background: #eaf0f7; border: 1px solid #c8d8e8; border-radius: 8px; padding: 12px 16px; color: #1a3a6b; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; outline: none; width: 100%; }
+.enquiry-form textarea { resize: vertical; }
+.enquiry-form select { background: #eaf0f7; border: 1px solid #c8d8e8; border-radius: 8px; padding: 12px 14px; color: #1a3a6b; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; outline: none; width: 100%; cursor: pointer; }
+.enquiry-form [hidden] { display: none; }
+.enquiry-form input:focus, .enquiry-form select:focus { border-color: #2563eb; }
+.enquiry-form .invalid { border-color: #d93025; }
+.enquiry-error { color: #d93025; font-size: 13px; font-weight: 600; }
+.enquiry-error:empty { display: none; }
+.enquiry-success { background: #eaf7ef; border: 1px solid #b7e2c4; color: #1d5b33; border-radius: 10px; padding: 16px 18px; font-size: 14px; line-height: 1.6; font-weight: 600; }
+.submit-btn { background: #1a3a6b; color: #fff; border: none; border-radius: 30px; padding: 14px 32px; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 15px; cursor: pointer; }
+.submit-btn:hover { background: #2563eb; }
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .services-grid { grid-template-columns: repeat(2,1fr); }
+  .about-grid, .aakrin-grid { grid-template-columns: 1fr; gap: 48px; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+}
+@media (max-width: 900px) {
+  .slide { flex-direction: column; min-height: auto; }
+  .slide-content { flex: none; padding: 50px 32px 36px; }
+  .slide-image { flex: none; height: 280px; }
+  .slide-1 .slide-image::before, .slide-2 .slide-image::before { display: none; }
+  .slider-arrows { right: 16px; }
+  .services-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+  nav { display: none; }
+  .hamburger { display: flex; }
+  .projects-grid, .blog-grid { grid-template-columns: 1fr; }
+  .tabs-wrapper { grid-template-columns: 1fr; }
+  .tabs-nav { display: flex; overflow-x: auto; }
+  .tab-btn { white-space: nowrap; min-width: 160px; border-left: none; border-bottom: 3px solid transparent; }
+  .tab-btn.active { border-left: none; border-bottom-color: var(--primary-light); }
+  .tab-panel { flex-direction: column; padding: 28px; }
+  .tab-panel-img { width: 100%; }
+  .footer-grid { grid-template-columns: 1fr; }
+  section.section { padding: 60px 0; }
+  .about-features { grid-template-columns: 1fr; }
+  .contact-grid { grid-template-columns: 1fr !important; gap: 28px !important; }
+}
+@media (max-width: 600px) {
+  .slide-content { padding: 40px 20px 28px; }
+  .slide-1 .slide-heading, .slide-2 .slide-heading { font-size: 32px; }
+  .slider-arrows { display: none; }
+  .container { padding: 0 16px; }
+}
+.partner-container {
+  display: flex;
+  align-items: center;   /* vertically center */
+  gap: 10px;             /* space between image and text */
+}
+
+.sf-logo-img {
+  width: 120px;
+  height: 70px;
+}
+
+.partner-text {
+  color: white;
+  margin: 0;
+}
+
+/* ====== ONBOARDING GUIDE ====== */
+.onb { display: none; position: fixed; inset: 0; z-index: 10000; flex-direction: column; overflow: hidden; background: linear-gradient(180deg, #DCEAFF 0%, #F3F8FF 55%, #FFFFFF 100%); font-family: 'Plus Jakarta Sans', sans-serif; }
+.onb-open .onb { display: flex; }
+.onb-open, .onb-open body { overflow: hidden; }
+.onb-trail { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.onb-trail path { fill: none; stroke: var(--primary-pale); stroke-width: 3; stroke-dasharray: 6 12; stroke-linecap: round; }
+.onb-top { position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 32px; }
+.onb-logo { height: 36px; width: auto; }
+.onb-steps { list-style: none; display: flex; gap: 8px; counter-reset: onbstep; transition: opacity .3s; }
+.onb[data-stage="intro"] .onb-steps { opacity: 0; }
+.onb-steps li { counter-increment: onbstep; display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: var(--text); background: rgba(255,255,255,0.75); border: 1px solid var(--border); border-radius: 20px; padding: 5px 12px 5px 6px; }
+.onb-steps li::before { content: counter(onbstep); width: 20px; height: 20px; border-radius: 50%; background: var(--border); color: var(--heading); font-size: 11px; display: flex; align-items: center; justify-content: center; }
+.onb-steps li.current { border-color: var(--primary); color: var(--primary); }
+.onb-steps li.current::before { background: var(--primary); color: #fff; }
+.onb-steps li.done::before { content: '✓'; background: var(--primary); color: #fff; }
+.onb-skip { background: rgba(255,255,255,0.75); border: 1px solid var(--border); color: var(--heading); font-family: inherit; font-size: 14px; font-weight: 700; padding: 10px 18px; border-radius: 30px; cursor: pointer; transition: all .2s; white-space: nowrap; }
+.onb-skip:hover { border-color: var(--primary); color: var(--primary); }
+
+.onb-scene { position: relative; z-index: 1; flex: 1; min-height: 0; width: 100%; max-width: 1160px; margin: 0 auto; padding: 8px 32px 32px; display: grid; grid-template-columns: minmax(220px, 38%) minmax(0, 1fr); gap: 40px; align-items: center; }
+
+/* Character */
+.onb-mascot-wrap { position: relative; height: min(56vh, 400px); display: flex; flex-direction: column; align-items: center; justify-content: flex-end; }
+.onb-mascot { height: calc(100% - 14px); aspect-ratio: 200 / 240; max-width: 100%; position: relative; z-index: 1; }
+.onb-mascot svg, .onb-mascot img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.onb-mascot.idle { animation: onbFloat 3.2s ease-in-out infinite; }
+.onb-mascot.swap > * { animation: onbPop .35s ease both; }
+.onb-mascot[data-pose="celebrate"] > * { animation: onbJump .8s ease 2; }
+.onb-shadow { width: 55%; height: 14px; border-radius: 50%; background: radial-gradient(closest-side, rgba(15,27,53,0.18), transparent); }
+.onb-mascot-wrap.flying .onb-mascot { animation: onbFly 2.2s cubic-bezier(.25,.75,.3,1) both; }
+.onb-mascot-wrap.flying .onb-shadow { animation: onbShadow 2.2s ease both; }
+
+/* Placeholder character poses (used until the artwork images are set) */
+.ph-plane { display: none; }
+.onb-mascot[data-pose="fly"] .ph-plane { display: inline; }
+.onb-mascot[data-pose="fly"] .ph-legs { display: none; }
+.ph-arm-r { transform-box: view-box; transform-origin: 136px 150px; transition: transform .35s ease; }
+.ph-arm-l { transform-box: view-box; transform-origin: 64px 150px; transition: transform .35s ease; }
+.onb-mascot[data-pose="fly"] .ph-arm-r { transform: rotate(-110deg); }
+.onb-mascot[data-pose="wave"] .ph-arm-r { animation: phWave 1.1s ease-in-out infinite; }
+.onb-mascot[data-pose="point"] .ph-arm-r { transform: rotate(-100deg); }
+.onb-mascot[data-pose="think"] .ph-arm-r { transform: rotate(150deg); }
+.onb-mascot[data-pose="celebrate"] .ph-arm-r { transform: rotate(-160deg); }
+.onb-mascot[data-pose="celebrate"] .ph-arm-l { transform: rotate(160deg); }
+.ph-blink { transform-box: fill-box; transform-origin: center; animation: phBlink 4s infinite; }
+
+/* Voice: sound toggle and talking motion */
+.onb-sound { position: absolute; top: 0; right: 0; z-index: 2; display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.85); border: 1px solid var(--border); border-radius: 30px; padding: 8px 14px; font-family: inherit; font-size: 13px; font-weight: 700; color: var(--heading); cursor: pointer; box-shadow: 0 4px 14px rgba(15,27,53,0.06); transition: border-color .2s, color .2s, opacity .3s; }
+.onb-sound:hover, .onb-sound:focus-visible { border-color: var(--primary); color: var(--primary); outline: none; }
+.onb-sound[aria-pressed="true"] { border-color: var(--primary); color: var(--primary); }
+.onb[data-stage="intro"] .onb-sound { opacity: 0; pointer-events: none; }
+.ph-mouth { transform-box: fill-box; transform-origin: center; transform: scaleY(0); }
+.onb-mascot.talking .ph-mouth { animation: phTalk .2s ease-in-out infinite alternate; }
+.onb-mascot.talking .ph-smile { opacity: 0; }
+.onb-mascot.talking > img { animation: onbTalkBob .3s ease-in-out infinite alternate; }
+@keyframes phTalk { from { transform: scaleY(.25); } to { transform: scaleY(1); } }
+@keyframes onbTalkBob { to { transform: translateY(-4px); } }
+
+/* Speech bubble + answers */
+.onb-panel { min-width: 0; max-height: 100%; overflow-y: auto; display: flex; flex-direction: column; gap: 18px; padding: 8px 6px 8px 12px; }
+.onb-bubble { position: relative; background: #fff; border: 1px solid var(--border); border-radius: 22px; padding: 22px 26px; box-shadow: 0 10px 30px rgba(27,110,243,0.08); animation: onbIn .35s ease both; }
+.onb-bubble::before { content: ''; position: absolute; left: -11px; top: 34px; width: 20px; height: 20px; background: #fff; border-left: 1px solid var(--border); border-bottom: 1px solid var(--border); transform: rotate(45deg); }
+.onb-bubble:empty { display: none; }
+.onb-ack { font-size: 16px; color: var(--text); line-height: 1.6; margin-bottom: 6px; }
+.onb-q { font-family: 'Fraunces', serif; font-size: clamp(22px, 2.6vw, 30px); font-weight: 700; color: var(--heading); line-height: 1.25; text-wrap: balance; }
+.onb-typing { display: inline-flex; gap: 6px; padding: 6px 0; }
+.onb-typing span { width: 8px; height: 8px; border-radius: 50%; background: var(--primary-light); animation: onbDot 1s infinite ease-in-out; }
+.onb-typing span:nth-child(2) { animation-delay: .15s; }
+.onb-typing span:nth-child(3) { animation-delay: .3s; }
+.onb-actions { display: grid; grid-template-columns: repeat(var(--cols, 2), minmax(0, 1fr)); gap: 12px; }
+.onb-opt { display: flex; align-items: center; gap: 12px; text-align: left; background: #fff; border: 1.5px solid var(--border); border-radius: 14px; padding: 14px 16px; font-family: inherit; font-size: 15px; font-weight: 600; line-height: 1.35; color: var(--heading); cursor: pointer; transition: border-color .2s, box-shadow .2s, transform .2s; animation: onbIn .3s ease both; }
+.onb-opt:hover, .onb-opt:focus-visible { border-color: var(--primary); box-shadow: 0 8px 20px var(--primary-glow); transform: translateY(-2px); outline: none; }
+.onb-opt.selected { border-color: var(--primary); background: var(--light-bg); }
+.onb-opt-icon { font-size: 22px; flex: 0 0 auto; }
+.onb-actions .form-col { grid-column: 1 / -1; padding: 24px; animation: onbIn .35s ease both; }
+.onb-done { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 12px; animation: onbIn .35s ease both; }
+.onb-cta { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 26px; border-radius: 30px; font-family: inherit; font-weight: 700; font-size: 15px; cursor: pointer; transition: all .2s; border: 1.5px solid var(--primary); }
+.onb-cta.primary { background: var(--primary); color: #fff; }
+.onb-cta.primary:hover { background: var(--primary-dark); border-color: var(--primary-dark); }
+.onb-cta.ghost { background: transparent; border-color: transparent; color: var(--text); }
+.onb-cta.ghost:hover { color: var(--heading); }
+.onb-back { align-self: flex-start; background: none; border: none; color: var(--text); font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; padding: 4px 0; }
+.onb-back:hover { color: var(--primary); }
+.float-onb { background: var(--heading); border: none; font-size: 20px; }
+
+@keyframes onbIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes onbDot { 0%, 80%, 100% { transform: translateY(0); opacity: .5; } 40% { transform: translateY(-5px); opacity: 1; } }
+@keyframes onbFly { 0% { transform: translate(-60vw, -45vh) rotate(-14deg) scale(.6); } 45% { transform: translate(-22vw, -26vh) rotate(-8deg) scale(.8); } 78% { transform: translate(0, -16px) rotate(3deg) scale(1); } 90% { transform: translate(0, 4px) rotate(0); } 100% { transform: none; } }
+@keyframes onbShadow { 0%, 60% { opacity: 0; transform: scale(.3); } 100% { opacity: 1; transform: none; } }
+@keyframes onbFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@keyframes onbPop { from { transform: scale(.94); opacity: .6; } to { transform: none; opacity: 1; } }
+@keyframes onbJump { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-24px); } }
+@keyframes phWave { 0%, 100% { transform: rotate(-140deg); } 50% { transform: rotate(-168deg); } }
+@keyframes phBlink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(.1); } }
+@media (prefers-reduced-motion: reduce) {
+  .onb-mascot.idle, .onb-mascot.swap > *, .onb-mascot[data-pose="celebrate"] > *, .onb-mascot-wrap.flying .onb-mascot, .onb-mascot-wrap.flying .onb-shadow,
+  .onb-mascot[data-pose="wave"] .ph-arm-r, .ph-blink, .onb-bubble, .onb-opt, .onb-typing span, .onb-mascot.talking > img { animation: none; }
+}
+@media (max-width: 760px) {
+  .onb-top { padding: 12px 16px; gap: 10px; }
+  .onb-logo { height: 22px; flex-shrink: 1; min-width: 0; }
+  .onb-steps { gap: 4px; flex-shrink: 0; }
+  .onb-steps li { padding: 0; border: none; background: none; }
+  .onb-steps li span { display: none; }
+  .onb-skip { padding: 7px 11px; font-size: 12px; flex-shrink: 0; }
+  .onb-scene { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto; align-content: start; gap: 8px; padding: 4px 16px 24px; overflow-y: auto; }
+  .onb-mascot-wrap { height: 160px; }
+  .onb-panel { max-height: none; overflow: visible; padding: 8px 0 0; }
+  .onb-bubble { padding: 18px 20px; }
+  .onb-bubble::before { left: 50%; top: -11px; margin-left: -10px; border-bottom: none; border-top: 1px solid var(--border); }
+  .onb-ack { font-size: 15px; }
+  .onb-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .onb-actions[data-cols-m="1"] { grid-template-columns: minmax(0, 1fr); }
+  .onb-opt { font-size: 14px; padding: 12px 14px; }
+  .onb-actions .form-col { padding: 20px 16px; }
+  .onb-cta { flex: 1 1 100%; }
+}
+</style>
+</head>
+<body>
+
+<!-- Onboarding guide (full-screen on first visit) -->
+<div class="onb" id="onb" data-stage="intro" role="dialog" aria-modal="true" aria-label="Aakrin onboarding guide">
+  <svg class="onb-trail" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true"><path d="M-20 40 C 160 30, 250 220, 300 470"/></svg>
+  <div class="onb-top">
+    <img class="onb-logo" src="A-Aakrin-logo-1.svg" alt="Aakrin">
+    <ol class="onb-steps" id="onbSteps" aria-label="Progress">
+      <li><span>Situation</span></li>
+      <li><span>Industry</span></li>
+      <li><span>Timing</span></li>
+      <li><span>Your details</span></li>
+    </ol>
+    <button type="button" class="onb-skip" id="onbSkip">Skip to website →</button>
+  </div>
+  <div class="onb-scene">
+    <div class="onb-mascot-wrap" id="onbMascotWrap">
+      <button type="button" class="onb-sound" id="onbSound" aria-pressed="false" hidden><span class="onb-sound-icon" aria-hidden="true">🔊</span><span class="onb-sound-label">Turn on sound</span></button>
+      <div class="onb-mascot" id="onbMascot" data-pose="fly"></div>
+      <div class="onb-shadow"></div>
+    </div>
+    <div class="onb-panel" id="onbPanel">
+      <div class="onb-bubble" id="onbBubble" aria-live="polite"></div>
+      <div class="onb-actions" id="onbActions"></div>
+      <button type="button" class="onb-back" id="onbBack" hidden>← Back</button>
+    </div>
+  </div>
+</div>
+
+<!-- Topbar -->
+<div class="topbar">
+  <div class="container">
+    <!-- <a href="tel:+917259688052">📞 +91 7259688052</a> -->
+    <a href="mailto:info@aakrin.com">✉ info@aakrin.com</a>
+  </div>
+</div>
+
+<!-- Header -->
+<header>
+  <div class="container">
+    <div class="header-inner">
+      <a href="#" class="logo">
+        <img src="A-Aakrin-logo-1.svg" alt="Aakrin" height="42" style="height:42px;width:auto;">
+      </a>
+      <nav id="desktopNav">
+        <a href="#" class="active">Home</a>
+        <a href="#services">Services</a>
+        <a href="#industries">Industries</a>
+        <a href="#customer">Customers &amp; Partners</a>
+        <a href="#about">About</a>
+        <a href="#blog">Blog</a>
+        <a href="#contact">Contact</a>
+        <a href="https://calendly.com/akshat-shah-aakrin/new-meeting" class="btn-schedule" target="_blank" rel="noopener">Schedule Call</a>
+      </nav>
+      <div class="hamburger" id="hamburger" onclick="openMobileNav()">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile Nav -->
+<div class="mobile-nav" id="mobileNav">
+  <span class="mobile-nav-close" onclick="closeMobileNav()">×</span>
+  <a href="#" onclick="closeMobileNav()">Home</a>
+  <a href="#services" onclick="closeMobileNav()">Services</a>
+  <a href="#industries" onclick="closeMobileNav()">Industries</a>
+  <a href="#customer" onclick="closeMobileNav()">Customers</a>
+  <a href="#about" onclick="closeMobileNav()">About</a>
+  <a href="#blog" onclick="closeMobileNav()">Blog</a>
+  <a href="#contact" onclick="closeMobileNav()">Contact</a>
+</div>
+
+<!-- ====== HERO SLIDER ====== -->
+<section class="hero-slider-section" id="home">
+  <div class="slider-wrapper" id="sliderWrapper">
+
+    <!-- Slide 1: Light bg -->
+    <div class="slide slide-2 is-active">
+      <div class="slide-content">
+       <div class="partner-container">
+  <img 
+    src="partner_logo.png"
+    alt="Salesforce Logo"
+    class="sf-logo-img"
+  />
+  <h5 class="partner-text">PARTNER</h5>
+</div>
+        <div class="slide-eyebrow">Welcome to Aakrin</div>
+        <h1 class="slide-heading">Unlock The Power of<br>Salesforce With Aakrin</h1>
+        <a href="#services" class="slide-btn">Learn More &nbsp;&rarr;</a>
+      </div>
+      <div class="slide-image">
+        <img src="team-collaboration.jpg" alt="Aakrin consultants collaborating" loading="eager">
+      </div>
+    </div>
+
+    <!-- Slide 2: Dark bg -->
+    <div class="slide slide-2">
+      <div class="slide-content">
+           <div class="partner-container">
+  <img 
+    src="partner_logo.png"
+    alt="Salesforce Logo"
+    class="sf-logo-img"
+  />
+  <h5 class="partner-text">PARTNER</h5>
+</div>
+        <div class="slide-eyebrow">Welcome to Aakrin</div>
+        <h1 class="slide-heading">Your trusted partner for<br>Salesforce Implementation</h1>
+        <a href="#services" class="slide-btn">Learn More &nbsp;&rarr;</a>
+      </div>
+      <div class="slide-image">
+        <img src="team-meeting.jpg" alt="Aakrin expert team" loading="eager">
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Arrows -->
+  <div class="slider-arrows">
+    <div class="slider-arrow" id="sliderPrev" title="Previous">&#8593;</div>
+    <div class="slider-arrow" id="sliderNext" title="Next">&#8595;</div>
+  </div>
+
+  <!-- Dots -->
+  <div class="slider-dots">
+    <div class="slider-dot active" data-index="0"></div>
+    <div class="slider-dot" data-index="1"></div>
+  </div>
+
+  <!-- Progress bar -->
+  <div class="slider-progress" id="sliderProgress"></div>
+</section>
+
+<!-- Certifications Marquee -->
+<section class="certifications" style="padding: 60px 0 40px; font-family: 'Segoe UI', sans-serif; background: #fff;">
+  <div class="container">
+
+
+   <!-- Certifications Header -->
+<div style="text-align:center; margin-bottom: 30px;">
+  <h2 style="font-size: 1.8rem; font-weight: 700; color: #111;">
+    We are Salesforce Certified Partner
+  </h2>
+</div>
+
+<!-- Slider -->
+<div class="cert-slider">
+  <div class="cert-track">
+
+    <!-- Badge -->
+    <div class="sf-badge">
+  <img 
+    src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg" 
+    alt="Salesforce Logo"
+    class="sf-logo-img"
+  />
+  <div class="cert-title">CERTIFIED</div>
+  <div class="cert-name">Field Service Consultant</div>
+</div>
+
+    <div class="sf-badge">
+     <img 
+    src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg" 
+    alt="Salesforce Logo"
+    class="sf-logo-img"
+  />
+      <div class="cert-title">CERTIFIED</div>
+      <div class="cert-name">Application Architect</div>
+    </div>
+
+    <div class="sf-badge">
+     <img 
+    src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg" 
+    alt="Salesforce Logo"
+    class="sf-logo-img"
+  />
+      <div class="cert-title">CERTIFIED</div>
+      <div class="cert-name">Data Architect</div>
+    </div>
+
+    <div class="sf-badge">
+     <img 
+    src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg" 
+    alt="Salesforce Logo"
+    class="sf-logo-img"
+  />
+      <div class="cert-title">CERTIFIED</div>
+      <div class="cert-name">Administrator</div>
+    </div>
+
+    <div class="sf-badge">
+      <img 
+    src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg" 
+    alt="Salesforce Logo"
+    class="sf-logo-img"
+  />
+      <div class="cert-title">CERTIFIED</div>
+      <div class="cert-name">Tableau CRM Consultant</div>
+    </div>
+
+    <!-- DUPLICATE for smooth infinite scroll -->
+    <div class="sf-badge">
+    <img 
+    src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg" 
+    alt="Salesforce Logo"
+    class="sf-logo-img"
+  />
+      <div class="cert-title">CERTIFIED</div>
+      <div class="cert-name">Field Service Consultant</div>
+    </div>
+
+     <div class="sf-badge">
+    <img 
+    src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg" 
+    alt="Salesforce Logo"
+    class="sf-logo-img"
+  />
+      <div class="cert-title">CERTIFIED</div>
+      <div class="cert-name">Platform App Builder</div>
+    </div>
+
+     <div class="sf-badge">
+    <img 
+    src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg" 
+    alt="Salesforce Logo"
+    class="sf-logo-img"
+  />
+      <div class="cert-title">CERTIFIED</div>
+      <div class="cert-name">Platform Developer I</div>
+    </div>
+
+     <div class="sf-badge">
+    <img 
+    src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg" 
+    alt="Salesforce Logo"
+    class="sf-logo-img"
+  />
+      <div class="cert-title">CERTIFIED</div>
+      <div class="cert-name">Platform Developer II</div>
+    </div>
+
+    <!-- <div class="sf-badge">
+      <div class="sf-logo">salesforce</div>
+      <div class="cert-title">CERTIFIED</div>
+      <div class="cert-name">Application Architect</div>
+    </div> -->
+
+  </div>
+</div>
+
+  </div>
+</section>
+<!-- Services -->
+<section class="section services-section" id="services">
+  <div class="container">
+    <div style="text-align:center;max-width:600px;margin:0 auto;">
+      <div class="section-label" style="justify-content:center;">What We Offer</div>
+      <h2 class="section-title">Our Salesforce Services</h2>
+      <p class="section-desc">Comprehensive Salesforce services tailored to your unique business needs, delivered by certified experts who understand your industry.</p>
+    </div>
+    <div class="services-grid">
+       <div class="service-card"><div class="service-icon">🔗</div><h3>Salesforce API Integration</h3><p>Seamless data exchange, automated workflows, and a unified view of your business processes through expert API integration.</p>
+      </div>
+      <div class="service-card"><div class="service-icon">💼</div><h3>Salesforce Consulting Services</h3><p>Expert guidance to maximize the value of your Salesforce investment with strategic planning and implementation expertise.</p></div>
+      <div class="service-card"><div class="service-icon">⚙️</div><h3>Salesforce Development Services</h3><p>Custom development tailored to your specific needs and business objectives using Salesforce best practices.</p></div>
+      <div class="service-card"><div class="service-icon">🗄️</div><h3>Salesforce Data Migration</h3><p>Accurate transfer of your valuable business information to Salesforce for effective customer management and analytics.</p></div>
+      <div class="service-card"><div class="service-icon">🛠️</div><h3>Salesforce Support &amp; Maintenance</h3><p>Keep your Salesforce instance running smoothly with expert support, prompt issue resolution, and continuous optimization.</p></div>
+      <div class="service-card"><div class="service-icon">🚀</div><h3>Salesforce Implementation</h3><p>Successful on-time delivery with careful planning, expertise, and a comprehensive understanding of your business needs.</p></div>
+      
+      <div class="service-card"><div class="service-icon">⚙️</div><h3>Salesforce Customization</h3><p>
+									Salesforce customization is essential. Customization allows you to tailor Salesforce to your specific needs, enhance user experience, automate workflows, and drive productivity.we will explore the benefits and considerations of Salesforce customization, highlighting</p></div>
+        <div class="service-card"><div class="service-icon">🛍️</div><h3>Salesforce Appexchange</h3><p>
+									Salesforce AppExchange provides a vast ecosystem of pre-built apps, components, and integrations. In this article, we will explore the benefits and potential of Salesforce AppExchange, highlighting how it enables businesses to extend and customize Salesforce to unlock new levels</p></div>
+      <div class="service-card"><div class="service-icon">⚡</div><h3>Salesforce Lighting</h3><p>
+									Salesforce Lightning is a powerful user interface (UI) framework and design system that revolutionizes the way users interact with the Salesforce platform. With its modern and intuitive interface, Lightning enhances productivity, streamlines processes, and provides a seamless user experience across devices.</p></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- About Aakrin / Industries -->
+<section class="section aakrin-section" id="industries">
+  <div class="container">
+    <!-- <div class="aakrin-grid">
+      <div>
+        <div class="section-label">About Aakrin</div>
+        <h2 class="section-title">Your Requirement – Our Priority</h2>
+        <p class="section-desc">AAKrin believes in quality and innovation in all spheres. We make things easier by providing top-notch talent with minimal hassle. Simply share your requirements, and our certified personnel will create a perfect plan tailored to your needs.</p>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px;margin-bottom:28px;">
+          <div style="background:var(--light-bg);border-radius:10px;padding:14px;text-align:center;border:1px solid var(--border);">
+            <div style="font-size:22px;font-weight:800;color:var(--primary);font-family:'Fraunces',serif;">75%</div>
+            <div style="font-size:11px;font-weight:600;color:var(--text);text-transform:uppercase;letter-spacing:.8px;margin-top:4px;">Client Satisfaction</div>
+          </div>
+          <div style="background:var(--light-bg);border-radius:10px;padding:14px;text-align:center;border:1px solid var(--border);">
+            <div style="font-size:22px;font-weight:800;color:var(--primary);font-family:'Fraunces',serif;">90%</div>
+            <div style="font-size:11px;font-weight:600;color:var(--text);text-transform:uppercase;letter-spacing:.8px;margin-top:4px;">Projects Completed</div>
+          </div>
+          <div style="background:var(--light-bg);border-radius:10px;padding:14px;text-align:center;border:1px solid var(--border);">
+            <div style="font-size:22px;font-weight:800;color:var(--primary);font-family:'Fraunces',serif;">80%</div>
+            <div style="font-size:11px;font-weight:600;color:var(--text);text-transform:uppercase;letter-spacing:.8px;margin-top:4px;">On-Time Delivery</div>
+          </div>
+        </div>
+        <a href="#contact" class="btn-primary" style="display:inline-block;background:var(--primary);color:#fff;padding:14px 32px;border-radius:30px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;">Learn More</a>
+      </div>
+      <div class="aakrin-img-col">
+        <div class="aakrin-img-box tall" style="background:linear-gradient(135deg,#0F1B35,#0D2A6E);">
+          <img src="team-meeting.jpg" alt="Team" style="width:100%;height:100%;object-fit:cover;">
+        </div>
+        <div class="aakrin-img-box" style="background:linear-gradient(135deg,var(--primary),var(--primary-light));display:flex;align-items:center;justify-content:center;">
+          <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" style="width:70%;height:70%"><circle cx="60" cy="60" r="50" fill="rgba(255,255,255,0.15)"/><path d="M60 20 L72 46 L100 50 L80 68 L84 96 L60 84 L36 96 L40 68 L20 50 L48 46 Z" fill="white" opacity="0.9"/></svg>
+        </div>
+        <div class="aakrin-img-box" style="background:linear-gradient(135deg,#0a1a4a,#0D2A6E);display:flex;align-items:center;justify-content:center;">
+          <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" style="width:70%;height:70%"><rect x="20" y="40" width="80" height="55" rx="8" fill="rgba(255,255,255,0.2)"/><rect x="30" y="50" width="40" height="6" rx="3" fill="white" opacity="0.8"/><path d="M30 85 L45 70 L55 78 L70 62 L90 75" stroke="#5B9BFF" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="90" cy="75" r="3" fill="#5B9BFF"/></svg>
+        </div>
+      </div>
+    </div> -->
+
+    <!-- Industries -->
+    <!-- <div style="margin-top:72px;padding-top:48px;border-top:1px solid var(--border);"> -->
+      <div style="text-align:center;margin-bottom:40px;">
+        <!-- <div class="section-label" style="justify-content:center;margin-bottom:12px;">Industries We Serve</div> -->
+        <h3 class="section-title" style="font-size:clamp(24px,3vw,36px);margin-bottom:10px;">Industries We Serve</h3>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px;">
+        <div style="background:var(--light-bg);border:1px solid var(--border);border-radius:14px;padding:22px;transition:.25s;cursor:pointer;" onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
+          <div style="font-size:26px;margin-bottom:10px;">💻</div><div style="font-size:16px;font-weight:700;color:var(--heading);margin-bottom:6px;">Hi-Tech</div><div style="font-size:13px;color:var(--text);line-height:1.65;">
+								We bring decades of experience working with hi-tech manufacturers, distributors and Independent Software Vendors (ISVs).</div>
+        </div>
+        <div style="background:var(--light-bg);border:1px solid var(--border);border-radius:14px;padding:22px;transition:.25s;cursor:pointer;" onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
+          <div style="font-size:26px;margin-bottom:10px;">🔬</div><div style="font-size:16px;font-weight:700;color:var(--heading);margin-bottom:6px;">Pharma &amp; Life Sciences</div><div style="font-size:13px;color:var(--text);line-height:1.65;">
+								Our breadth of understanding in this space enables us to provide comprehensive solutions for API and Formulations business.</div>
+        </div>
+        <div style="background:var(--light-bg);border:1px solid var(--border);border-radius:14px;padding:22px;transition:.25s;cursor:pointer;" onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
+          <div style="font-size:26px;margin-bottom:10px;">⚡</div><div style="font-size:16px;font-weight:700;color:var(--heading);margin-bottom:6px;">Energy &amp; Utilities</div><div style="font-size:13px;color:var(--text);line-height:1.65;">
+								We have worked on a multi-country lightning transformation project for a large Energy Major. The lightning transformation project.</div>
+        </div>
+        <div style="background:var(--light-bg);border:1px solid var(--border);border-radius:14px;padding:22px;transition:.25s;cursor:pointer;" onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
+          <div style="font-size:26px;margin-bottom:10px;">🏭</div><div style="font-size:16px;font-weight:700;color:var(--heading);margin-bottom:6px;">Manufacturing</div><div style="font-size:13px;color:var(--text);line-height:1.65;">
+								Our Manufacturing solutions combine sales, service, marketing cloud powered with Einstein analytics to connect data and derive actionable insights.</div>
+        </div>
+        <div style="background:var(--light-bg);border:1px solid var(--border);border-radius:14px;padding:22px;transition:.25s;cursor:pointer;" onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
+          <div style="font-size:26px;margin-bottom:10px;">🎓</div><div style="font-size:16px;font-weight:700;color:var(--heading);margin-bottom:6px;">Higher Education</div><div style="font-size:13px;color:var(--text);line-height:1.65;">
+								Our consultants have deep experience with HEDA architecture that speaks volumes about our capability in this space. Over the years.</div>
+        </div>
+        <div style="background:var(--light-bg);border:1px solid var(--border);border-radius:14px;padding:22px;transition:.25s;cursor:pointer;" onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
+          <div style="font-size:26px;margin-bottom:10px;">🏦</div><div style="font-size:16px;font-weight:700;color:var(--heading);margin-bottom:6px;">Financial Services</div><div style="font-size:13px;color:var(--text);line-height:1.65;">
+								We have worked on specific solutions in financial services to create unique customer experiences around Salesforce. Be it e-KYC, data security.</div>
+        </div>
+        <div style="background:var(--light-bg);border:1px solid var(--border);border-radius:14px;padding:22px;transition:.25s;cursor:pointer;" onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
+          <div style="font-size:26px;margin-bottom:10px;">🛒</div><div style="font-size:16px;font-weight:700;color:var(--heading);margin-bottom:6px;">Retail &amp; CPG</div><div style="font-size:13px;color:var(--text);line-height:1.65;">
+								Be it brick and mortar or online shopping your customers need personalized and consistent experience and our solutions drives engagement.</div>
+        </div>
+        <div style="background:var(--light-bg);border:1px solid var(--border);border-radius:14px;padding:22px;transition:.25s;cursor:pointer;" onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
+          <div style="font-size:26px;margin-bottom:10px;">🏥</div><div style="font-size:16px;font-weight:700;color:var(--heading);margin-bottom:6px;">Healthcare</div><div style="font-size:13px;color:var(--text);line-height:1.65;">
+								Our Healthcare solutions combine sales, service, marketing cloud powered with Einstein analytics to connect patient and payer data and derive actionable.</div>
+        </div>
+        <div style="background:var(--light-bg);border:1px solid var(--border);border-radius:14px;padding:22px;transition:.25s;cursor:pointer;" onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
+          <div style="font-size:26px;margin-bottom:10px;">🤝</div><div style="font-size:16px;font-weight:700;color:var(--heading);margin-bottom:6px;">Non-Profit</div><div style="font-size:13px;color:var(--text);line-height:1.65;">
+								As part of our 1% pledge with Salesforce we dedicate 1% of our efforts for Non-Profit institution to help them leverage the power of digital transformation.</div>
+        </div>
+        <!-- Real Estate -->
+<div style="background:var(--light-bg);border:1px solid var(--border);border-radius:14px;padding:22px;transition:.25s;cursor:pointer;" 
+onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)'" 
+onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
+  
+  <div style="font-size:26px;margin-bottom:10px;">🏢</div>
+  <div style="font-size:16px;font-weight:700;color:var(--heading);margin-bottom:6px;">Real Estate</div>
+  <div style="font-size:13px;color:var(--text);line-height:1.65;">
+    Streamlining property management, sales automation, and client engagement solutions.
+  </div>
+</div>
+
+<!-- Recruitment -->
+<div style="background:var(--light-bg);border:1px solid var(--border);border-radius:14px;padding:22px;transition:.25s;cursor:pointer;" 
+onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)'" 
+onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
+  
+  <div style="font-size:26px;margin-bottom:10px;">👥</div>
+  <div style="font-size:16px;font-weight:700;color:var(--heading);margin-bottom:6px;">Recruitment</div>
+  <div style="font-size:13px;color:var(--text);line-height:1.65;">
+    Enhancing hiring workflows, candidate tracking, and recruitment automation systems.
+  </div>
+</div>
+      </div>
+    <!-- </div> -->
+  </div>
+</section>
+
+<!--About Customer-->
+<section class="section aakrin-section" id="customer">
+  <div class="container">
+    <div style="text-align:center; margin-bottom:40px;">
+      <div class="section-label" style="justify-content:center;">Our Customers & Partners</div>
+      <h2 class="section-title">Trusted by Industry Leaders</h2>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;">
+
+      <div style="border: 1px solid #e2e8f0; border-radius:10px; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:center; padding: 24px 20px; min-height:110px;">
+        <img src="zessta_logo.jpg" alt="Zessta" style="max-width:180px; max-height:100px; width:auto; height:auto; object-fit:contain;">
+      </div>
+
+      <div style="border: 1px solid #e2e8f0; border-radius:10px; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:center; padding: 24px 20px; min-height:110px;">
+        <img src="nvish_logo.png" alt="Nvish" style="max-width:180px; max-height:100px; width:auto; height:auto; object-fit:contain;">
+      </div>
+
+      <div style="border: 1px solid #e2e8f0; border-radius:10px; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:center; padding: 24px 20px; min-height:110px;">
+        <img src="mouritech_logo.jpg" alt="MOURI Tech" style="max-width:180px; max-height:100px; width:auto; height:auto; object-fit:contain;">
+      </div>
+
+      <div style="border: 1px solid #e2e8f0; border-radius:10px; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:center; padding: 24px 20px; min-height:110px;">
+        <img src="Infoglen.jpg" alt="Infoglen" style="max-width:180px; max-height:100px; width:auto; height:auto; object-fit:contain;">
+      </div>
+
+      <div style="border: 1px solid #e2e8f0; border-radius:10px; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:center; padding: 24px 20px; min-height:110px;">
+        <img src="artech_logo.png" alt="Artech" style="max-width:180px; max-height:100px; width:auto; height:auto; object-fit:contain;">
+      </div>
+
+      <div style="border: 1px solid #e2e8f0; border-radius:10px; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:center; padding: 24px 20px; min-height:110px;">
+        <img src="igen_american_softwares_logo.jpg" alt="iGen" style="max-width:180px; max-height:100px; width:auto; height:auto; object-fit:contain;">
+      </div>
+
+      <div style="border: 1px solid #e2e8f0; border-radius:10px; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:center; padding: 24px 20px; min-height:110px;">
+        <img src="yash_technologies.avif" alt="Yash Technologies" style="max-width:180px; max-height:100px; width:auto; height:auto; object-fit:contain;">
+      </div>
+
+      <div style="border: 1px solid #e2e8f0; border-radius:10px; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:center; padding: 24px 20px; min-height:110px;">
+        <img src="skillnet_solutions_inc_logo.jpg" alt="Skillnet" style="max-width:180px; max-height:100px; width:auto; height:auto; object-fit:contain;">
+      </div>
+
+      <div style="border: 1px solid #e2e8f0; border-radius:10px; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:center; padding: 24px 20px; min-height:110px;">
+        <img src="wiselinkglobal_logo.jpg" alt="Wiselink" style="max-width:180px; max-height:100px; width:auto; height:auto; object-fit:contain;">
+      </div>
+
+      <div style="border: 1px solid #e2e8f0; border-radius:10px; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:center; padding: 24px 20px; min-height:110px;">
+        <img src="rapidflow_apps_inc__logo.jpg" alt="Rapidflow" style="max-width:180px; max-height:100px; width:auto; height:auto; object-fit:contain;">
+      </div>
+
+      <div style="border: 1px solid #e2e8f0; border-radius:10px; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:center; padding: 24px 20px; min-height:110px;">
+        <img src="hackett_group.gif" alt="The Hackett Group" style="max-width:180px; max-height:100px; width:auto; height:auto; object-fit:contain;">
+      </div>
+
+      <div style="border: 1px solid #e2e8f0; border-radius:10px; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:center; padding: 24px 20px; min-height:110px;">
+        <img src="infosys.png" alt="Infosys" style="max-width:180px; max-height:100px; width:auto; height:auto; object-fit:contain;">
+      </div>
+
+      <div style="border: 1px solid #e2e8f0; border-radius:10px; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:center; padding: 24px 20px; min-height:110px;">
+        <img src="Abbott.png" alt="Abbott" style="max-width:180px; max-height:100px; width:auto; height:auto; object-fit:contain;">
+      </div>
+
+      <div style="border: 1px solid #e2e8f0; border-radius:10px; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:center; padding: 24px 20px; min-height:110px;">
+        <img src="Emudhra.png" alt="eMudhra" style="max-width:180px; max-height:100px; width:auto; height:auto; object-fit:contain;">
+      </div>
+
+      <div style="border: 1px solid #e2e8f0; border-radius:10px; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:center; padding: 24px 20px; min-height:110px;">
+        <img src="camelot.jpg" alt="Camelot" style="max-width:180px; max-height:100px; width:auto; height:auto; object-fit:contain;">
+      </div>
+
+      <div style="border: 1px solid #e2e8f0; border-radius:10px; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:center; padding: 24px 20px; min-height:110px;">
+        <img src="crossdoor.jpg" alt="Crossdoor Consultants" style="max-width:180px; max-height:100px; width:auto; height:auto; object-fit:contain;">
+      </div>
+
+      <div style="border: 1px solid #e2e8f0; border-radius:10px; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:center; padding: 24px 20px; min-height:110px;">
+        <img src="maple_tax.jpg" alt="Maple Tax Consulting" style="max-width:180px; max-height:100px; width:auto; height:auto; object-fit:contain;">
+      </div>
+
+      <div style="border: 1px solid #e2e8f0; border-radius:10px; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:center; padding: 24px 20px; min-height:110px;">
+        <img src="biztron_softech.webp" alt="Biztron Softech" style="max-width:180px; max-height:100px; width:auto; height:auto; object-fit:contain;">
+      </div>
+
+      <div style="border: 1px solid #e2e8f0; border-radius:10px; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:center; padding: 24px 20px; min-height:110px;">
+        <img src="lunio_logo.png" alt="Lunio" style="max-width:180px; max-height:100px; width:auto; height:auto; object-fit:contain;">
+      </div>
+
+      <div style="border: 1px solid #e2e8f0; border-radius:10px; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:center; padding: 24px 20px; min-height:110px;">
+        <img src="wildnet_logo.jpg" alt="Wildnet Technologies" style="max-width:180px; max-height:100px; width:auto; height:auto; object-fit:contain;">
+      </div>
+
+      <div style="border: 1px solid #e2e8f0; border-radius:10px; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:center; padding: 24px 20px; min-height:110px;">
+        <img src="astropay_logo.png" alt="AstroPay" style="max-width:180px; max-height:100px; width:auto; height:auto; object-fit:contain;">
+      </div>
+
+      <div style="border: 1px solid #e2e8f0; border-radius:10px; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:center; padding: 24px 20px; min-height:110px;">
+        <img src="ces_logo.jpg" alt="CES" style="max-width:180px; max-height:100px; width:auto; height:auto; object-fit:contain;">
+      </div>
+
+      <div style="border: 1px solid #e2e8f0; border-radius:10px; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:center; padding: 24px 20px; min-height:110px;">
+        <img src="innovius_logo.jpg" alt="Innovius" style="max-width:180px; max-height:100px; width:auto; height:auto; object-fit:contain;">
+      </div>
+
+   
+
+    </div>
+     <div style="text-align: right; margin-top: 16px;">
+  <span style="font-size: 15px; font-weight: 600; color: #E55014;">& Many More...</span>
+</div>
+  </div>
+</section>
+
+
+<!-- Who We Are -->
+<section class="section about-section" id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div>
+        <div class="section-label">Who We Are</div>
+        <h2 class="section-title">We Have Decades of Practical Experience</h2>
+        <p class="section-desc">Salesforce consulting services offer a team of certified experts who possess deep knowledge and extensive experience in implementing and customizing Salesforce solutions.</p>
+        <p class="section-desc" style="margin-top:16px;">Whether you need help with initial implementation, system integration, or ongoing enhancements, Salesforce consultants have the expertise to design and deliver a solution that aligns with your business objectives.</p>
+        <div class="about-features">
+          <div class="feature-chip"><span>⚡</span> Expert Consultants</div>
+          <div class="feature-chip"><span>🔧</span> End-to-End Solutions</div>
+          <div class="feature-chip"><span>🎯</span> Business first approach</div>
+          <div class="feature-chip"><span>🏆</span> 14+ Certifications</div>
+        </div>
+      </div>
+      <div class="about-img-main">
+        <img src="team-collaboration.jpg" alt="Team" style="width:100%;height:100%;object-fit:cover;border-radius:16px;">
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:56px;padding-top:40px;border-top:1px solid var(--border);">
+      <div style="text-align:center;padding:20px 12px;background:var(--light-bg);border-radius:12px;border:1px solid var(--border);">
+        <div style="font-size:30px;font-weight:800;color:var(--primary);line-height:1;font-family:'Fraunces',serif;">80+</div>
+        <div style="font-size:12px;font-weight:600;color:var(--text);text-transform:uppercase;letter-spacing:1px;margin-top:5px;">Active Clients</div>
+      </div>
+      <div style="text-align:center;padding:20px 12px;background:var(--light-bg);border-radius:12px;border:1px solid var(--border);">
+        <div style="font-size:30px;font-weight:800;color:var(--primary);line-height:1;font-family:'Fraunces',serif;">200+</div>
+        <div style="font-size:12px;font-weight:600;color:var(--text);text-transform:uppercase;letter-spacing:1px;margin-top:5px;">Projects Completed</div>
+      </div>
+      <div style="text-align:center;padding:20px 12px;background:var(--light-bg);border-radius:12px;border:1px solid var(--border);">
+        <div style="font-size:30px;font-weight:800;color:var(--primary);line-height:1;font-family:'Fraunces',serif;">14+</div>
+        <div style="font-size:12px;font-weight:600;color:var(--text);text-transform:uppercase;letter-spacing:1px;margin-top:5px;">Certifications</div>
+      </div>
+      <div style="text-align:center;padding:20px 12px;background:var(--light-bg);border-radius:12px;border:1px solid var(--border);">
+        <div style="font-size:30px;font-weight:800;color:var(--primary);line-height:1;font-family:'Fraunces',serif;">98%</div>
+        <div style="font-size:12px;font-weight:600;color:var(--text);text-transform:uppercase;letter-spacing:1px;margin-top:5px;">Satisfaction Rate</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Blog -->
+<section class="section blog-section" id="blog">
+  <div class="container">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;margin-bottom:50px;">
+      <div><div class="section-label">What's Happening</div><h2 class="section-title">News &amp; Articles</h2></div>
+      <a href="https://aakrin.com/blog/" target="_blank" class="read-more">View All Articles</a>
+    </div>
+    <div class="blog-grid">
+      <div class="blog-card"><div class="blog-card-img"><svg viewBox="0 0 160 90" xmlns="http://www.w3.org/2000/svg"><text x="30" y="52" font-size="36" fill="white">CRM</text></svg></div><div class="blog-card-body"><div class="blog-meta"><span>👤 Krishna Dadi</span><span class="dot"></span><span>March 5, 2024</span></div><h3><a href="https://aakrin.com/2024/03/05/the-10-best-crm-for-saas-in-2024-boost-your-software-sales-growth/" target="_blank">The 10 Best CRM for SaaS in 2024: Boost Your Software Sales &amp; Growth</a></h3><a href="#" class="read-more">Read More</a></div></div>
+      <div class="blog-card"><div class="blog-card-img" style="background:linear-gradient(135deg,#0F1B35,#0D2A6E);"><svg viewBox="0 0 160 90" xmlns="http://www.w3.org/2000/svg"><text x="14" y="55" font-size="22" fill="white" font-weight="700">SALESFORCE</text></svg></div><div class="blog-card-body"><div class="blog-meta"><span>👤 Krishna Dadi</span><span class="dot"></span><span>February 9, 2024</span></div><h3><a href="https://aakrin.com/2024/02/09/develop-your-business-with-salesforce/" target="_blank">Develop your Business with SALESFORCE</a></h3><a href="#" class="read-more">Read More</a></div></div>
+      <div class="blog-card"><div class="blog-card-img" style="background:linear-gradient(135deg,#0a1a4a,#1a3483);"><svg viewBox="0 0 160 90" xmlns="http://www.w3.org/2000/svg"><text x="35" y="35" font-size="14" fill="white">2024</text><text x="18" y="58" font-size="18" fill="white" font-weight="700">Predictions</text></svg></div><div class="blog-card-body"><div class="blog-meta"><span>👤 Krishna Dadi</span><span class="dot"></span><span>February 2, 2024</span></div><h3><a href="https://aakrin.com/2024/02/02/embracing-tomorrow-salesforce-predictions-for-2024/" target="_blank">Embracing Tomorrow: Salesforce Predictions for 2024</a></h3><a href="#" class="read-more">Read More</a></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Methodology -->
+<section class="section methodology-section">
+  <div class="container">
+    <div style="text-align:center;max-width:700px;margin:0 auto;">
+      <div class="section-label" style="justify-content:center;">What We're Offering</div>
+      <h2 class="section-title">Our Methodology</h2>
+      <p class="section-desc">A well-defined approach that guides our work and ensures successful delivery of every project.</p>
+    </div>
+    <div style="margin-top:50px;">
+      <div class="tabs-wrapper">
+        <div class="tabs-nav">
+          <button class="tab-btn active" onclick="switchTab(0)"><span class="tab-icon">💻</span> Discussion Group</button>
+          <button class="tab-btn" onclick="switchTab(1)"><span class="tab-icon">🔊</span> Solution Development</button>
+          <button class="tab-btn" onclick="switchTab(2)"><span class="tab-icon">👍</span> Delivery &amp; Training</button>
+          <button class="tab-btn" onclick="switchTab(3)"><span class="tab-icon">🕐</span> Continuous Support</button>
+        </div>
+        <div class="tab-panel active"><div class="tab-panel-img">
+          <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg" style="width:80%;height:80%"><rect x="20" y="20" width="100" height="70" rx="10" fill="#1B6EF3" opacity="0.15"/><circle cx="55" cy="48" r="12" fill="#ffd5b8"/><rect x="43" y="60" width="24" height="30" rx="6" fill="#1B6EF3" opacity="0.6"/><circle cx="145" cy="88" r="12" fill="#ffd5b8"/><rect x="133" y="100" width="24" height="30" rx="6" fill="#0F1B35" opacity="0.5"/><path d="M67 55 Q110 40 133 80" stroke="#1B6EF3" stroke-width="2" fill="none" stroke-dasharray="5,4" stroke-linecap="round"/></svg></div><div class="tab-panel-content"><h4>Discussion Group</h4><p>Our Expert Consultant will reach out to understand your company process. We conduct in-depth discovery sessions to map requirements, identify pain points, and define clear objectives for your Salesforce implementation.</p></div></div>
+        <div class="tab-panel"><div class="tab-panel-img">
+         <svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg" style="width:80%;height:80%">
+  <rect x="0" y="0" width="200" height="260" rx="18" fill="#0d1b3e"/>
+  <circle cx="25" cy="25" r="1.5" fill="white" opacity="0.5"/>
+  <circle cx="75" cy="18" r="1" fill="white" opacity="0.4"/>
+  <circle cx="135" cy="30" r="1.5" fill="white" opacity="0.6"/>
+  <circle cx="185" cy="15" r="1" fill="white" opacity="0.3"/>
+  <circle cx="50" cy="50" r="1" fill="white" opacity="0.4"/>
+  <circle cx="165" cy="45" r="1.5" fill="white" opacity="0.5"/>
+  <circle cx="192" cy="65" r="1" fill="white" opacity="0.3"/>
+  <circle cx="20" cy="85" r="1" fill="white" opacity="0.35"/>
+  <circle cx="100" cy="80" r="58" fill="none" stroke="#3B8BD4" stroke-width="0.5" stroke-dasharray="4 6" opacity="0.25"/>
+  <path d="M78 98 Q100 50 122 98 Z" fill="#185FA5"/>
+  <ellipse cx="100" cy="128" rx="22" ry="46" fill="#3B8BD4"/>
+  <circle cx="100" cy="118" r="10" fill="#0d1b3e"/>
+  <circle cx="100" cy="118" r="7" fill="#60a5fa" opacity="0.6"/>
+  <circle cx="97" cy="115" r="2.5" fill="white" opacity="0.7"/>
+  <path d="M78 158 L58 183 L78 173 Z" fill="#185FA5"/>
+  <path d="M122 158 L142 183 L122 173 Z" fill="#185FA5"/>
+  <ellipse cx="100" cy="183" rx="12" ry="18" fill="#fbbf24" opacity="0.9"/>
+  <ellipse cx="100" cy="190" rx="7" ry="12" fill="#f97316" opacity="0.85"/>
+  <ellipse cx="100" cy="196" rx="4" ry="8" fill="white" opacity="0.7"/>
+  <text x="18" y="142" font-size="26" font-weight="700" fill="#60a5fa" opacity="0.7" font-family="monospace">{</text>
+  <text x="18" y="162" font-size="11" fill="#34d399" opacity="0.7" font-family="monospace">build()</text>
+  <text x="18" y="178" font-size="11" fill="#a78bfa" opacity="0.7" font-family="monospace">deploy()</text>
+  <text x="152" y="142" font-size="26" font-weight="700" fill="#60a5fa" opacity="0.7" font-family="monospace">}</text>
+  <text x="148" y="162" font-size="11" fill="#fbbf24" opacity="0.7" font-family="monospace">v2.4</text>
+  <rect x="0" y="224" width="200" height="36" rx="18" fill="#0a1628"/>
+  <text x="100" y="246" text-anchor="middle" font-size="11" font-weight="700" fill="#60a5fa" font-family="sans-serif">Solution Development</text>
+</svg>
+        </div>
+          <div class="tab-panel-content">
+            <h4>Solution Development</h4><p>Using Salesforce best practices, our expert developers create the tailored solution. Our team brings your vision to life through meticulous coding, configuration, and customization aligned with Salesforce standards.</p></div></div>
+        <div class="tab-panel"><div class="tab-panel-img">
+         <svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg" style="width:80%;height:80%">
+  <rect x="0" y="0" width="200" height="260" rx="18" fill="#0a2818"/>
+  <circle cx="22" cy="22" r="3" fill="#fbbf24" opacity="0.7"/>
+  <circle cx="52" cy="14" r="2" fill="#f472b6" opacity="0.6"/>
+  <circle cx="90" cy="25" r="3" fill="#60a5fa" opacity="0.6"/>
+  <circle cx="138" cy="18" r="2" fill="#34d399" opacity="0.7"/>
+  <circle cx="172" cy="28" r="3" fill="#fbbf24" opacity="0.5"/>
+  <circle cx="188" cy="14" r="2" fill="#f472b6" opacity="0.5"/>
+  <circle cx="16" cy="48" r="2" fill="#34d399" opacity="0.5"/>
+  <circle cx="192" cy="52" r="2" fill="#60a5fa" opacity="0.5"/>
+  <rect x="78" y="52" width="44" height="36" rx="8" fill="#fbbf24" opacity="0.9"/>
+  <rect x="82" y="56" width="36" height="28" rx="5" fill="#f59e0b"/>
+  <rect x="86" y="58" width="8" height="20" rx="4" fill="white" opacity="0.3"/>
+  <path d="M78 62 Q62 62 64 74 Q66 86 78 84" stroke="#fbbf24" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M122 62 Q138 62 136 74 Q134 86 122 84" stroke="#fbbf24" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <rect x="93" y="88" width="14" height="16" rx="2" fill="#fbbf24" opacity="0.8"/>
+  <rect x="80" y="102" width="40" height="7" rx="3" fill="#fbbf24" opacity="0.9"/>
+  <text x="100" y="76" text-anchor="middle" font-size="15" fill="white" font-family="sans-serif">★</text>
+  <rect x="55" y="152" width="44" height="52" rx="6" fill="#10b981"/>
+  <text x="77" y="183" text-anchor="middle" font-size="17" font-weight="700" fill="white" font-family="sans-serif">2</text>
+  <rect x="103" y="138" width="44" height="66" rx="6" fill="#059669"/>
+  <text x="125" y="176" text-anchor="middle" font-size="17" font-weight="700" fill="white" font-family="sans-serif">1</text>
+  <rect x="13" y="163" width="44" height="41" rx="6" fill="#34d399"/>
+  <text x="35" y="189" text-anchor="middle" font-size="17" font-weight="700" fill="white" font-family="sans-serif">3</text>
+  <rect x="9" y="202" width="142" height="8" rx="4" fill="#064e2e"/>
+  <circle cx="35" cy="150" r="10" fill="#a7f3d0"/>
+  <ellipse cx="35" cy="163" rx="8" ry="5" fill="#a7f3d0"/>
+  <circle cx="77" cy="138" r="10" fill="#d1fae5"/>
+  <ellipse cx="77" cy="151" rx="8" ry="5" fill="#d1fae5"/>
+  <circle cx="125" cy="124" r="10" fill="#6ee7b7"/>
+  <ellipse cx="125" cy="137" rx="8" ry="5" fill="#6ee7b7"/>
+  <rect x="0" y="224" width="200" height="36" rx="18" fill="#064e2e"/>
+  <text x="100" y="246" text-anchor="middle" font-size="11" font-weight="700" fill="#34d399" font-family="sans-serif">Delivery &amp; Training</text>
+</svg>
+        </div>
+        <div class="tab-panel-content"><h4>Delivery &amp; Training</h4><p>Following successful delivery, we offer comprehensive user training. Our programs are designed to empower your users and maximize Salesforce adoption across your organization.</p></div></div>
+        <div class="tab-panel"><div class="tab-panel-img">
+        <svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg" style="width:80%;height:80%">
+  <rect x="0" y="0" width="200" height="260" rx="18" fill="#1c0533"/>
+  <circle cx="22" cy="28" r="1.5" fill="#a78bfa" opacity="0.3"/>
+  <circle cx="48" cy="18" r="1.5" fill="#a78bfa" opacity="0.25"/>
+  <circle cx="74" cy="28" r="1.5" fill="#a78bfa" opacity="0.3"/>
+  <circle cx="100" cy="18" r="1.5" fill="#a78bfa" opacity="0.25"/>
+  <circle cx="126" cy="28" r="1.5" fill="#a78bfa" opacity="0.3"/>
+  <circle cx="152" cy="18" r="1.5" fill="#a78bfa" opacity="0.25"/>
+  <circle cx="178" cy="28" r="1.5" fill="#a78bfa" opacity="0.3"/>
+  <circle cx="35" cy="44" r="1.5" fill="#a78bfa" opacity="0.2"/>
+  <circle cx="61" cy="54" r="1.5" fill="#a78bfa" opacity="0.25"/>
+  <circle cx="87" cy="44" r="1.5" fill="#a78bfa" opacity="0.2"/>
+  <circle cx="113" cy="54" r="1.5" fill="#a78bfa" opacity="0.25"/>
+  <circle cx="139" cy="44" r="1.5" fill="#a78bfa" opacity="0.2"/>
+  <circle cx="165" cy="54" r="1.5" fill="#a78bfa" opacity="0.25"/>
+  <path d="M100 55 L160 75 L160 138 Q160 172 100 192 Q40 172 40 138 L40 75 Z" fill="#3b0d6e"/>
+  <path d="M100 63 L152 80 L152 138 Q152 167 100 184 Q48 167 48 138 L48 80 Z" fill="#6d28d9" opacity="0.45"/>
+  <circle cx="100" cy="128" r="36" fill="none" stroke="#a78bfa" stroke-width="1" opacity="0.5"/>
+  <circle cx="100" cy="128" r="30" fill="#1c0533"/>
+  <circle cx="100" cy="128" r="30" fill="none" stroke="#8b5cf6" stroke-width="2"/>
+  <line x1="100" y1="100" x2="100" y2="106" stroke="#a78bfa" stroke-width="2" stroke-linecap="round"/>
+  <line x1="128" y1="128" x2="122" y2="128" stroke="#a78bfa" stroke-width="2" stroke-linecap="round"/>
+  <line x1="100" y1="156" x2="100" y2="150" stroke="#a78bfa" stroke-width="2" stroke-linecap="round"/>
+  <line x1="72" y1="128" x2="78" y2="128" stroke="#a78bfa" stroke-width="2" stroke-linecap="round"/>
+  <line x1="100" y1="128" x2="100" y2="108" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="100" y1="128" x2="116" y2="128" stroke="#a78bfa" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="100" cy="128" r="3" fill="white"/>
+  <circle cx="22" cy="108" r="9" fill="#6d28d9"/>
+  <circle cx="22" cy="108" r="5" fill="#a78bfa"/>
+  <circle cx="22" cy="148" r="9" fill="#6d28d9"/>
+  <circle cx="22" cy="148" r="5" fill="#a78bfa"/>
+  <circle cx="178" cy="108" r="9" fill="#6d28d9"/>
+  <circle cx="178" cy="108" r="5" fill="#a78bfa"/>
+  <circle cx="178" cy="148" r="9" fill="#6d28d9"/>
+  <circle cx="178" cy="148" r="5" fill="#a78bfa"/>
+  <line x1="31" y1="108" x2="40" y2="113" stroke="#a78bfa" stroke-width="1" stroke-dasharray="3 3" opacity="0.6"/>
+  <line x1="31" y1="148" x2="40" y2="143" stroke="#a78bfa" stroke-width="1" stroke-dasharray="3 3" opacity="0.6"/>
+  <line x1="169" y1="108" x2="160" y2="113" stroke="#a78bfa" stroke-width="1" stroke-dasharray="3 3" opacity="0.6"/>
+  <line x1="169" y1="148" x2="160" y2="143" stroke="#a78bfa" stroke-width="1" stroke-dasharray="3 3" opacity="0.6"/>
+  <rect x="73" y="196" width="54" height="20" rx="10" fill="#6d28d9"/>
+  <text x="100" y="210" text-anchor="middle" font-size="11" font-weight="700" fill="white" font-family="sans-serif">24 × 7</text>
+  <rect x="0" y="224" width="200" height="36" rx="18" fill="#3b0d6e"/>
+  <text x="100" y="246" text-anchor="middle" font-size="11" font-weight="700" fill="#c4b5fd" font-family="sans-serif">Continuous Support</text>
+</svg>
+        </div><div class="tab-panel-content"><h4>Continuous Support</h4><p>We provide support 24×7. Submit a ticket if you have any problems and we will quickly find a solution. Our dedicated team ensures your Salesforce instance runs smoothly at all times.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Projects -->
+<section class="section projects-section">
+  <div class="container">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:20px;margin-bottom:50px;">
+      <div><div class="section-label">Latest Projects</div><h2 class="section-title" style="margin-bottom:0;">We Provide Best Services</h2></div>
+      <p style="max-width:420px;font-size:15px;line-height:1.7;">At Aakrin Consulting Services, we leverage cutting-edge Salesforce features to enhance customer support and business outcomes.</p>
+    </div>
+    <div class="projects-grid">
+      <div class="project-card"><div class="project-card-bg bg1"></div><div class="project-card-overlay"><div class="project-num">01</div><h4>Project Overview</h4><p>We partnered with a client to revamp their customer support processes using Salesforce Service.</p></div></div>
+      <div class="project-card"><div class="project-card-bg bg2"></div><div class="project-card-overlay"><div class="project-num">02</div><h4>Key Features &amp; Enhancements</h4><p>We implemented Salesforce Service's Omni-Channel functionality to intelligently route customer inquiries.</p></div></div>
+      <div class="project-card"><div class="project-card-bg bg3"></div><div class="project-card-overlay"><div class="project-num">03</div><h4>Benefits &amp; Outcomes</h4><p>Our client experienced significant improvement in customer satisfaction scores using advanced Salesforce capabilities.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section class="cta-section" id="contact">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:40px;">
+      <div class="section-label" style="justify-content:center;">Get In Touch</div>
+      <h2 class="section-title">Contact With Us</h2>
+      <p class="section-desc" style="margin:0 auto;">Whether you're in healthcare, finance, retail, or technology, we have the expertise to deliver Salesforce solutions tailored to your industry.</p>
+    </div>
+    <div class="contact-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:48px;text-align:left;">
+      <div>
+        <!-- <div class="info-card"><div class="icon-box">📞</div><div><div class="card-label">Call Anytime</div><a href="tel:+917259688052" class="card-value">+91 7259688052</a><div class="card-note">Available Mon – Sat, 9am – 7pm IST</div></div></div> -->
+        <div class="info-card"><div class="icon-box">✉️</div><div><div class="card-label">Send Email</div><a href="mailto:info@aakrin.com" class="card-value">info@aakrin.com</a><div class="card-note">We reply within 24 hours</div></div></div>
+        <div class="info-card"><div class="icon-box">📍</div><div><div class="card-label">Visit Now</div><div class="card-value" style="font-size:15px;line-height:1.5;">#112, first floor, Confident Oxygen Mall,<br>Chambenahalli, Sarjapura Road,<br>Bangalore - 562125, IN</div></div></div>
+        <!-- <a href="https://web.whatsapp.com/send?phone=+917259688052" target="_blank" rel="noopener" class="whatsapp-btn"><div style="font-size:24px;">💬</div><div><div style="font-size:13px;font-weight:700;color:#fff;">Chat on WhatsApp</div><div style="font-size:12px;color:rgba(255,255,255,0.8);">+91 7259688052 — instant reply</div></div></a> -->
+      </div>
+      <div class="form-col">
+        <div class="form-title">Enquiry Now!</div>
+        <div class="form-sub">Fill in the form and we'll get back to you shortly.</div>
+        <div id="enquiryFormMount"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#" class="logo">
+        <img src="aakrin_logo_white.svg" alt="Aakrin" height="42" style="height:42px;
+        width:auto;  fill: white;">
+      </a>
+        <p>Aakrin believes in quality and innovation in all the spheres — picking the best Salesforce solutions for your business.</p>
+        <div class="footer-social">
+          <!-- <a href="https://twitter.com/AakrinConsulting" target="_blank" class="social-btn">𝕏</a> -->
+          <!-- <a href="https://www.facebook.com/aakrin" target="_blank" class="social-btn">f</a> -->
+          <a href="https://www.linkedin.com/company/aakrin" target="_blank" class="social-btn">in</a>
+          <!-- <a href="https://www.instagram.com/aakrinconsulting/" target="_blank" class="social-btn">📸</a> -->
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Quick Links</div>
+        <div class="footer-links">
+          <a href="#about">About Us</a><a href="#contact">Contact Us</a>
+          <a href="#services">Our Services</a><a href="#industries">Industries</a>
+          <a href="#">Privacy Policy</a><a href="#">Terms &amp; Conditions</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Newsletter</div>
+        <div class="newsletter-form">
+          <input type="text" placeholder="Enter Your Name">
+          <input type="email" placeholder="Enter Your Email*">
+          <button type="button">Subscribe</button>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Contact</div>
+        <!-- <div class="footer-contact-item"><div class="icon">📞</div><div><a href="tel:+917259688052" style="color:rgba(255,255,255,0.7);">+91 7259688052</a></div></div> -->
+        <div class="footer-contact-item"><div class="icon">✉</div><div><a href="mailto:info@aakrin.com" style="color:rgba(255,255,255,0.7);">info@aakrin.com</a></div></div>
+        <div class="footer-contact-item"><div class="icon">📍</div><div>
+          #112 , first floor, Confident Oxygen Mall, Chambenahalli, Sarjapura Road , Bangalore - 562125, IN</div></div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© Copyright 2023 | All rights reserved Aakrin Consulting Services |</p>
+    </div>
+  </div>
+</footer>
+
+<!-- Floating -->
+<div class="floating-cta">
+  <a href="https://web.whatsapp.com/send?phone=+917259688052" target="_blank" class="float-btn float-whatsapp" title="WhatsApp">💬</a>
+  <!-- <a href="tel:+917259688052" class="float-btn float-phone" title="Call">📞</a> -->
+  <a href="mailto:info@aakrin.com" class="float-btn float-contact" title="Email">✉</a>
+  <button type="button" class="float-btn float-onb" id="onbLauncher" title="Find my Salesforce fit" aria-label="Find my Salesforce fit">✨</button>
+</div>
+<div class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+
+<script>
+// Mobile nav
+function openMobileNav() { document.getElementById('mobileNav').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeMobileNav() { document.getElementById('mobileNav').classList.remove('open'); document.body.style.overflow=''; }
+
+// Tabs
+function switchTab(idx) {
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', i===idx));
+  document.querySelectorAll('.tab-panel').forEach((p,i) => p.classList.toggle('active', i===idx));
+}
+
+// Scroll top
+window.addEventListener('scroll', () => {
+  document.getElementById('scrollTop').classList.toggle('show', window.scrollY > 300);
+});
+
+// ====== HERO SLIDER ======
+(function() {
+  const wrapper = document.getElementById('sliderWrapper');
+  const slides = Array.from(wrapper.querySelectorAll('.slide'));
+  const dots = Array.from(document.querySelectorAll('.slider-dot'));
+  const progress = document.getElementById('sliderProgress');
+  const DURATION = 5000;
+  let current = 0;
+  let autoTimer;
+
+  function goTo(idx) {
+    slides[current].classList.remove('is-active');
+    dots[current].classList.remove('active');
+    current = ((idx % slides.length) + slides.length) % slides.length;
+    slides[current].classList.add('is-active');
+    dots[current].classList.add('active');
+    wrapper.style.transform = 'translateX(-' + (current * 100) + '%)';
+    animateProgress();
+  }
+
+  function animateProgress() {
+    progress.style.transition = 'none';
+    progress.style.width = '0%';
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        progress.style.transition = 'width ' + DURATION + 'ms linear';
+        progress.style.width = '100%';
+      });
+    });
+  }
+
+  function startAuto() {
+    clearInterval(autoTimer);
+    autoTimer = setInterval(() => goTo(current + 1), DURATION);
+  }
+
+  document.getElementById('sliderNext').addEventListener('click', () => { clearInterval(autoTimer); goTo(current + 1); startAuto(); });
+  document.getElementById('sliderPrev').addEventListener('click', () => { clearInterval(autoTimer); goTo(current - 1); startAuto(); });
+
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      clearInterval(autoTimer);
+      goTo(parseInt(dot.dataset.index));
+      startAuto();
+    });
+  });
+
+  // Init
+  goTo(0);
+  startAuto();
+})();
+
+// ====== ENQUIRY FORM (Salesforce Web-to-Lead) ======
+// Used by the Enquiry Now section and the onboarding chat's enquiry card
+(function() {
+  // Settings from the org's generated Web-to-Lead form
+  const WEB_TO_LEAD = {
+    action: 'https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8&orgId=00DdN00000rD67Y',
+    oid: '00DdN00000rD67Y',
+    leadSource: 'Web',
+    retURL: 'https://aakrin.com/favicon.svg',  // Salesforce redirects the hidden frame here; a tiny file avoids loading the whole site again
+    debugEmail: 'krishna@aakrin.com'  // e.g. 'krishna@aakrin.com' to get Salesforce's debug email for each submission while testing
+  };
+
+  // Country picklist codes accepted by the org; display names come from the browser
+  const COUNTRY_CODES = ('AF AX AL DZ AD AO AI AQ AG AR AM AW AU AT AZ BS BH BD BB BY BE BZ BJ BM BT BO BQ BA BW BV BR IO BN BG BF BI KH CM CA CV ' +
+    'KY CF TD CL CN CX CC CO KM CG CD CK CR CI HR CW CY CZ DK DJ DM DO EC EG SV GQ ER EE SZ ET FK FO FJ FI FR GF PF TF GA GM GE DE GH GI GR GL GD GP ' +
+    'GT GG GN GW GY HT HM VA HN HU IS IN ID IQ IE IM IL IT JM JP JE JO KZ KE KI KR XK KW KG LA LV LB LS LR LY LI LT LU MO MG MW MY MV ML MT MQ MR MU ' +
+    'YT MX MD MC MN ME MS MA MZ MM NA NR NP NL NC NZ NI NE NG NU NF MK NO OM PK PS PA PG PY PE PH PN PL PT QA RE RO RU RW BL SH KN LC MF PM VC WS SM ' +
+    'ST SA SN RS SC SL SG SX SK SI SB SO ZA GS SS ES LK SR SJ SE CH TW TJ TZ TH TL TG TK TO TT TN TR TM TC TV UG UA AE GB US UY UZ VU VE VN VG WF EH YE ZM ZW').split(' ');
+
+  // State picklist codes repeat across countries, so they're listed per country (name:code)
+  const STATES = {
+    IN: 'Andaman and Nicobar Islands:AN|Andhra Pradesh:AP|Arunachal Pradesh:AR|Assam:AS|Bihar:BR|Chandigarh:CH|Chhattisgarh:CT|Dadra and Nagar Haveli:DN|Daman and Diu:DD|Delhi:DL|Goa:GA|Gujarat:GJ|Haryana:HR|Himachal Pradesh:HP|Jammu and Kashmir:JK|Jharkhand:JH|Karnataka:KA|Kerala:KL|Lakshadweep:LD|Madhya Pradesh:MP|Maharashtra:MH|Manipur:MN|Meghalaya:ML|Mizoram:MZ|Nagaland:NL|Odisha:OR|Puducherry:PY|Punjab:PB|Rajasthan:RJ|Sikkim:SK|Tamil Nadu:TN|Telangana:TG|Tripura:TR|Uttar Pradesh:UP|Uttarakhand:UT|West Bengal:WB',
+    US: 'Alabama:AL|Alaska:AK|Arizona:AZ|Arkansas:AR|California:CA|Colorado:CO|Connecticut:CT|Delaware:DE|District of Columbia:DC|Florida:FL|Georgia:GA|Hawaii:HI|Idaho:ID|Illinois:IL|Indiana:IN|Iowa:IA|Kansas:KS|Kentucky:KY|Louisiana:LA|Maine:ME|Maryland:MD|Massachusetts:MA|Michigan:MI|Minnesota:MN|Mississippi:MS|Missouri:MO|Montana:MT|Nebraska:NE|Nevada:NV|New Hampshire:NH|New Jersey:NJ|New Mexico:NM|New York:NY|North Carolina:NC|North Dakota:ND|Ohio:OH|Oklahoma:OK|Oregon:OR|Pennsylvania:PA|Rhode Island:RI|South Carolina:SC|South Dakota:SD|Tennessee:TN|Texas:TX|Utah:UT|Vermont:VT|Virginia:VA|Washington:WA|West Virginia:WV|Wisconsin:WI|Wyoming:WY',
+    CA: 'Alberta:AB|British Columbia:BC|Manitoba:MB|New Brunswick:NB|Newfoundland and Labrador:NL|Northwest Territories:NT|Nova Scotia:NS|Nunavut:NU|Ontario:ON|Prince Edward Island:PE|Quebec:QC|Saskatchewan:SK|Yukon Territories:YT',
+    AU: 'Australian Capital Territory:ACT|New South Wales:NSW|Northern Territory:NT|Queensland:QLD|South Australia:SA|Tasmania:TAS|Victoria:VIC|Western Australia:WA'
+  };
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  // Forms post into a hidden frame so the visitor stays on the page
+  function leadFrame() {
+    let frame = document.querySelector('iframe[name="enquiryLeadFrame"]');
+    if (!frame) {
+      frame = document.createElement('iframe');
+      frame.name = 'enquiryLeadFrame';
+      frame.title = 'Enquiry submission';
+      frame.hidden = true;
+      document.body.appendChild(frame);
+    }
+    return frame;
+  }
+
+  function countryOptions() {
+    let names = null;
+    try { names = new Intl.DisplayNames(['en'], { type: 'region' }); } catch (e) {}
+    return COUNTRY_CODES
+      .map(code => ({ code, name: (names && names.of(code)) || code }))
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map(c => '<option value="' + c.code + '">' + esc(c.name) + '</option>')
+      .join('');
+  }
+
+  // opts.description(): text for the Lead's Description field; opts.onSuccess(name): called after submitting
+  function createEnquiryForm(opts) {
+    opts = opts || {};
+    const form = document.createElement('form');
+    form.className = 'enquiry-form';
+    form.noValidate = true;
+    form.method = 'POST';
+    form.action = WEB_TO_LEAD.action;
+    form.target = leadFrame().name;
+    form.innerHTML =
+      '<input type="hidden" name="oid"><input type="hidden" name="retURL"><input type="hidden" name="lead_source">' +
+      '<input type="hidden" name="first_name"><input type="hidden" name="last_name"><input type="hidden" name="description">' +
+      (WEB_TO_LEAD.debugEmail ? '<input type="hidden" name="debug" value="1"><input type="hidden" name="debugEmail">' : '') +
+      '<input data-f="name" maxlength="120" autocomplete="name" placeholder="Name *" aria-label="Name (required)">' +
+      '<input name="email" type="email" maxlength="80" autocomplete="email" placeholder="Email *" aria-label="Email (required)">' +
+      '<input name="mobile" type="tel" maxlength="40" autocomplete="tel" placeholder="Phone Number" aria-label="Phone number">' +
+      '<input name="company" maxlength="40" autocomplete="organization" placeholder="Company" aria-label="Company">' +
+      '<input name="city" maxlength="40" autocomplete="address-level2" placeholder="City" aria-label="City">' +
+      '<select name="country_code" autocomplete="country" aria-label="Country"><option value="">Country</option>' + countryOptions() + '</select>' +
+      '<select name="state_code" aria-label="State/Province" hidden disabled><option value="">State/Province</option></select>' +
+      '<div class="enquiry-error" role="alert"></div>' +
+      '<button type="submit" class="submit-btn">Submit Form →</button>';
+
+    const f = form.elements;
+    const nameInput = form.querySelector('[data-f="name"]');
+    const errorBox = form.querySelector('.enquiry-error');
+    f.oid.value = WEB_TO_LEAD.oid;
+    f.retURL.value = WEB_TO_LEAD.retURL;
+    f.lead_source.value = WEB_TO_LEAD.leadSource;
+    if (WEB_TO_LEAD.debugEmail) f.debugEmail.value = WEB_TO_LEAD.debugEmail;
+
+    f.country_code.addEventListener('change', () => {
+      const list = STATES[f.country_code.value];
+      f.state_code.innerHTML = '<option value="">State/Province</option>' + (list ? list.split('|').map(s => {
+        const [name, code] = s.split(':');
+        return '<option value="' + code + '">' + esc(name) + '</option>';
+      }).join('') : '');
+      f.state_code.hidden = !list;
+      f.state_code.disabled = !list;
+    });
+
+    form.addEventListener('input', e => e.target.classList.remove('invalid'));
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const name = nameInput.value.trim();
+      const email = f.email.value.trim();
+      const mobile = f.mobile.value.trim();
+      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
+      const mobileOk = !mobile || /^\+?[\d\s\-().]{7,20}$/.test(mobile);
+      nameInput.classList.toggle('invalid', !name);
+      f.email.classList.toggle('invalid', !emailOk);
+      f.mobile.classList.toggle('invalid', !mobileOk);
+
+      let problem = '';
+      if (!name) problem = 'Please enter your name.';
+      else if (!emailOk) problem = 'Please enter a valid email address.';
+      else if (!mobileOk) problem = 'Please check your phone number.';
+      errorBox.textContent = problem;
+      if (problem) return;
+
+      // Salesforce requires Last Name, so a single-word name goes there
+      const parts = name.split(/\s+/);
+      f.first_name.value = parts.length > 1 ? parts.slice(0, -1).join(' ').slice(0, 40) : '';
+      f.last_name.value = parts[parts.length - 1].slice(0, 80);
+      f.description.value = opts.description ? opts.description() : '';
+      form.submit();
+
+      const done = document.createElement('div');
+      done.className = 'enquiry-success';
+      done.setAttribute('role', 'status');
+      done.innerHTML = '✅ Thank you, ' + esc(parts[0]) + '! We\'ve received your enquiry and will get back to you within 24 hours.';
+      form.replaceWith(done);
+      if (typeof window.clarity === 'function') window.clarity('event', 'enquiry_submitted');
+      if (opts.onSuccess) opts.onSuccess(name);
+    });
+
+    return form;
+  }
+
+  window.createEnquiryForm = createEnquiryForm;
+
+  const mount = document.getElementById('enquiryFormMount');
+  if (mount) mount.appendChild(createEnquiryForm({ description: () => 'Source: Enquiry Now form on aakrin.com' }));
+})();
+
+// ====== ONBOARDING GUIDE ======
+(function() {
+  const STORAGE_KEY = 'aakrin_onboarding_v2';
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Character artwork: set each pose to a transparent PNG/WebP path once the images are ready, e.g. 'mascot/wave.png'.
+  // A pose left empty uses the built-in placeholder drawing.
+  const MASCOT_IMAGES = {
+    fly: '',        // riding the paper plane (used while flying in)
+    wave: '',       // standing, waving hello
+    point: '',      // pointing towards the answers
+    think: '',      // hand on chin, while "typing"
+    celebrate: ''   // arms up, after the enquiry is sent
+  };
+  const MASCOT_ALT = 'Aakrin guide';
+
+  const STEPS = [
+    {
+      key: 'situation',
+      question: 'What best describes your current situation?',
+      cols: 2, mobileCols: 1,
+      options: [
+        { id: 'new',       icon: '🚀', label: 'We don\'t have Salesforce yet',                 ack: 'Exciting! Starting fresh is the best time to get it right.' },
+        { id: 'fix',       icon: '🩺', label: 'We have Salesforce but it\'s not working well', ack: 'Got it. Let\'s get it working the way it should.' },
+        { id: 'migrate',   icon: '🔄', label: 'We\'re migrating from another CRM',            ack: 'A migration, nice. Let\'s make sure your data lands safely.' },
+        { id: 'integrate', icon: '🔗', label: 'We need Salesforce connected to other systems', ack: 'Integrations it is. Connected systems save everyone time.' },
+        { id: 'automate',  icon: '⚙️', label: 'We want to automate/customize Salesforce',      ack: 'Love it. Automation is where Salesforce really pays off.' },
+        { id: 'ai',        icon: '✨', label: 'We want to explore AI/Agentforce',               ack: 'Agentforce is exciting. Let\'s see where it fits for you.' },
+        { id: 'support',   icon: '🛠️', label: 'We need ongoing Salesforce support',            ack: 'Happy to help keep things running smoothly.' }
+      ]
+    },
+    {
+      key: 'industry',
+      question: 'Which industry are you in?',
+      cols: 3, mobileCols: 2,
+      options: [
+        { id: 'hitech',        icon: '💻', label: 'Hi-Tech' },
+        { id: 'pharma',        icon: '🔬', label: 'Pharma & Life Sciences' },
+        { id: 'energy',        icon: '⚡', label: 'Energy & Utilities' },
+        { id: 'manufacturing', icon: '🏭', label: 'Manufacturing' },
+        { id: 'education',     icon: '🎓', label: 'Higher Education' },
+        { id: 'finance',       icon: '🏦', label: 'Financial Services' },
+        { id: 'retail',        icon: '🛒', label: 'Retail & CPG' },
+        { id: 'healthcare',    icon: '🏥', label: 'Healthcare' },
+        { id: 'nonprofit',     icon: '🤝', label: 'Non-Profit' },
+        { id: 'realestate',    icon: '🏢', label: 'Real Estate' },
+        { id: 'recruitment',   icon: '👥', label: 'Recruitment' },
+        { id: 'other',         icon: '✳️', label: 'Other' }
+      ]
+    },
+    {
+      key: 'timing',
+      question: 'How soon are you looking to bring on a Salesforce partner?',
+      cols: 2, mobileCols: 2,
+      options: [
+        { id: 'now',       icon: '⚡', label: 'Immediately' },
+        { id: 'month',     icon: '📅', label: 'Within a month' },
+        { id: 'quarter',   icon: '🗓️', label: 'In 1–3 months' },
+        { id: 'half',      icon: '🧭', label: 'In 3–6 months' },
+        { id: 'exploring', icon: '🔍', label: 'Just exploring' }
+      ]
+    }
+  ];
+
+  const onb = document.getElementById('onb');
+  const mascotWrap = document.getElementById('onbMascotWrap');
+  const mascot = document.getElementById('onbMascot');
+  const bubble = document.getElementById('onbBubble');
+  const actions = document.getElementById('onbActions');
+  const back = document.getElementById('onbBack');
+  const stepItems = document.querySelectorAll('#onbSteps li');
+  let answers = {};
+  let runId = 0;
+  let stage = 'intro';
+  let onBack = null;
+
+  Object.values(MASCOT_IMAGES).filter(Boolean).forEach(src => { new Image().src = src; });
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  function track(key, value) {
+    if (typeof window.clarity === 'function') window.clarity('set', key, value);
+  }
+
+  function trackEvent(name) {
+    if (typeof window.clarity === 'function') window.clarity('event', name);
+  }
+
+  function markDone() {
+    try { localStorage.setItem(STORAGE_KEY, '1'); } catch (e) {}
+  }
+
+  function wait(ms) {
+    return new Promise(r => setTimeout(r, reduceMotion ? 0 : ms));
+  }
+
+  // Simple stand-in character; replaced pose by pose as MASCOT_IMAGES are filled in
+  function placeholder() {
+    return '<svg viewBox="0 0 200 240" role="img" aria-label="' + MASCOT_ALT + '">' +
+      '<g class="ph-legs"><rect x="82" y="192" width="14" height="30" rx="6" fill="#2A2350"/><rect x="104" y="192" width="14" height="30" rx="6" fill="#2A2350"/>' +
+        '<ellipse cx="89" cy="224" rx="11" ry="7" fill="#E55014"/><ellipse cx="111" cy="224" rx="11" ry="7" fill="#E55014"/></g>' +
+      '<rect x="70" y="138" width="60" height="58" rx="18" fill="#8E35C2"/>' +
+      '<rect x="70" y="184" width="60" height="7" fill="#E55014"/>' +
+      '<polygon points="100,150 111,170 89,170" fill="#FFFFFF"/>' +
+      '<rect x="74" y="132" width="52" height="12" rx="6" fill="#E55014"/>' +
+      '<polygon points="116,140 142,152 120,155" fill="#C2410C"/>' +
+      '<circle cx="100" cy="92" r="48" fill="#F6D2B5"/>' +
+      '<ellipse cx="52" cy="100" rx="9" ry="16" fill="#7A2BB0"/><ellipse cx="148" cy="100" rx="9" ry="16" fill="#7A2BB0"/>' +
+      '<path d="M52 90 Q52 38 100 38 Q148 38 148 90 Z" fill="#8E35C2"/>' +
+      '<line x1="54" y1="62" x2="146" y2="62" stroke="#E55014" stroke-width="4"/>' +
+      '<circle cx="82" cy="60" r="12" fill="#7FD3FF" stroke="#E55014" stroke-width="4"/><circle cx="118" cy="60" r="12" fill="#7FD3FF" stroke="#E55014" stroke-width="4"/>' +
+      '<ellipse class="ph-blink" cx="84" cy="104" rx="6" ry="8" fill="#1A1A2E"/><ellipse class="ph-blink" cx="116" cy="104" rx="6" ry="8" fill="#1A1A2E"/>' +
+      '<circle cx="86" cy="101" r="2" fill="#FFFFFF"/><circle cx="118" cy="101" r="2" fill="#FFFFFF"/>' +
+      '<circle cx="72" cy="116" r="6" fill="#FF9E8A" opacity="0.55"/><circle cx="128" cy="116" r="6" fill="#FF9E8A" opacity="0.55"/>' +
+      '<path class="ph-smile" d="M90 120 Q100 128 110 120" fill="none" stroke="#1A1A2E" stroke-width="3" stroke-linecap="round"/>' +
+      '<ellipse class="ph-mouth" cx="100" cy="122" rx="7" ry="6" fill="#7A1F2B"/>' +
+      '<g class="ph-arm-l"><rect x="56" y="144" width="16" height="42" rx="8" fill="#8E35C2"/><circle cx="64" cy="188" r="8" fill="#F6D2B5"/></g>' +
+      '<g class="ph-arm-r"><rect x="128" y="144" width="16" height="42" rx="8" fill="#8E35C2"/><circle cx="136" cy="188" r="8" fill="#F6D2B5"/></g>' +
+      '<g class="ph-plane"><polygon points="0,175 200,128 64,206" fill="#1B6EF3"/><polygon points="64,206 200,128 92,196" fill="#1558C7"/><polygon points="92,196 200,128 104,228" fill="#5B9BFF"/></g>' +
+      '</svg>';
+  }
+
+  function setPose(pose) {
+    mascot.dataset.pose = pose;
+    const src = MASCOT_IMAGES[pose];
+    mascot.innerHTML = src ? '<img src="' + esc(src) + '" alt="' + MASCOT_ALT + '">' : placeholder();
+    mascot.classList.remove('swap');
+    void mascot.offsetWidth;
+    mascot.classList.add('swap');
+  }
+
+  function setSteps(current) {
+    stepItems.forEach((li, i) => {
+      li.classList.toggle('done', i < current);
+      li.classList.toggle('current', i === current);
+    });
+  }
+
+  function setBubble(html) {
+    bubble.innerHTML = html;
+    bubble.style.animation = 'none';
+    void bubble.offsetWidth;
+    bubble.style.animation = '';
+  }
+
+  // Voice: the browser's built-in speech. Sound starts off (browsers block audio before a tap) and the visitor's choice is remembered.
+  const SOUND_KEY = 'aakrin_onboarding_sound';
+  const synth = 'speechSynthesis' in window ? window.speechSynthesis : null;
+  const soundBtn = document.getElementById('onbSound');
+  let soundOn = false;
+  let voice = null;
+  let lastLine = '';
+  try { soundOn = !!synth && localStorage.getItem(SOUND_KEY) === 'on'; } catch (e) {}
+
+  function pickVoice() {
+    const english = synth.getVoices().filter(v => /^en/i.test(v.lang));
+    voice = english.find(v => /natural|neural|online/i.test(v.name)) || english.find(v => /google/i.test(v.name)) ||
+      english.find(v => v.default) || english[0] || null;
+  }
+
+  // Bubble HTML to plain text, without emoji (speech engines read them out by name)
+  function spokenText(html) {
+    const d = document.createElement('div');
+    d.innerHTML = html;
+    const parts = d.children.length ? [...d.children].map(c => c.textContent) : [d.textContent];
+    return parts.join(' ').replace(/[\p{Extended_Pictographic}️‍]/gu, '').replace(/\s+/g, ' ').trim();
+  }
+
+  function speak(text) {
+    lastLine = text;
+    if (!synth || !soundOn || !text) return;
+    synth.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    if (voice) { u.voice = voice; u.lang = voice.lang; } else { u.lang = 'en-US'; }
+    u.pitch = 1.1;
+    u.onstart = () => mascot.classList.add('talking');
+    u.onend = u.onerror = () => mascot.classList.remove('talking');
+    // Chrome can drop an utterance queued in the same tick as cancel()
+    setTimeout(() => { if (lastLine === text && soundOn) synth.speak(u); }, 60);
+  }
+
+  function stopSpeaking() {
+    lastLine = '';
+    if (synth) synth.cancel();
+    mascot.classList.remove('talking');
+  }
+
+  function say(html) {
+    setBubble(html);
+    speak(spokenText(html));
+  }
+
+  function updateSoundButton() {
+    soundBtn.setAttribute('aria-pressed', String(soundOn));
+    soundBtn.querySelector('.onb-sound-icon').textContent = soundOn ? '🔇' : '🔊';
+    soundBtn.querySelector('.onb-sound-label').textContent = soundOn ? 'Mute' : 'Turn on sound';
+  }
+
+  if (synth) {
+    pickVoice();
+    synth.onvoiceschanged = pickVoice;
+    soundBtn.hidden = false;
+    updateSoundButton();
+    soundBtn.addEventListener('click', () => {
+      soundOn = !soundOn;
+      try { localStorage.setItem(SOUND_KEY, soundOn ? 'on' : 'off'); } catch (e) {}
+      updateSoundButton();
+      trackEvent(soundOn ? 'onb_sound_on' : 'onb_sound_off');
+      if (soundOn) speak(lastLine || spokenText(bubble.innerHTML));
+      else stopSpeaking();
+    });
+  }
+
+  function setBack(handler) {
+    onBack = handler;
+    back.hidden = !handler;
+  }
+
+  // Shows the "thinking" pose and typing dots for a moment; false if the guide was closed or restarted meanwhile
+  async function think(id) {
+    stopSpeaking();
+    setPose('think');
+    setBubble('<span class="onb-typing" aria-label="Typing"><span></span><span></span><span></span></span>');
+    actions.innerHTML = '';
+    setBack(null);
+    await wait(750);
+    return id === runId;
+  }
+
+  async function intro(id) {
+    onb.dataset.stage = stage = 'intro';
+    stopSpeaking();
+    setBubble('');
+    actions.innerHTML = '';
+    setBack(null);
+    mascot.classList.remove('idle');
+    setPose('fly');
+    if (!reduceMotion) {
+      mascotWrap.classList.add('flying');
+      await wait(2200);
+      mascotWrap.classList.remove('flying');
+      if (id !== runId) return;
+    }
+    setPose('wave');
+    mascot.classList.add('idle');
+    await wait(500);
+    if (id !== runId) return;
+    ask(0, 'Hi there! 👋 Welcome to Aakrin. Answer 3 quick questions and let\'s get Salesforce working for your business.', id);
+  }
+
+  async function ask(i, ack, id) {
+    const step = STEPS[i];
+    onb.dataset.stage = stage = step.key;
+    setSteps(i);
+    trackEvent('onb_step_' + step.key);
+    if (!await think(id)) return;
+
+    setPose(i === 0 ? 'wave' : 'point');
+    say((ack ? '<p class="onb-ack">' + ack + '</p>' : '') + '<h2 class="onb-q">' + step.question + '</h2>');
+    actions.style.setProperty('--cols', step.cols);
+    actions.dataset.colsM = step.mobileCols;
+    step.options.forEach((opt, n) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'onb-opt' + (answers[step.key] && answers[step.key].id === opt.id ? ' selected' : '');
+      b.style.animationDelay = (reduceMotion ? 0 : n * 35) + 'ms';
+      b.innerHTML = '<span class="onb-opt-icon" aria-hidden="true">' + opt.icon + '</span><span>' + esc(opt.label) + '</span>';
+      b.addEventListener('click', () => pick(i, opt, id));
+      actions.appendChild(b);
+    });
+    setBack(i > 0 ? () => ask(i - 1, '', id) : null);
+    actions.querySelector('button').focus({ preventScroll: true });
+  }
+
+  function pick(i, opt, id) {
+    if (id !== runId) return;
+    const step = STEPS[i];
+    answers[step.key] = opt;
+    track('onb_' + step.key, opt.id);
+    let ack = opt.ack || '';
+    if (step.key === 'industry') ack = opt.id === 'other' ? 'Great, thanks!' : 'Great, ' + esc(opt.label) + ' it is.';
+    if (step.key === 'timing') ack = 'Perfect, one last step!';
+    if (i + 1 < STEPS.length) ask(i + 1, ack, id);
+    else showForm(ack, id);
+  }
+
+  async function showForm(ack, id) {
+    onb.dataset.stage = stage = 'form';
+    setSteps(STEPS.length);
+    trackEvent('onb_step_form');
+    if (!await think(id)) return;
+
+    markDone();
+    setPose('point');
+    say((ack ? '<p class="onb-ack">' + ack + '</p>' : '') + '<h2 class="onb-q">Share your details and our team will get back to you.</h2>');
+    actions.style.setProperty('--cols', 1);
+    actions.dataset.colsM = 1;
+    const card = document.createElement('div');
+    card.className = 'form-col';
+    card.appendChild(window.createEnquiryForm({
+      description: () => [
+        'Source: Aakrin onboarding guide',
+        'Situation: ' + answers.situation.label,
+        'Industry: ' + answers.industry.label,
+        'Start time: ' + answers.timing.label
+      ].join('\n'),
+      onSuccess: name => celebrate(name, id)
+    }));
+    actions.appendChild(card);
+    setBack(() => ask(STEPS.length - 1, '', id));
+    card.querySelector('[data-f="name"]').focus({ preventScroll: true });
+  }
+
+  function celebrate(name, id) {
+    if (id !== runId) return;
+    onb.dataset.stage = stage = 'done';
+    setSteps(STEPS.length + 1);
+    trackEvent('onb_enquiry_submitted');
+    setPose('celebrate');
+    say('<p class="onb-ack">Thanks, ' + esc(name.split(/\s+/)[0]) + '! 🎉</p><h2 class="onb-q">Our team will be in touch soon.</h2>');
+    setBack(null);
+    const done = document.createElement('div');
+    done.className = 'onb-done';
+    done.innerHTML = '<button type="button" class="onb-cta primary" data-act="site">Explore the website →</button>' +
+      '<button type="button" class="onb-cta ghost" data-act="restart">↺ Start over</button>';
+    actions.appendChild(done);
+  }
+
+  function restart() {
+    const id = ++runId;
+    answers = {};
+    ask(0, '', id);
+  }
+
+  function open() {
+    document.documentElement.classList.add('onb-open');
+    const id = ++runId;
+    answers = {};
+    intro(id);
+  }
+
+  function close() {
+    runId++;
+    stopSpeaking();
+    markDone();
+    document.documentElement.classList.remove('onb-open');
+  }
+
+  actions.addEventListener('click', e => {
+    const btn = e.target.closest('[data-act]');
+    if (!btn) return;
+    trackEvent('onb_cta_' + btn.dataset.act);
+    if (btn.dataset.act === 'site') close();
+    if (btn.dataset.act === 'restart') restart();
+  });
+  back.addEventListener('click', () => { if (onBack) onBack(); });
+  document.getElementById('onbSkip').addEventListener('click', () => {
+    track('onb_skipped_at', stage);
+    trackEvent('onboarding_skipped');
+    close();
+  });
+  document.getElementById('onbLauncher').addEventListener('click', open);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && document.documentElement.classList.contains('onb-open')) close();
+  });
+
+  if (document.documentElement.classList.contains('onb-open')) open();
+})();
+</script>
+
+<script>function initApollo(){var n=Math.random().toString(36).substring(7),o=document.createElement("script");
+o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,o.async=!0,o.defer=!0,
+o.onload=function(){window.trackingFunctions.onLoad({appId:"6819ca5be4098f001573dd60"})},
+document.head.appendChild(o)}initApollo();</script>
+
+</body>
+</html>

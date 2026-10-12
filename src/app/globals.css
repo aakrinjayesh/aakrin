@@ -1,0 +1,664 @@
+@import "tailwindcss";
+
+/*
+  Design tokens, taken from the Version C redesign (reference/legacy-site/version-c.html).
+  Colour comes from the Aakrin logo: ink, orange, violet.
+  - accent (#E55014, logo orange) is for large marks and rules only.
+  - accent-strong (#C8450F) is for buttons and links; it passes WCAG AA with white text.
+*/
+@theme {
+  --color-ink: #16131d;
+  --color-body: #4e4a59;
+  --color-muted: #6f6a7b;
+  --color-canvas: #f6f5f8;
+  --color-surface: #ffffff;
+  --color-line: #e4e1ea;
+  --color-accent: #e55014;
+  --color-accent-strong: #c8450f;
+  --color-accent-hover: #a9380b;
+  --color-accent-tint: #fcede6;
+  --color-on-dark: #f3f1f6;
+  --color-on-dark-muted: #b5afc2;
+  --color-on-dark-line: rgb(255 255 255 / 0.12);
+
+  /* Type scale */
+  --text-xs: 0.8125rem;
+  --text-xs--line-height: 1.45;
+  --text-sm: 0.9375rem;
+  --text-sm--line-height: 1.55;
+  --text-md: 1.0625rem;
+  --text-md--line-height: 1.6;
+  --text-lg: 1.25rem;
+  --text-lg--line-height: 1.35;
+  --text-xl: 1.625rem;
+  --text-xl--line-height: 1.25;
+  --text-2xl: clamp(1.875rem, 3.2vw, 2.5rem);
+  --text-2xl--line-height: 1.12;
+  --text-hero: clamp(2.25rem, 5vw, 3.6rem);
+  --text-hero--line-height: 1.08;
+
+  /* Header switches to the inline nav with both CTAs here; below it they don't fit on one line */
+  --breakpoint-nav: 75rem;
+
+  --radius-card: 12px;
+  --container-site: 1200px;
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  /* Quiz step change: a short fade/rise only (reduced-motion users get none) */
+  --animate-quiz-step: quiz-step-in 200ms var(--ease-out) both;
+  @keyframes quiz-step-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+  }
+}
+
+/* Fonts are loaded with next/font in the root layout, which sets these variables on <html>. */
+@theme inline {
+  --font-display: var(--font-bricolage), "Segoe UI", system-ui, sans-serif;
+  --font-sans: var(--font-instrument), "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+:root {
+  --gutter: clamp(16px, 4vw, 32px);
+  --header-h: 68px;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-canvas font-sans text-md text-body antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-display text-ink;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* Anchored sections land below the sticky header */
+  [id] {
+    scroll-margin-top: calc(var(--header-h) + 16px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ===== Onboarding: Nova (components/onboarding) =====
+   The stage covers the viewport: Nova, his props and the fireworks are positioned in screen
+   px by nova-engine.ts. The question card floats on the right (desktop/tablet) or is a sheet
+   at the bottom (phones, <= 720px, matching isPhone() in the engine). */
+html.onb-pending {
+  overflow: hidden;
+}
+html.onb-pending .onb-cover {
+  display: block;
+}
+.onb-cover,
+.onb-sky {
+  background:
+    radial-gradient(1100px 520px at 70% -10%, var(--color-accent-tint) 0%, transparent 70%),
+    linear-gradient(180deg, #fbf1ea 0%, var(--color-canvas) 72%);
+}
+.onb-sky {
+  /* Card width, and its distance from the right edge (aligned with the site container) */
+  --onb-card-w: min(540px, 100vw - 48px);
+  --onb-edge: max(24px, (100vw - 1200px) / 2 + var(--gutter));
+  --onb-top: 88px;
+  --onb-q2-top: clamp(88px, 24vh, 220px);
+}
+@media (min-width: 721px) and (max-width: 1099px) {
+  .onb-sky {
+    --onb-card-w: min(480px, 78vw - 160px);
+    --onb-edge: 24px;
+  }
+}
+.onb-leaving {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+/* Question card */
+.onb-bubble {
+  position: absolute;
+  top: var(--onb-top);
+  right: var(--onb-edge);
+  z-index: 30;
+  width: var(--onb-card-w);
+  max-height: calc(100% - var(--onb-top) - 24px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  transition:
+    top 0.45s var(--ease-out),
+    padding-top 0.35s ease,
+    max-height 0.45s var(--ease-out);
+}
+/* Question 2: the card drops a little so Nova can sit on it, with room for his dangling legs */
+.onb-sky[data-q2] .onb-bubble {
+  top: var(--onb-q2-top);
+  max-height: calc(100% - var(--onb-q2-top) - 24px);
+  padding-top: 44px;
+}
+@media (max-width: 720px) {
+  .onb-bubble {
+    top: auto;
+    right: 12px;
+    bottom: 12px;
+    left: 12px;
+    width: auto;
+    max-height: 62vh;
+  }
+  .onb-sky[data-q2] .onb-bubble {
+    top: auto;
+    height: 62vh;
+    max-height: 62vh;
+    padding-top: 40px;
+  }
+}
+.onb-bubble-in {
+  animation: onb-bubble-in 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+@keyframes onb-bubble-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.96);
+  }
+}
+.onb-caret {
+  display: inline-block;
+  width: 2px;
+  height: 1.05em;
+  margin-left: 2px;
+  vertical-align: -0.15em;
+  background: var(--color-ink);
+  animation: onb-caret 0.8s steps(1) infinite;
+}
+@keyframes onb-caret {
+  50% {
+    opacity: 0;
+  }
+}
+/* Sound button while the browser holds speech back until the first tap */
+.onb-tap {
+  animation: onb-tap 1.6s ease-in-out infinite;
+}
+@keyframes onb-tap {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgb(229 80 20 / 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgb(229 80 20 / 0);
+  }
+}
+
+/* Nova and the paper plane. Landing spot: centred in the open area left of the card
+   (desktop/tablet), or centred under the top buttons (phones, where the engine also scales
+   the flyer to 0.7). Until the fly-in starts it waits off the bottom-right corner. */
+.nova-flyer {
+  position: absolute;
+  top: 50%;
+  left: calc((100% - var(--onb-card-w)) / 2 - 230px);
+  z-index: 10;
+  width: 420px;
+  height: 300px;
+  margin-top: -150px;
+  pointer-events: none;
+  transform: translate(120vw, 120vh) scale(0.45);
+}
+@media (max-width: 720px) {
+  .nova-flyer {
+    top: 130px;
+    left: calc(50% - 230px);
+    margin-top: 0;
+    transform-origin: 50% 50%;
+  }
+}
+.onb-sky[data-front] .nova-flyer {
+  z-index: 35;
+}
+.nova-plane {
+  position: absolute;
+  top: 140px;
+  left: 0;
+  width: 420px;
+  height: 210px;
+}
+.nova-plane-back {
+  z-index: 1;
+}
+.nova-plane-front {
+  z-index: 3;
+}
+.nova-agent {
+  position: absolute;
+  top: 18px;
+  left: 150px;
+  z-index: 2;
+  width: 160px;
+  height: 216px;
+  transform-origin: 50% 100%;
+}
+.nova-shadow {
+  position: absolute;
+  top: 318px;
+  left: 175px;
+  width: 110px;
+  height: 16px;
+  border-radius: 50%;
+  background: radial-gradient(rgb(22 19 29 / 0.25), transparent 70%);
+  opacity: 0;
+}
+.nova-trail {
+  position: absolute;
+  top: 230px;
+  right: -40px;
+  width: 160px;
+  height: 4px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, rgb(229 80 20 / 0.5), transparent);
+}
+/* No drop-shadow on Nova: it would be re-blurred every frame he moves; the floor shadow grounds him */
+.nova-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.nova-idle {
+  animation: nova-breathe 3s ease-in-out infinite;
+}
+.nova-eye-motion,
+.nova-eyes {
+  transform-origin: 100px 122px;
+  transform-box: view-box;
+}
+.nova-eyes {
+  animation: nova-blink 4s infinite;
+}
+.nova-mouth {
+  transform-origin: 100px 138px;
+  transform-box: view-box;
+}
+.nova-talking .nova-mouth {
+  animation: nova-talk 0.32s ease-in-out infinite alternate;
+}
+.nova-yawning .nova-mouth {
+  animation: nova-yawn 1.5s ease-in-out;
+}
+@keyframes nova-breathe {
+  50% {
+    transform: translateY(-4px) scaleY(1.01);
+  }
+}
+@keyframes nova-blink {
+  0%,
+  92%,
+  100% {
+    transform: scaleY(1);
+  }
+  95% {
+    transform: scaleY(0.1);
+  }
+}
+@keyframes nova-talk {
+  to {
+    transform: scaleY(2.1);
+  }
+}
+@keyframes nova-yawn {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  35%,
+  70% {
+    transform: scale(1.6, 3.4);
+  }
+}
+
+/* Props added by the engine */
+.nova-fireworks {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.nova-seat-shadow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 31;
+  height: 14px;
+  margin-top: -3px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(22 19 29 / 0.28), rgb(22 19 29 / 0));
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.nova-seat-shadow.show {
+  opacity: 1;
+}
+.nova-ladder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 32;
+  width: 46px;
+  border-right: 7px solid #9b6533;
+  border-left: 7px solid #9b6533;
+  border-radius: 3px;
+  background: repeating-linear-gradient(to bottom, transparent 0 24px, #c98a4b 24px 31px);
+  filter: drop-shadow(0 4px 6px rgb(22 19 29 / 0.18));
+  transform-origin: 50% 100%;
+  pointer-events: none;
+}
+.nova-rope {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 32;
+  width: 6px;
+  margin-left: -3px;
+  border-radius: 3px;
+  background: repeating-linear-gradient(160deg, #c9a26b 0 6px, #a87f4a 6px 12px);
+  transform-origin: 50% 0;
+  pointer-events: none;
+}
+.nova-kit {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 9;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.nova-kit > * {
+  position: absolute;
+}
+.nova-thread {
+  top: 0;
+  left: 0;
+  display: block;
+  overflow: visible;
+}
+.nova-cracker {
+  filter: drop-shadow(0 4px 5px rgb(22 19 29 / 0.22));
+  transform-origin: 50% 100%;
+}
+.nova-cracker svg {
+  display: block;
+  overflow: visible;
+}
+.nova-flame {
+  top: 0;
+  left: 0;
+  width: 18px;
+  height: 18px;
+  margin: -9px 0 0 -9px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 0%, #ffe066 30%, #ff8a1a 55%, rgb(255 90 0 / 0) 72%);
+}
+.nova-flame::after {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(255 200 80 / 0.5), rgb(255 140 0 / 0) 70%);
+  content: "";
+  animation: nova-flicker 0.09s linear infinite alternate;
+}
+@keyframes nova-flicker {
+  from {
+    transform: scale(0.75);
+  }
+  to {
+    transform: scale(1.25);
+  }
+}
+.nova-shell {
+  position: absolute;
+  z-index: 9;
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 0%, #ffd166 45%, rgb(255 140 0 / 0) 75%);
+  pointer-events: none;
+}
+
+/* Sky */
+.nova-cloud {
+  position: absolute;
+  border-radius: 999px;
+  background: #fff;
+  opacity: 0.8;
+  filter: drop-shadow(0 8px 14px rgb(22 19 29 / 0.05));
+  animation: nova-drift linear infinite;
+}
+.nova-cloud::before,
+.nova-cloud::after {
+  position: absolute;
+  border-radius: 50%;
+  background: #fff;
+  content: "";
+}
+.nova-cloud::before {
+  bottom: 20%;
+  left: 12%;
+  width: 55%;
+  height: 160%;
+}
+.nova-cloud::after {
+  right: 12%;
+  bottom: 25%;
+  width: 40%;
+  height: 130%;
+}
+.nova-c1 {
+  top: 14%;
+  width: 180px;
+  height: 48px;
+  animation-duration: 60s;
+  animation-delay: -10s;
+}
+.nova-c2 {
+  top: 34%;
+  width: 120px;
+  height: 34px;
+  opacity: 0.65;
+  animation-duration: 45s;
+  animation-delay: -30s;
+}
+.nova-c3 {
+  top: 64%;
+  width: 240px;
+  height: 60px;
+  opacity: 0.55;
+  animation-duration: 80s;
+  animation-delay: -50s;
+}
+.nova-c4 {
+  top: 84%;
+  width: 140px;
+  height: 40px;
+  opacity: 0.7;
+  animation-duration: 55s;
+  animation-delay: -5s;
+}
+@keyframes nova-drift {
+  from {
+    transform: translateX(110vw);
+  }
+  to {
+    transform: translateX(-300px);
+  }
+}
+
+/* Speech tail on the card's edge, pointing at Nova (positioned by the engine) */
+.nova-tail {
+  position: absolute;
+  top: -9px;
+  left: -9px;
+  z-index: 31;
+  width: 18px;
+  height: 18px;
+  border-bottom: 1px solid var(--color-line);
+  border-left: 1px solid var(--color-line);
+  background: var(--color-surface);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+.nova-tail.up {
+  border-top: 1px solid var(--color-line);
+  border-bottom: 0;
+}
+.nova-tail.show {
+  opacity: 1;
+}
+/* Nova dozing off */
+.nova-z {
+  position: absolute;
+  z-index: 12;
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-muted);
+  pointer-events: none;
+}
+/* Card: "speaking" bars next to the guide's name */
+.onb-voice-bars {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 10px;
+}
+.onb-voice-bars span {
+  width: 2px;
+  height: 100%;
+  border-radius: 1px;
+  background: var(--color-accent);
+  opacity: 0.35;
+  transform: scaleY(0.3);
+  transform-origin: 50% 100%;
+  transition: opacity 0.2s ease;
+}
+.onb-voice-bars.on span {
+  opacity: 1;
+}
+.onb-voice-bars.on span {
+  animation: onb-bars 0.9s ease-in-out infinite;
+}
+.onb-voice-bars.on span:nth-child(2) {
+  animation-delay: -0.3s;
+}
+.onb-voice-bars.on span:nth-child(3) {
+  animation-delay: -0.6s;
+}
+@keyframes onb-bars {
+  0%,
+  100% {
+    transform: scaleY(0.3);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+/* Step progress: segments fill as the visitor moves through the steps */
+.onb-progress span {
+  position: relative;
+  overflow: hidden;
+}
+.onb-progress span::after {
+  position: absolute;
+  inset: 0;
+  background: var(--color-accent);
+  content: "";
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 0.6s var(--ease-out);
+}
+.onb-progress span[data-on="true"]::after {
+  transform: scaleX(1);
+}
+/* The picked answer: its dot pops */
+.onb-pop {
+  animation: onb-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes onb-pop {
+  from {
+    transform: scale(0.4);
+  }
+}
+/* Thank-you: the tick draws itself */
+.onb-check circle {
+  stroke-dasharray: 152;
+  stroke-dashoffset: 152;
+  animation: onb-draw 0.6s var(--ease-out) forwards;
+}
+.onb-check path {
+  stroke-dasharray: 40;
+  stroke-dashoffset: 40;
+  animation: onb-draw 0.35s 0.45s var(--ease-out) forwards;
+}
+@keyframes onb-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Glasses: a glint sweeps across the lenses now and then */
+.nova-glint {
+  transform-box: view-box;
+  animation: nova-glint 4.2s ease-in-out infinite;
+}
+@keyframes nova-glint {
+  0%,
+  60% {
+    transform: translateX(0);
+  }
+  85%,
+  100% {
+    transform: translateX(96px);
+  }
+}
+/* The cracker glows while it fountains */
+.nova-cracker.lit {
+  animation: nova-lit 0.35s ease-in-out infinite alternate;
+}
+@keyframes nova-lit {
+  from {
+    filter: drop-shadow(0 0 6px rgb(255 170 60 / 0.55)) drop-shadow(0 4px 5px rgb(22 19 29 / 0.22));
+  }
+  to {
+    filter: drop-shadow(0 0 16px rgb(255 140 40 / 0.9)) drop-shadow(0 4px 5px rgb(22 19 29 / 0.22));
+  }
+}

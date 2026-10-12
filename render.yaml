@@ -1,0 +1,47 @@
+# Render Blueprint for the Aakrin website: a Static Site.
+# `next build` exports the whole site to out/ (output: "export" in next.config.ts); Render
+# serves that folder. Node version comes from .node-version.
+# Environment variables are read at build time, so redeploy after changing any of them.
+services:
+  - type: web
+    name: aakrin-web
+    runtime: static
+    # --include=dev: the build needs TypeScript, Tailwind and PostCSS from devDependencies.
+    buildCommand: npm ci --include=dev && npm run build
+    staticPublishPath: ./out
+    routes:
+      # The export writes /start as start.html
+      - type: rewrite
+        source: /start
+        destination: /start.html
+    headers:
+      # The social sharing image is exported without a file extension
+      - path: /opengraph-image
+        name: Content-Type
+        value: image/png
+    envVars:
+      - key: SITE_URL
+        value: https://aakrin.com
+      # Keep "false" until aakrin.com points at this site, then set to "true" and redeploy.
+      - key: ALLOW_INDEXING
+        value: "false"
+      # Analytics providers are off unless their ID is set explicitly in the Render
+      # dashboard. sync: false declares the variable without giving it a value.
+      - key: APOLLO_APP_ID
+        sync: false
+      - key: CLARITY_PROJECT_ID
+        sync: false
+      # Nova onboarding (qualification quiz + enquiry form): opens on every visit to the
+      # homepage, at /start and behind the "Tell us what you need" CTAs. "false" turns it off.
+      - key: FEATURE_QUIZ
+        value: "true"
+      # Salesforce Web-to-Lead. The org id is public by design (it is in every form post).
+      - key: WEB_TO_LEAD_ORG_ID
+        value: 00DdN00000rD67Y
+      # Optional: {"situation":"00N…","requirement":"00N…",…} to send quiz context to
+      # Lead custom fields as well as the Description.
+      - key: WEB_TO_LEAD_CONTEXT_FIELDS
+        sync: false
+      # Never set WEB_TO_LEAD_DEBUG_EMAIL here. It is ignored whenever ALLOW_INDEXING=true.
+      - key: NEXT_TELEMETRY_DISABLED
+        value: "1"

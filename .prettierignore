@@ -1,0 +1,10 @@
+.next/
+node_modules/
+package-lock.json
+next-env.d.ts
+# Legacy HTML kept verbatim as reference material
+reference/
+
+# Specification docs are kept verbatim
+docs/
+CLAUDE.md
