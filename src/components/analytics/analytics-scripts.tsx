@@ -14,12 +14,14 @@ export function AnalyticsScripts() {
   return (
     <>
       {clarityProjectId && (
-        <Script id="clarity" strategy="afterInteractive">
+        // Not id="clarity": an element id becomes window.<id>, which would shadow the
+        // window.clarity function the snippet creates
+        <Script id="clarity-init" strategy="afterInteractive">
           {`(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script",${JSON.stringify(clarityProjectId)});`}
         </Script>
       )}
       {apolloAppId && (
-        <Script id="apollo" strategy="lazyOnload">
+        <Script id="apollo-init" strategy="lazyOnload">
           {`(function(){var n=Math.random().toString(36).substring(7),o=document.createElement("script");o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n;o.async=true;o.onload=function(){window.trackingFunctions.onLoad({appId:${JSON.stringify(apolloAppId)}})};document.head.appendChild(o);})();`}
         </Script>
       )}
