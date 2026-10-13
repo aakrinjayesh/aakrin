@@ -14,6 +14,8 @@ type ChoiceGroupProps = {
   layout?: "grid" | "list";
   /** Focus the checked (or first) option when the group appears */
   autoFocus?: boolean;
+  /** Shorter rows and tighter spacing, so a whole question fits a card without scrolling */
+  compact?: boolean;
 };
 
 /**
@@ -29,6 +31,7 @@ export function ChoiceGroup({
   onSelect,
   layout = "grid",
   autoFocus = false,
+  compact = false,
 }: ChoiceGroupProps) {
   const refs = useRef<(HTMLButtonElement | null)[]>([]);
   const selectedIndex = options.findIndex((option) => option.id === value);
@@ -67,7 +70,7 @@ export function ChoiceGroup({
       role="radiogroup"
       aria-labelledby={labelledBy}
       aria-describedby={describedBy}
-      className={cn("grid gap-2.5", layout === "grid" && "sm:grid-cols-2")}
+      className={cn("grid", compact ? "gap-2" : "gap-2.5", layout === "grid" && "sm:grid-cols-2")}
     >
       {options.map((option, index) => {
         const checked = option.id === value;
@@ -87,7 +90,9 @@ export function ChoiceGroup({
             className={cn(
               // The outline is an inset ring, not a border: a border colour change is four
               // transitions (one per side), each firing events, on every hover
-              "flex min-h-14 cursor-pointer items-center gap-3 rounded-lg px-4 py-3 text-left text-md font-medium text-ink ring-[1.5px] transition-[box-shadow,background-color] duration-150 ring-inset",
+              "flex cursor-pointer items-center gap-3 rounded-lg px-4 text-left font-medium text-ink ring-[1.5px] transition-[box-shadow,background-color] duration-150 ring-inset",
+              // Compact rows stay at least 44px tall: still a comfortable touch target
+              compact ? "min-h-11 py-2 text-base leading-snug" : "min-h-14 py-3 text-md",
               checked ? "bg-accent-tint ring-accent-strong" : "bg-surface ring-line hover:ring-ink",
             )}
           >

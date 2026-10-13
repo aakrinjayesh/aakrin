@@ -592,6 +592,7 @@ export function Onboarding({ config }: { config: WebToLeadConfig }) {
         </p>
         <ChoiceGroup
           layout="list"
+          compact
           labelledBy={headingId}
           describedBy={hintId}
           options={situations}
@@ -607,7 +608,9 @@ export function Onboarding({ config }: { config: WebToLeadConfig }) {
           {quizCopy.requirement.hint}
         </p>
         <ChoiceGroup
-          layout="list"
+          // Short answers: two columns keep all of them on screen beside Nova
+          layout="grid"
+          compact
           labelledBy={headingId}
           describedBy={hintId}
           options={requirementOptions}
@@ -773,9 +776,9 @@ export function Onboarding({ config }: { config: WebToLeadConfig }) {
               width={site.logo.width}
               height={site.logo.height}
               alt={site.name}
-              className="h-7 w-auto sm:h-8"
+              className="h-6 w-auto sm:h-8"
             />
-            <div ref={navRef} className="flex items-center gap-2">
+            <div ref={navRef} className="flex items-center gap-1.5 sm:gap-2">
               <button
                 ref={soundButtonRef}
                 type="button"
