@@ -463,6 +463,27 @@ export function Onboarding({ config }: { config: WebToLeadConfig }) {
     if (id !== situationId) setRequirementId(undefined);
     setSituationId(id);
     track("quiz_question_1", { placement, situation: id });
+    // "Something else" has no step 2 list: Nova stays on the ground and the form comes next
+    const skipsStep2 = !picked?.requirements.length;
+    if (skipsStep2) {
+      void engine?.skipToCracker();
+      await wait(PACE.pickMs);
+      if (run === runRef.current) {
+        setReady(false);
+        voiceRef.current?.stop();
+        if (picked && (await say(picked.ack, run, { announce: true, untilSpoken: true }))) {
+          await wait(250);
+          if (run === runRef.current) {
+            enterPhase("q3");
+            track("quiz_contact_step", { placement, situation: id });
+            if (await say(quizCopy.details.title, run)) setReady(true);
+          }
+        }
+        if (run === runRef.current) busyRef.current = false;
+      }
+      if (engine) engine.busy = false;
+      return;
+    }
     // Nova heads off for the ladder straight away and climbs while replying and while the next
     // question is typed; the answers appear once he is sitting on the card
     const seating = engine?.climbToSeat() ?? Promise.resolve();
@@ -520,7 +541,7 @@ export function Onboarding({ config }: { config: WebToLeadConfig }) {
     newRun();
     busyRef.current = false;
     if (phase === "q2") showInstant("q1");
-    if (phase === "q3") showInstant("q2");
+    if (phase === "q3") showInstant(requirementOptions.length ? "q2" : "q1");
   }
 
   function onValuesChange(next: EnquiryValues) {
@@ -587,7 +608,7 @@ export function Onboarding({ config }: { config: WebToLeadConfig }) {
   if (ready && phase === "q1") {
     body = (
       <>
-        <p id={hintId} className="text-sm text-muted">
+        <p id={hintId} className="onb-hint text-sm text-muted">
           {quizCopy.situation.hint}
         </p>
         <ChoiceGroup
@@ -604,7 +625,7 @@ export function Onboarding({ config }: { config: WebToLeadConfig }) {
   } else if (ready && phase === "q2") {
     body = (
       <>
-        <p id={hintId} className="text-sm text-muted">
+        <p id={hintId} className="onb-hint text-sm text-muted">
           {quizCopy.requirement.hint}
         </p>
         <ChoiceGroup
@@ -622,19 +643,21 @@ export function Onboarding({ config }: { config: WebToLeadConfig }) {
   } else if (ready && phase === "q3") {
     body = (
       <>
-        {situation && requirement && (
+        {situation && (requirement || !requirementOptions.length) && (
           <div className="grid gap-2.5 rounded-lg bg-canvas p-4">
             <MetaLabel as="p">{quizCopy.details.answersLabel}</MetaLabel>
             <ul className="flex flex-wrap gap-1.5 text-xs font-medium text-ink">
               <li className="rounded-md border border-line bg-surface px-2.5 py-1">
                 {situation.label}
               </li>
-              <li className="rounded-md border border-line bg-surface px-2.5 py-1">
-                {requirement.label}
-              </li>
+              {requirement && (
+                <li className="rounded-md border border-line bg-surface px-2.5 py-1">
+                  {requirement.label}
+                </li>
+              )}
             </ul>
             <p className="text-sm text-ink">
-              {requirement.summary
+              {requirement?.summary
                 ? quizCopy.details.recommendation(requirement.summary)
                 : quizCopy.details.somethingElse}
             </p>
@@ -694,16 +717,18 @@ export function Onboarding({ config }: { config: WebToLeadConfig }) {
           </svg>
           <p>{quizCopy.done.body}</p>
         </div>
-        {situation && requirement && (
+        {situation && (requirement || !requirementOptions.length) && (
           <div className="grid gap-2">
             <MetaLabel as="p">{quizCopy.details.answersLabel}</MetaLabel>
             <ul className="flex flex-wrap gap-1.5 text-xs font-medium text-ink">
               <li className="rounded-md border border-line bg-canvas px-2.5 py-1">
                 {situation.label}
               </li>
-              <li className="rounded-md border border-line bg-canvas px-2.5 py-1">
-                {requirement.label}
-              </li>
+              {requirement && (
+                <li className="rounded-md border border-line bg-canvas px-2.5 py-1">
+                  {requirement.label}
+                </li>
+              )}
             </ul>
           </div>
         )}

@@ -181,6 +181,12 @@ html.onb-pending .onb-cover {
     font-size: var(--text-xl);
   }
 }
+/* Very short screens: the hint under the question goes, so the answers still fit */
+@media (min-width: 721px) and (max-height: 640px) {
+  .onb-hint {
+    display: none;
+  }
+}
 @media (max-width: 720px) {
   .onb-bubble {
     top: auto;

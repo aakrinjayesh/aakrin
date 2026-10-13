@@ -32,7 +32,7 @@ export function ClientLogos() {
               alt={client.name}
               sizes="140px"
               // Same bounding box for every logo so wide and square marks read at a similar weight
-              className="h-auto max-h-14 w-auto max-w-[min(100%,140px)] object-contain opacity-85 grayscale"
+              className="h-auto max-h-14 w-auto max-w-[min(100%,140px)] object-contain"
             />
           </li>
         ))}

@@ -1,6 +1,15 @@
 "use client";
 
-import { useEffect, useId, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
+import {
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type FormEvent,
+  type ReactNode,
+} from "react";
 import { buttonClasses } from "@/components/ui/button-styles";
 import { enquiryCopy } from "@/content/enquiry";
 import { industryOptions, optionLabel, timingOptions } from "@/content/quiz";
@@ -46,6 +55,8 @@ const FIELD_ORDER: EnquiryField[] = [
   "message",
 ];
 
+const noSubscribe = () => () => {};
+
 /** Optional select answers that are sent as labelled context (timing). */
 function selectContext(options: Parameters<typeof optionLabel>[0], id: string) {
   const label = id ? optionLabel(options, id) : undefined;
@@ -75,7 +86,15 @@ export function EnquiryForm({
     ensureLeadFrame();
   }, []);
 
+  // Country names come from the browser's Intl data, which can differ from the server's:
+  // the list is built only in the browser so the server-rendered form hydrates cleanly
+  const inBrowser = useSyncExternalStore(
+    noSubscribe,
+    () => true,
+    () => false,
+  );
   const countries = useMemo(() => {
+    if (!inBrowser) return [];
     let names: Intl.DisplayNames | null = null;
     try {
       names = new Intl.DisplayNames(["en"], { type: "region" });
@@ -85,7 +104,7 @@ export function EnquiryForm({
     return COUNTRY_CODES.map((code) => ({ code, name: names?.of(code) ?? code })).sort((a, b) =>
       a.name.localeCompare(b.name),
     );
-  }, []);
+  }, [inBrowser]);
   const states = STATES[values.country];
 
   function update(field: EnquiryField, value: string) {

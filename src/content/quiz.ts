@@ -22,7 +22,7 @@ export interface Requirement extends QuizOption {
 export interface Situation extends QuizOption {
   /** Nova's short reply after this answer. No claims about past work. */
   ack: string;
-  /** Step 2 options for this problem */
+  /** Step 2 options for this problem. Empty: step 2 is skipped and the form comes next. */
   requirements: readonly Requirement[];
 }
 
@@ -56,6 +56,11 @@ export const situations: readonly Situation[] = [
     ack: "More hands on deck. Let's see who you need.",
     requirements: [
       {
+        id: "delivery-team",
+        label: "A full delivery team",
+        summary: "a full Salesforce delivery team",
+      },
+      {
         id: "developers",
         label: "Developers",
         summary: "Salesforce developers for your projects",
@@ -63,11 +68,6 @@ export const situations: readonly Situation[] = [
       { id: "admins", label: "Admins", summary: "Salesforce admins for your team" },
       { id: "architects", label: "Architects", summary: "Salesforce architecture expertise" },
       { id: "cpq-specialists", label: "CPQ specialists", summary: "Salesforce CPQ specialists" },
-      {
-        id: "delivery-team",
-        label: "A full delivery team",
-        summary: "a full Salesforce delivery team",
-      },
       somethingElse,
     ],
   },
@@ -156,19 +156,19 @@ export const situations: readonly Situation[] = [
     ack: "Agentforce it is. Let's see where it fits.",
     requirements: [
       {
-        id: "ai-discovery",
-        label: "Finding where AI fits",
-        summary: "finding where Agentforce and AI fit your business",
+        id: "agentforce-planning",
+        label: "Finding where Agentforce fits",
+        summary: "planning where Agentforce fits your business",
       },
       {
-        id: "ai-agents",
-        label: "Building and launching AI agents",
-        summary: "building and launching AI agents on Salesforce",
+        id: "agentforce-agents",
+        label: "Building Agentforce agents",
+        summary: "building and launching Agentforce agents",
       },
       {
-        id: "ai-data",
-        label: "Connecting AI to our data",
-        summary: "connecting AI to your Salesforce data",
+        id: "ai-ready-data",
+        label: "Getting our data ready for AI",
+        summary: "getting your Salesforce data ready for AI",
       },
       somethingElse,
     ],
@@ -195,6 +195,13 @@ export const situations: readonly Situation[] = [
       },
       somethingElse,
     ],
+  },
+  {
+    id: "other",
+    label: "Something else",
+    ack: "No problem. Tell us a little about it and we'll take it from there.",
+    // Nothing to narrow down: straight on to the form
+    requirements: [],
   },
 ];
 

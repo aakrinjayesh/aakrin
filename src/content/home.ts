@@ -105,6 +105,16 @@ export const howWeWorkSection: SectionCopy = {
   description: "Engagements follow five steps, scaled to the size of the work.",
 };
 
+/** The enquiry form on the homepage: the same form as the quiz's last step. */
+export const enquirySection = {
+  eyebrow: "Get in touch",
+  title: "Tell us about your Salesforce work",
+  description:
+    "Share a few details and what you need help with. The Aakrin team will review it and get back to you.",
+  emailPrompt: "Prefer email?",
+  sendAnother: "Send another enquiry",
+} as const;
+
 /** Entry point for the qualification quiz. Renders only when the quiz feature is on. */
 export const qualificationSection = {
   eyebrow: "Not sure where to start?",

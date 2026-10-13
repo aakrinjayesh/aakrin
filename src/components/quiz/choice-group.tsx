@@ -70,7 +70,12 @@ export function ChoiceGroup({
       role="radiogroup"
       aria-labelledby={labelledBy}
       aria-describedby={describedBy}
-      className={cn("grid", compact ? "gap-2" : "gap-2.5", layout === "grid" && "sm:grid-cols-2")}
+      // Grid: every tile the same height, so a label that wraps doesn't leave rows uneven
+      className={cn(
+        "grid",
+        compact ? "gap-2" : "gap-2.5",
+        layout === "grid" && "sm:auto-rows-fr sm:grid-cols-2",
+      )}
     >
       {options.map((option, index) => {
         const checked = option.id === value;
@@ -88,6 +93,11 @@ export function ChoiceGroup({
             onKeyDown={(event) => onKeyDown(event, index)}
             onClick={() => onSelect(option.id)}
             className={cn(
+              // An odd last tile spans both columns instead of sitting alone in one
+              layout === "grid" &&
+                index === options.length - 1 &&
+                options.length % 2 === 1 &&
+                "sm:col-span-2",
               // The outline is an inset ring, not a border: a border colour change is four
               // transitions (one per side), each firing events, on every hover
               "flex cursor-pointer items-center gap-3 rounded-lg px-4 text-left font-medium text-ink ring-[1.5px] transition-[box-shadow,background-color] duration-150 ring-inset",

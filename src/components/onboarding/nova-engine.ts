@@ -1508,6 +1508,19 @@ export class NovaEngine {
     void this.prepareCracker();
   }
 
+  /** Question 1 answered with no question 2 to follow: fist pump on the ground, then the cracker. */
+  async skipToCracker() {
+    const run = this.run;
+    this.newRunSoft();
+    this.setMood("idle");
+    if (!this.reduced) {
+      void this.playGesture("fistpump", 900);
+      await this.wait(900);
+      if (run !== this.run) return;
+    }
+    void this.prepareCracker();
+  }
+
   private async floatDown() {
     const token = ++this.seatRun;
     const run = this.run;

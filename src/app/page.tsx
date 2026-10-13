@@ -1,5 +1,6 @@
 import { AudiencePaths } from "@/components/home/audience-paths";
 import { ClientLogos } from "@/components/home/client-logos";
+import { EnquirySection } from "@/components/home/enquiry-section";
 import { ExpertiseSection } from "@/components/home/expertise-section";
 import { FinalCta } from "@/components/home/final-cta";
 import { Hero } from "@/components/home/hero";
@@ -32,6 +33,7 @@ export default function HomePage() {
       <IndustriesSection />
       <ResultsSection />
       <HowWeWork />
+      <EnquirySection />
       <QualificationCta />
       <FinalCta />
     </>
