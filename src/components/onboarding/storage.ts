@@ -13,7 +13,7 @@ export const ONBOARDING_PENDING_CLASS = "onb-pending";
 /**
  * Runs in <head> before the page paints, so the homepage never flashes behind the
  * onboarding. Opens on every visit to "/" (product decision 2026-10-09: Nova is the default
- * landing experience; "Skip & explore" goes to the website), always at /start, and with
+ * landing experience; "Skip & explore website" goes to the website), always at /start, and with
  * ?onboarding=1. Crawlers and link-preview bots are not shown the overlay (they get the
  * homepage), which keeps it from acting as an intrusive interstitial for search.
  */

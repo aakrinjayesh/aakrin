@@ -361,8 +361,9 @@ export const onboardingCopy = {
   greeting:
     "Hi there! 👋 I'm Nova, your Aakrin guide. Tell me what you're looking to solve, and I'll help you find the right way to get started.",
   requirementAck: "Perfect, one last step.",
-  skip: "Skip & explore",
-  exploreSelf: "I'd rather explore the website myself",
+  skip: "Skip & explore website",
+  /** Shorter label for the same button on narrow screens */
+  skipShort: "Skip to website",
   replay: "Replay intro",
   sound: "Sound",
   /** Sound button label while the browser holds speech back until the visitor's first tap */

@@ -17,7 +17,8 @@ export function ClientLogos() {
       >
         {trustSection.title}
       </h2>
-      <ul className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 md:grid-cols-5">
+      {/* 16 logos: column counts that divide 16 so no row is left with an orphan tile */}
+      <ul className="grid grid-cols-2 gap-2.5 sm:grid-cols-4 lg:grid-cols-8">
         {logos.map((client) => (
           <li
             key={client.id}

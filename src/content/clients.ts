@@ -11,6 +11,7 @@ export interface Client extends Fact {
 }
 
 const CONFIRMED = "Client list, logo and display permission confirmed 2026-10-12.";
+const CONFIRMED_ADDED = "Added by the product owner with logo file on 2026-10-13.";
 
 export const clients: readonly Client[] = [
   {
@@ -75,5 +76,54 @@ export const clients: readonly Client[] = [
     status: "confirmed",
     note: CONFIRMED,
     logo: { src: "/clients/zordial.png", width: 972, height: 751 },
+  },
+  {
+    id: "rapidflow",
+    name: "Rapidflow",
+    status: "confirmed",
+    note: CONFIRMED_ADDED,
+    logo: { src: "/clients/rapidflow.webp", width: 2048, height: 1046 },
+  },
+  {
+    id: "mouri-tech",
+    name: "MOURI Tech",
+    status: "confirmed",
+    note: CONFIRMED_ADDED,
+    logo: { src: "/clients/mouri-tech.png", width: 989, height: 203 },
+  },
+  {
+    id: "infoglen",
+    name: "Infoglen",
+    status: "confirmed",
+    note: CONFIRMED_ADDED,
+    logo: { src: "/clients/infoglen.png", width: 1000, height: 535 },
+  },
+  {
+    id: "emudhra",
+    name: "eMudhra",
+    status: "confirmed",
+    note: CONFIRMED_ADDED,
+    logo: { src: "/clients/emudhra.svg", width: 367, height: 100 },
+  },
+  {
+    id: "crossdoor",
+    name: "Crossdoor",
+    status: "confirmed",
+    note: CONFIRMED_ADDED,
+    logo: { src: "/clients/crossdoor.webp", width: 517, height: 100 },
+  },
+  {
+    id: "tekshiras",
+    name: "Tekshiras",
+    status: "confirmed",
+    note: `${CONFIRMED_ADDED} Cropped from the supplied 200x200 CMYK teckshiras.jpg and converted to sRGB; a larger source would look sharper.`,
+    logo: { src: "/clients/tekshiras.png", width: 177, height: 48 },
+  },
+  {
+    id: "wildnet",
+    name: "Wildnet Technologies",
+    status: "confirmed",
+    note: `${CONFIRMED_ADDED} The supplied wildnet.webp has white "NET" text for dark backgrounds; this copy recolours it dark grey.`,
+    logo: { src: "/clients/wildnet-on-light.webp", width: 458, height: 114 },
   },
 ];

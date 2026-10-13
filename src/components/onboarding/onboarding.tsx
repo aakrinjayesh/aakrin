@@ -82,7 +82,7 @@ function writeStorage(key: string, value: string) {
  * Full-screen onboarding with Nova (the qualification quiz): situation → requirement →
  * enquiry form. Shown automatically on every visit to "/" (decided before first paint by
  * the inline script in the root layout), at /start, and from "Tell us what you need".
- * "Skip & explore" is always available.
+ * "Skip & explore website" is always available.
  *
  * This component owns the conversation; Nova's movement on the stage lives in NovaEngine.
  */
@@ -736,7 +736,6 @@ export function Onboarding({ config }: { config: WebToLeadConfig }) {
     );
   }
 
-  const showExploreLink = phase === "greeting" || phase === "q1" || phase === "q2";
   const iconButton =
     "inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-lg border border-line bg-surface px-3 text-sm font-semibold text-ink hover:border-ink";
 
@@ -804,14 +803,12 @@ export function Onboarding({ config }: { config: WebToLeadConfig }) {
                 type="button"
                 onClick={close}
                 aria-label={onboardingCopy.skip}
-                className={buttonClasses({
-                  variant: "secondary",
-                  size: "sm",
-                  className: "bg-surface whitespace-nowrap",
-                })}
+                // Primary so the way out is never hard to find
+                className={buttonClasses({ size: "sm", className: "whitespace-nowrap" })}
               >
-                <span className="sm:hidden">Skip</span>
+                <span className="sm:hidden">{onboardingCopy.skipShort}</span>
                 <span className="max-sm:hidden">{onboardingCopy.skip}</span>
+                <span aria-hidden="true">→</span>
               </button>
             </div>
           </header>
@@ -888,28 +885,15 @@ export function Onboarding({ config }: { config: WebToLeadConfig }) {
 
             {body && <div className="mt-4 grid animate-quiz-step gap-4">{body}</div>}
 
-            {((ready && (phase === "q2" || phase === "q3")) || showExploreLink) && (
-              <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4">
-                {ready && (phase === "q2" || phase === "q3") ? (
-                  <button
-                    type="button"
-                    onClick={goBack}
-                    className={buttonClasses({ variant: "secondary", size: "sm" })}
-                  >
-                    <span aria-hidden="true">←</span> {onboardingCopy.back}
-                  </button>
-                ) : (
-                  <span />
-                )}
-                {showExploreLink && (
-                  <button
-                    type="button"
-                    onClick={close}
-                    className="cursor-pointer text-sm font-medium text-muted underline-offset-4 hover:text-ink hover:underline"
-                  >
-                    {onboardingCopy.exploreSelf}
-                  </button>
-                )}
+            {ready && (phase === "q2" || phase === "q3") && (
+              <div className="mt-5 flex items-center border-t border-line pt-4">
+                <button
+                  type="button"
+                  onClick={goBack}
+                  className={buttonClasses({ variant: "secondary", size: "sm" })}
+                >
+                  <span aria-hidden="true">←</span> {onboardingCopy.back}
+                </button>
               </div>
             )}
           </div>
